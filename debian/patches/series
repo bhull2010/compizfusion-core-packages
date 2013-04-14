@@ -12,9 +12,7 @@
 015_draw_dock_shadows_on_desktop.patch
 016_call_glxwaitx_before_drawing.patch
 017_always_unredirect_screensaver_on_nvidia.patch
-021_hide_tooltip_on_decorator.patch
 029_default_options.patch
-035_ignore_workspaces.patch
 037_fullscreen_stacking_fixes.patch
 049-damage-report-non-empty.patch
 050_stacking.patch
