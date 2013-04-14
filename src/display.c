@@ -2234,6 +2234,23 @@ addDisplay (const char *name)
 	lastScreen  = ScreenCount (dpy) - 1;
     }
 
+    {
+	XSetWindowAttributes attr;
+	Atom atom;
+
+	attr.override_redirect = TRUE;
+	d->glIncludeInferiorsOwner =
+	    XCreateWindow (dpy, XRootWindow (dpy, 0),
+			   -100, -100, 1, 1, 0,
+			   CopyFromParent, CopyFromParent,
+			   CopyFromParent,
+			   CWOverrideRedirect,
+			   &attr);
+
+	atom = XInternAtom (dpy, "_COMPIZ_GL_INCLUDE_INFERIORS", False);
+	XSetSelectionOwner(dpy, atom, d->glIncludeInferiorsOwner, CurrentTime);
+    }
+
     for (i = firstScreen; i <= lastScreen; i++)
     {
 	Window		     newWmSnOwner = None, newCmSnOwner = None;

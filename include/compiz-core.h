@@ -1027,6 +1027,8 @@ struct _CompDisplay {
 
     GLenum textureFilter;
 
+    Window glIncludeInferiorsOwner;
+
     Window activeWindow;
     Window nextActiveWindow;
 
