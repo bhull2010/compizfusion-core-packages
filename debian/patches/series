@@ -1,7 +1,6 @@
 001-mate-compiz.patch
 002-mate-compiz_pot_files.patch
 ### Patches imported from the Debian compiz packages ###
-014_fix-no-border-window-shadow.patch
 015_optional-fbo.patch
 020_disable_gdk_gtk_disable_deprecated
 ### End of Debian-imported patches ###
