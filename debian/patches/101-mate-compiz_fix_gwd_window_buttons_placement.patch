@@ -1,0 +1,42 @@
+Description: Fix window buttons misplacement
+ Configure checks for versions 2.15.21, 2.17.0 and 2.23.2. Since marco-1.2.0 is 
+ essentially metacity-2.32, all of these tests should return true. And the code 
+ in the gtk decorator looks for HAVE_MARCO_2_23_2, not HAVE_MARCO_1_2_0. So all
+ we have to do is have each test look for marco-1.2.0 to return true.
+ (I think, if I did this right with the forum post). It works on my system...
+Author: Loftyhauser
+Origin: <other>, http://forums.mate-desktop.org/viewtopic.php?f=8&t=818
+
+Author: Jasmine Hassan <jasmine.aura@gmail.com>
+ * Synced for LMDE/Debian testing build
+Last-Update: 2012-10-08
+---
+This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
+--- a/configure.ac
++++ b/configure.ac
+@@ -325,11 +325,11 @@ if test "x$use_gtk" = "xyes"; then
+     if test "x$use_marco" = "xyes"; then
+       PKG_CHECK_MODULES(MARCO, libmarco-private,
+ 			[use_marco=yes], [use_marco=no])
+-      PKG_CHECK_EXISTS(libmarco-private >= 2.15.21,
++      PKG_CHECK_EXISTS(libmarco-private >= 1.2.0,
+ 		       [have_marco_2_15_21=yes], [have_marco_2_15_21=no])
+-      PKG_CHECK_EXISTS(libmarco-private >= 2.17.0,
++      PKG_CHECK_EXISTS(libmarco-private >= 1.2.0,
+ 		       [have_marco_2_17_0=yes], [have_marco_2_17_0=no])
+-      PKG_CHECK_EXISTS(libmarco-private >= 2.23.2,
++      PKG_CHECK_EXISTS(libmarco-private >= 1.2.0,
+ 		       [have_marco_2_23_2=yes], [have_marco_2_23_2=no])
+     fi
+ 
+--- a/gtk/gnome/compiz-window-manager.c
++++ b/gtk/gnome/compiz-window-manager.c
+@@ -370,7 +370,7 @@ add_themes_from_dir (GList	*current_list
+     {
+ 	theme_file_path =
+ 	    g_build_filename (path, entry->d_name,
+-			      "marco-1/marco-theme-1.xml", NULL);
++			      "metacity-1/metacity-theme-1.xml", NULL);
+ 
+ 	if (g_file_test (theme_file_path, G_FILE_TEST_EXISTS))
+ 	{

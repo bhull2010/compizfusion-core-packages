@@ -1,0 +1,80 @@
+Description: add a gconf key (/desktop/gnome/interface/hide_decorator_tooltip)
+ to disable tooltip in decorator bar. If key not present, show the tooltip.
+Origin: Ubuntu
+Bug: http://bugs.opencompositing.org/show_bug.cgi?id=1264
+Bug-Ubuntu: https://bugs.launchpad.net/ubuntu/+source/compiz/+bug/519856
+
+Description: add a mateconf key (/desktop/mate/interface/hide_decorator_tooltip)
+ to disable tooltip in decorator bar. If key not present, show the tooltip.
+Origin: <other>, build for LMDE/Debian Testing
+Author: Jasmine Hassan <jasmine.aura@gmail.com>
+Last-Updated: 2012-10-08
+
+--- a/gtk/window-decorator/gtk-window-decorator.c
++++ b/gtk/window-decorator/gtk-window-decorator.c
+@@ -154,6 +154,9 @@
+ #define COMPIZ_CURSOR_SIZE_KEY           \
+     COMPIZ_MATECONF_DIR2 "/cursor_size"
+ 
++#define INTERFACE_MATECONF_DIR		"/desktop/mate/interface"
++#define HIDE_DECORATOR_TOOLTIP_KEY	INTERFACE_MATECONF_DIR "/hide_decorator_tooltip"
++
+ #define DBUS_DEST       "org.freedesktop.compiz"
+ #define DBUS_PATH       "/org/freedesktop/compiz/decoration/allscreens"
+ #define DBUS_INTERFACE  "org.freedesktop.compiz"
+@@ -464,6 +467,8 @@ static PangoFontDescription *titlebar_fo
+ static gboolean		    use_system_font = FALSE;
+ static gint		    text_height;
+ 
++static gboolean		    hide_decorator_tooltip = FALSE;
++
+ #define BLUR_TYPE_NONE     0
+ #define BLUR_TYPE_TITLEBAR 1
+ #define BLUR_TYPE_ALL      2
+@@ -4323,6 +4328,9 @@ handle_tooltip_event (WnckWindow *win,
+ 		      guint	 state,
+ 		      const char *tip)
+ {
++    if (hide_decorator_tooltip)
++        return;
++
+     switch (xevent->type) {
+     case ButtonPress:
+ 	hide_tooltip ();
+@@ -6597,6 +6605,12 @@ value_changed (MateConfClient *client,
+     {
+ 	cursor_theme_changed (client);
+     }
++    else if (strcmp (key, HIDE_DECORATOR_TOOLTIP_KEY) == 0)
++    {
++        hide_decorator_tooltip = mateconf_client_get_bool (client,
++							HIDE_DECORATOR_TOOLTIP_KEY,
++ 							NULL);
++    }
+ 
+     if (changed)
+ 	decorations_changed (data);
+@@ -6769,6 +6783,11 @@ init_settings (WnckScreen *screen)
+ 			  MATECONF_CLIENT_PRELOAD_ONELEVEL,
+ 			  NULL);
+ 
++    mateconf_client_add_dir (mateconf,
++			  INTERFACE_MATECONF_DIR,
++			  MATECONF_CLIENT_PRELOAD_NONE,
++			  NULL);
++
+     g_signal_connect (G_OBJECT (mateconf),
+ 		      "value_changed",
+ 		      G_CALLBACK (value_changed),
+@@ -6929,6 +6948,11 @@ init_settings (WnckScreen *screen)
+     wheel_action_changed (mateconf);
+     shadow_settings_changed (mateconf);
+     blur_settings_changed (mateconf);
++
++    hide_decorator_tooltip = mateconf_client_get_bool (mateconf,
++						    HIDE_DECORATOR_TOOLTIP_KEY,
++						    NULL);
++
+ #endif
+ 
+     (*theme_update_border_extents) (text_height);

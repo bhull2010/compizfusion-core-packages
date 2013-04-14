@@ -1,0 +1,698 @@
+compiz (0.8.8-2) unstable; urgency=low
+
+  * Don't remove compiz.desktop, and don't bundle compiz-mate-gtk.desktop
+    in debian/mate_files
+  * Don't remove compiz-wm.desktop. Install it from package compiz-mate in
+    usr/share/mate/wm-properties/compiz-wm.desktop, for marco windows 
+    settings to work in compiz.
+  * update 001-mate-compiz.patch to update both desktop files to:
+    - use X-MATE-WMSettingsModule=marco and X-MateWMSettingsLibrary=marco
+    - drop deprecated Encoding=UTF-8 attribute
+  * delete no longer needed patch 018_use_marco_settings.patch
+  * delete no longer needed patch 060_move_checks_to_compiz.patch, we're
+    already checking capabilities in /usr/bin/compiz-mate-gtk wrapper,
+    and if we can't do indirect rendering, we fall back to marco.
+
+ -- Jasmine Hassan <jasmine.aura@gmail.com>  Sun, 14 Oct 2012 03:21:07 +0200
+
+compiz (0.8.8-1) unstable; urgency=low
+
+  * new upstream release, non-maintainer fork
+  * [debian/compat] Bump to Debhelper v7
+  * [debian/copyright] convert to http://dep.debian.net/deps/dep5/ format
+  * [debian/control]
+    - rename compiz-gtk package to compiz-mate. update description thereof
+    - add compiz-locales package, to reduce size of arch-dep compiz-core
+    - bump Standards-Version to 3.9.3, Build-Dep debhelper to (>= 7.0.50~)
+    - bump Build-Deps compiz-dev and libcompizconfig-dev to current version
+    - B-D on dh-autoreconf, drop autoconf automake libtool autotools-dev
+    - compiz-core depend on compiz for docs, and update compiz description
+    - Remove compiz-kde package (commented out). Disabled via debian/rules
+    - hardening-wrapper, to enable it from debian/rules (see below)
+    - change the maintainer's email address
+  * [debian/source/format] convert to '3.0 (quilt)' source format
+  * [debian/patches/*]
+  - Add 001-mate-compiz.patch: migration for MATE compatibility.
+  - Add 002-mate-compiz_pot_files.patch - pot files MATE changes.
+  - All migrated patches assume no files were renamed (ex: by migrate.sh).
+    See notes under [debian/rules] further down this changelog.
+  - Sync patches from Ubuntu (0.8.6-0u12) that are still needed in 0.8.8
+    This is not the full list, only those that were migrated/updated.
+    For the rest of (unchanged) patches, see debian/patches/series
+    - 013-add-cursor-theme-support.patch: update: migrate to MATE
+    - 018_use_marco_settings.patch: rename, migrate, update
+    - 021_hide_tooltip_on_decorator.patch: update, migrate to MATE
+    - 029_default_options.patch: update w/ new changes over Debian, migrate
+      . use new compiz-mate-gtk wrapper script instead of compiz-decorator
+      . revert to debian's logo instead of ubuntu's for adherence.
+    - 060_move_checks_to_compiz.patch update, refresh
+    - 562027-fix-mateconf-ftbfs.patch update, migrate, rename
+  - Add 200-linuxmint-logo.patch to replace Debian logo with LinuxMint
+  - Sync & update some from Wolfgang Ulrich's Redhat fc16 compiz fork:
+    - 102-compiz_windows-decorator.patch: cleaned up, added dep3 header
+    - 103-compiz-0.8.6-unloadpluginfix.patch: added dep3 header
+  - Add 101-mate-compiz_fix_gwd_window_buttons_placement.patch. Thanks to
+    Loftyhauser: http://forums.mate-desktop.org/viewtopic.php?f=8&t=818
+  * [debian/patches/series] Indicate all origins of respective patches.
+  * [debian/mate_files/*]
+    - From Wolfgang Ulrich's forked redhat compiz package:
+      - 50-marco-(navigation|system|windows).xml: enables some more compiz
+        keybindings based on the marco ones
+      - compiz-mate-gtk: wrapper script to run the appropriate decorator
+        updated to add --replace options.
+    - compiz-mate-gtk.desktop: X-MATE-WMSettingsModule=marco
+    - compiz-keybindings.sed: Add keybindings (adapted from 0.8.4-4ubuntu1)
+  * [debian/libdecoration0.symbols] after `debuild binary`, generate with:
+    dpkg-gensymbols -plibdecoration0 -Pdebian/libdecoration0 | patch -p0
+    perl -pi -e 's/-\d.*//' new_symbol_file  #strips the debian version
+  * [debian/rules] use simplified dh style, only use necessary overrides
+    - override_dh_autoreconf to rename files (gnome->MATE) after patching,
+      and override_dh_(clean|builddeb) to revert filenames before dh_clean 
+      and dpkg-source --after-build, respectively. The rationale is that we
+      can keep a debian/patches much smaller sized, and much more portable!
+    - Disable all kde stuff (kconfig/kde/kde4). Remove its xml and schema
+    - Import keybindings from marco (adapted from 0.8.4-4ubuntu1)
+    - Install compiz-mate-gtk*, remove compiz.desktop
+    - Remove libmate(conf|compat) from plugins pkg. They're included in mate
+    - Remove core.xml from plugins pkg. It's included in the core pkg
+    - override_dh_makeshlibs to fix dependencies on libdecoration0
+    - DEB_BUILD_HARDENING=1, to suppress lintian warnings
+  * [debian/*.install]
+    - compiz-dev: install schemas.xslt file (moved from compiz-core)
+    - compiz-core: only install en_GB,en_US,fr locales
+    - compiz-locales: all other locales
+    - compiz-mate: install gtk files, our new keybindings & wrapper script
+    - compiz-plugins: install xml files (moved from compiz-core)
+  * [debian/*.docs]
+    - Only compiz-core & libdecoration0 have docs. other pkgs use *.links
+  * [debian/compiz-mate.links]
+    - gtk-window-decorator bin/man to compiz-decorator and compiz-mate-gtk
+  * [debian/watch] update download link from freedesktop.org to compiz.org
+  * [debian/gbp.conf] remove it. this is not gonna be in debian unstable.
+    See: http://lists.debian.org/debian-mentors/2012/10/msg00164.html
+
+ -- Jasmine Hassan <jasmine.aura@gmail.com>  Thu, 11 Oct 2012 13:31:30 +0200
+
+compiz (0.8.4-5.2) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Fix build failure with GCC 4.7 (Sebastian Ramacher). Closes: #671995.
+
+ -- Matthias Klose <doko@debian.org>  Tue, 29 May 2012 08:51:01 +0000
+
+compiz (0.8.4-5.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Disable MATE integration as it uses deprecated interfaces which don't
+    work anymore and drop the compiz-mate package. (Closes: #648022)
+
+ -- Michael Biebl <biebl@debian.org>  Fri, 27 Jan 2012 06:00:59 +0100
+
+compiz (0.8.4-5) unstable; urgency=low
+
+  [ Sean Finney ]
+  * Update gbp.conf for new debian-wheezy branch
+  * Rebuild of the package should fix remaining libmarco-private issues.
+    (Closes: #617763)
+  * Add dependency on libcompizconfig0 to compiz metapackage.
+    Thanks to Patricio Rojo <ss2@wasabi.das.uchile.cl> (Closes: #631129)
+
+  [ Michael Biebl ]
+  * Link against all necessary libraries.  (Closes: #639681, #554114)
+    Thanks: Loïc Minier <loic.minier@ubuntu.com>
+
+ -- Sean Finney <seanius@debian.org>  Tue, 25 Oct 2011 20:50:05 +0200
+
+compiz (0.8.4-4) unstable; urgency=low
+
+  * Drop libdbus-qt-1-dev from Build-Depends, as kindly requested by
+    Michael Biebl (Closes: #581788). Qt3 is going away, we already use
+    --disable-kde and --enable-kde4 to that effect, so libdbus-qt-1-dev
+    can be kicked away.
+  * Add libglu1-mesa-dev, needed for <GL/glu.h>.
+
+ -- Cyril Brulebois <kibi@debian.org>  Sun, 16 May 2010 20:44:51 +0200
+
+compiz (0.8.4-3) unstable; urgency=high
+
+  [ Brice Goglin ]
+  * Remove Thierry Reding from Uploaders, closes: #572540.
+
+  [ Cyril Brulebois ]
+  * Add patch to prevent FTBFS due to deprecated GDK/GTK stuff:
+    * 020_disable_gdk_gtk_disable_deprecated (Closes: #577352).
+  * Add myself to Uploaders.
+  * Set urgency to high due to RC bugfix.
+
+ -- Cyril Brulebois <kibi@debian.org>  Thu, 15 Apr 2010 03:29:29 +0200
+
+compiz (0.8.4-2) unstable; urgency=low
+
+  * Bump the dh_makeshlibs call to (>= 0.8.4)
+
+ -- Sean Finney <seanius@debian.org>  Thu, 11 Feb 2010 23:08:16 +0100
+
+compiz (0.8.4-1) unstable; urgency=low
+
+  * New upstream release.
+
+  [ Sean Finney ]
+  * Fix FTBFS: "mateconf/mateconf-client.h: No such file or directory"
+    - thanks to Sebastian Harl <tokkee@debian.org> (Closes: #562027, #562438) 
+  * Add compiz-decorator symlink for compatibility with ubuntu systems.
+  * Make all patches DEP-3 formatted.
+  * No longer keep the ubuntu patches logically separated from ours
+  * Enable 010-disable-child-window-clipping.patch, as there's an ABI bump.
+    Also, massage the patch a little so that it applies cleanly.
+  * Synchronize ubuntu patches from 0.8.4-0ubuntu10
+    * 015_draw_dock_shadows_on_desktop.patch:
+      - change decoration plugin to draw dock shadows only on the
+        desktop window instead of on top of all other windows
+    * 016_call_glxwaitx_before_drawing.patch:
+      - Call glXWaitX before we start drawing to make sure X is done
+        handling rendering calls. Suggested by Michel Dänzer to ensure
+        we don't have any rendering glitches.
+    * 017_always_unredirect_screensaver_on_nvidia.patch:
+      - always unredirect mate-screensaver when using nvidia, workaround
+        for LP #160264 while still disabling unredirect fullscreen
+        windows for nvidia users
+    * 020_fix_focus.patch:
+      - give back the focus to the previous focused window (LP: #455900)
+    * 030_from_git_crash_fix_multiscreen.patch:
+      - merge commit 24dea72a395071b533dcf66b2eef37b20522cbba to fix
+        crash with wobbly windows in a multi screen setup
+    * 031_from_git_fix_mate_keybindings.patch:
+      - fix mate keybindings (terminal key)
+    * 060_move_checks_to_compiz.patch:
+      - add all relevant checks from compiz-manager to compiz itself
+        Compiz already checks for almost everything it needs so there is no
+        need to check twice.
+    * 061_KWD_stubs.patch (updated locally to remove fuzz):
+      - Horrible hack to define empty stubs for some new pure virtual
+        functions in KWD::Window, to fix FTBFS.
+  * The following patches have been updated to cleanly apply:
+    * 014-fix-gtk-window-decorator-no-argb-crash.patch
+    * 015_optional-fbo.patch
+    * ubuntu/010-disable-child-window-clipping.patch
+    * ubuntu/013-add-cursor-theme-support.patch
+    * ubuntu/018_use_marco_settings.patch
+    * ubuntu/029_default_options
+    * ubuntu/035_ignore_workspaces
+    * ubuntu/037_fullscreen_stacking_fixes.patch
+    * ubuntu/049-damage-report-non-empty.patch
+    * ubuntu/050_stacking.patch
+  * Transition from compiz-manager to compiz binary for /usr/bin/compiz
+  * Remove all patches to the embedded compiz-manager script
+    * 028_compiz_manager_blacklist
+    * 029_compiz_manager_decoration.patch
+    * 029_compiz_manager_nvidia_settings.patch
+    * 030_compiz_manager_multi_display
+    * 031_compiz_manager_extra_blacklist_support
+    * 032_compiz_manager_add_matecompat
+    * 033_compiz_manager_xdg_dirs
+    * 042-compiz-manager-default-plugin
+    * 046_compiz_manager_second_screen.patch
+
+ -- Sean Finney <seanius@debian.org>  Thu, 11 Feb 2010 20:17:39 +0100
+
+compiz (0.8.2-6) unstable; urgency=low
+
+  * Add libxcursor-dev build-dep as required by patch
+    ubuntu/013-add-cursor-theme-support; also let compiz-dev pull it as it's
+    referenced in the .pc file; closes: #525240, #524943.
+  * Add a virtual compiz-core-abiversion-2009xxyy provides to compiz-core to
+    allow for strict dependencies of plugins on the compiz-core
+    CORE_ABIVERSION they were built with, as read from include/compiz-core.h.
+  * Use the new Breaks feature for the compiz-core -> libcompizconfig0 dep.
+    This makes upgrades smoother than Conflicts.
+  * Bump the compiz-core Breaks on libcompizconfig0 to 0.8.0 as the last
+    CORE_ABIVERSION bump happened between 0.7.8 and 0.8.0; closes: #523514.
+  * Add a missing libxml2-dev build-dep and update the compiz-dev deps to
+    match what compiz.pc requires and use the same versions as the build-deps.
+  * Build-dep on libcairo2-dev instead of libcairo-dev.
+  * Add missing libstartup-notification0-dev (>= 0.7) bdep and version the
+    compiz-dev dep to match.
+  * Use the same version in the libdecoration0-dev dep on libxrender-dev as
+    in the libxrender-dev bdep.
+
+ -- Loic Minier <lool@dooz.org>  Fri, 24 Apr 2009 15:15:24 +0200
+
+compiz (0.8.2-5) unstable; urgency=low
+
+  * remove obsolete --enable-mateconf-dump configure option
+  * add build-dependency on libmateui-dev to fix new FTBFS (Closes: #524446)
+  * add Vcs-Git and Vcs-Browser headers to debian/control
+
+ -- Sean Finney <seanius@debian.org>  Sun, 19 Apr 2009 18:45:39 +0200
+
+compiz (0.8.2-4) unstable; urgency=low
+
+  * disable child window clipping patch: it breaks the abi
+
+ -- Sean Finney <seanius@debian.org>  Sat, 11 Apr 2009 18:55:35 +0200
+
+compiz (0.8.2-3) unstable; urgency=low
+
+  * import of some ubuntu patches for 0.8.2 with some modifications
+    - see debian/patches/ubuntu for patches
+    - see debian/patches/series for which patches are used and which
+      are not.
+    - includes patch to copy mate/marco keyboard shortcuts
+      (Closes: #503442, #454922).
+
+ -- Sean Finney <seanius@debian.org>  Sat, 11 Apr 2009 14:26:06 +0200
+
+compiz (0.8.2-2) unstable; urgency=low
+
+  * upgrading compiz-manager backed out some locally modified but not
+    quilt-using changes in paths.  so, new patch compiz-debian-paths.patch
+    should fix this (closes: #522985).
+
+ -- Sean Finney <seanius@debian.org>  Wed, 08 Apr 2009 23:13:19 +0200
+
+compiz (0.8.2-1) unstable; urgency=low
+
+  * new upstream release.
+  * update location of compiz-mate desktop file
+  * add new app desktop file for compiz to compiz-core
+  * update build-deps to use kdebase-workspace-dev
+  * add build-dep on libxslt1-dev
+  * disable kde3 decorator and enable kde4 decorator
+  * include a gbp.conf for use with git-buildpackage
+  * bump the libdecoration0 shlibs version to 0.8.2
+  * update compiz-manager to upstream's 223180bf
+  * Obsolete patches now removed:
+    - disable-libx11-xcb-support.patch
+    - xscreensaver-damage-fix.patch
+    - compiz-manager-posixly-correct.patch
+  * Lintian fixes: 
+    - update Standards-Version to 3.8.1
+    - add misc:Depends to compiz
+
+ -- Sean Finney <seanius@debian.org>  Wed, 01 Apr 2009 00:00:10 +0200
+
+compiz (0.7.6-8) unstable; urgency=low
+
+  * Don't run glib-gettextize, to fix FTBFS caused by intltoolize changes
+    (closes: #518909).
+  * Rebuild against new marco (closes: #518910).
+
+ -- Julien Cristau <jcristau@debian.org>  Mon, 09 Mar 2009 18:44:13 +0100
+
+compiz (0.7.6-7) unstable; urgency=medium
+
+  * refresh quilt patches to apply with no fuzz/offsets. 
+  * add fglrx driver to compiz-manager whitelist (closes: #495539).
+
+ -- Sean Finney <seanius@debian.org>  Mon, 01 Sep 2008 08:00:56 +0200
+
+compiz (0.7.6-6) unstable; urgency=high
+
+  * backport commit aed97c441881d9c382c7865d0305fc8f884c10ac to fix the 
+    problems that seem to come up with certain xscreensavers the Right Way.
+    (closes: #483170).
+
+ -- Sean Finney <seanius@debian.org>  Sat, 30 Aug 2008 11:39:17 +0200
+
+compiz (0.7.6-5) unstable; urgency=high
+
+  * Brown paper bag: remove shlibs.local and libdecoration0.shlibs, call
+    dh_makeshlibs with the proper flags to actually fix dependencies on
+    libdecoration0.
+
+ -- Julien Cristau <jcristau@debian.org>  Fri, 01 Aug 2008 18:57:30 +0200
+
+compiz (0.7.6-4) unstable; urgency=low
+
+  [ Julien Cristau ]
+  * Bump libdecoration0 shlibs to >= 0.7.6 (closes: #485775).
+
+  [ Sean Finney ]
+  * Include fix for posixly-incorrect usage of ENV (closes: #484225).
+
+ -- Julien Cristau <jcristau@debian.org>  Sat, 26 Jul 2008 21:44:51 +0200
+
+compiz (0.7.6-3) unstable; urgency=high
+
+  * Add a versioned Replaces on older compiz-plugins to compiz-gtk, to prevent
+    file conflicts.  Thanks to Daniel Burrows for the report (closes: #485436).
+
+ -- Sean Finney <seanius@debian.org>  Mon, 09 Jun 2008 18:39:57 +0200
+
+compiz (0.7.6-2) unstable; urgency=low
+
+  * Add Conflicts against xscreensaver-data-extra as an unfortunately
+    heavy handed workaround to prevent graphical lockups with an as-of-yet
+    unknown bug somewhere in the screensaver-compiz-driver-xserver chain.
+    (See: #483170, and other bugs/urls referenced in that report)
+
+ -- Sean Finney <seanius@debian.org>  Sat, 07 Jun 2008 14:22:15 +0200
+
+compiz (0.7.6-1) unstable; urgency=low
+
+  * New upstream release
+
+  [ Sean Finney ]
+  * Special-case the mateconf and kconfig plugins to go into the -gtk and -kde
+    packages respectively, as they are semi-obsoleted by the ccp plugin anyway
+    and cause potentially problematic dependencies.  Thanks to Fabiano 
+    Manoel de Andrade for the report (closes: #482150).
+  * Add versioned Conflicts on libcompizconfig0 to compiz-core, to reflect
+    ABI breakage without introducing a circular dependency.  Thanks
+    to Mike Hommey for the report (closes: #482646).
+  * Make debian/rules stricter about catching uninstalled files.
+  * Make debian/rules able to build/clean/build again.
+  * Misc cleanups in debian/rules.
+  * Lintian fixes:
+    - Spelling correction in debian/control
+    - Fix for build-depends-on-1-revision for x11proto-gl-dev
+
+  [ Julien Cristau ]
+  * Add Depends: libxslt1-dev, libxml2-dev to compiz-dev, as they are required
+    by compiz.pc (closes: #482192).
+
+ -- Sean Finney <seanius@debian.org>  Mon, 26 May 2008 23:04:24 +0200
+
+compiz (0.7.4-1) unstable; urgency=low
+
+  * New upstream release
+  * Incorporate xcb-disabling patch from
+    http://gitweb.opencompositing.org/?p=users/3v1n0/compiz-patches
+
+ -- Sean Finney <seanius@debian.org>  Sun, 18 May 2008 19:15:13 +0200
+
+compiz (0.6.3~git20080115.0ea58487-1) unstable; urgency=low
+
+  * New upstream (git snapshot) release.  Refreshed quilt patches.
+  * Contains upstream fix for kde-window-decorator problems with not properly
+    mapping/rendering titlebars.  closes: #458464, #460186.
+  * Remove timestamps from quilt patches (package maintainers, you 
+    should put QUILT_NO_DIFF_TIMESTAMPS=1 in your ~/.quiltrc).
+  * add compizconfig-settings-manager to Suggests field for compiz.
+  * don't blindly assume that the nvidia-settings program is present.
+    patch: compiz-manager-nvidia-settings-optional.patch.  closes: #463645.
+
+ -- sean finney <seanius@debian.org>  Tue, 26 Feb 2008 20:08:31 +0100
+
+compiz (0.6.3~git20071222.061ff159-1) unstable; urgency=low
+
+  * New upstream (git snapshot) release.  Refreshed quilt patches.
+  * Remove build-dependency on libfuse-dev, since we explicitly disable the
+    fuse plugin and it causes FTBFS on non-linux arches.  It should also make
+    backporting easier (closes: #451149, #455516).
+  * compiz-manager-posixly-correct.patch: fix from Brian Carlson to get
+    compiz-manager to run when POSIXLY_CORRECT is set (always pass
+    options before arguments closes: #456628).
+  * Remove libmarco entry from shlibs override (closes: #455515) Thanks to
+    Rober Millan for noticing this.
+  * Remove outdated info in README.Debian for compiz-core (closes: #454340).
+  * lintian:
+    - Standards-Version to 3.7.3
+    - libdecoration0-dev to section libdevel
+
+ -- Sean Finney <seanius@debian.org>  Sat, 22 Dec 2007 12:01:54 +0100
+
+compiz (0.6.3~git20071208.25941d14-1) unstable; urgency=low
+
+  [Sean Finney]
+  * New upstream (git snapshot) release.
+  * Remove autofoo generated content and create/remove it as part of the
+    standard build process instead.
+  * Similarly, add Build-Deps on autoconf and similar stuff.
+  * Remove the old/buggy compiz.wrapper script and now use Kristian Lyngstol's
+    compiz-manager script as a drop-in replacement for it.  This should fix
+    numerous problems with plugin settings and window decorators not behaving
+    properly.  specifically, it closes: #449389, #390929, #400583, #440095.
+    it also closes: #446901, #447345 closes: #393501, #445026.  
+  * Update copyright file accordingly.
+
+ -- Sean Finney <seanius@debian.org>  Sun, 16 Dec 2007 17:29:03 +0100
+
+compiz (0.6.3~git20071104.c9009efd-1) unstable; urgency=low
+
+  [Sean Finney]
+  * New upstream (git snapshot) release.
+  * Disable the (unused?) fuse plugin, explicitly enable the mateconf plugin
+  * lintian: update FSF address
+
+  [Brice Goglin]
+  * Make compiz dependencies on compiz-* packages versioned,
+    closes: #440494.
+  * Make the build-dependency on libfuse-dev require >= 2.7.0.
+
+ -- Sean Finney <seanius@debian.org>  Sun, 04 Nov 2007 21:20:17 +0100
+
+compiz (0.5.2-2) unstable; urgency=low
+
+  * oops, shipping copies of a few .h and .pc files in both compiz-dev
+    and libdecoration0-dev.  fixed.
+
+ -- sean finney <seanius@debian.org>  Wed, 29 Aug 2007 21:06:29 +0200
+
+compiz (0.5.2-1) unstable; urgency=low
+
+  * New upstream release.
+  * updated/massaged various quilt patches
+  * make sure configure is executable at build time.  seems that this
+    causes problems in a pbuilder environment
+  * new build-dependencies on libxml-parser-perl and xsltproc
+  * modify compiz-dev.install to install all the extra .h/.pc files
+    being generated in this new version.
+
+ -- sean finney <seanius@debian.org>  Wed, 22 Aug 2007 22:58:09 -0700
+
+compiz (0.5.0.dfsg-3) UNRELEASED; urgency=low
+
+  * Restore all ${misc:Depends} in debian/control so that for instance
+    compiz-gtk and compiz-plugins gets the required dependency on mateconf2
+    (for mateconf-schemas in postinst), closes: #436432.
+
+ -- Brice Goglin <bgoglin@debian.org>  Tue, 07 Aug 2007 15:10:49 +0200
+
+compiz (0.5.0.dfsg-2) unstable; urgency=low
+
+  * Drop the now obsolete Source-Version in favour of binary:Version in
+    debian/control.
+  * Replace --strict-binding and --use-cow documentation by --loose-binding
+    and --use-root-window respectively in the compiz.real manpage. Thanks
+    Michael Gilbert. (Closes: 432920)
+  * Rearrange and add missing command-line options in the compiz.real manpage.
+  * compiz-gtk needs to conflict with libmarco0 (<< 1:2.15.21) because of
+    an incompatible ABI change. This should really be fixed in libmarco. A
+    shlibs bump should do the trick. (Closes: 425631)
+  * Add upstream patch that fixes non-tfp textures (icons, cube top image
+    etc.) on big endian platforms. Thanks Michel Dänzer.
+  * Run dh_makeshlibs with -V. (Closes: 425463)
+  * Use package-local shlibs override file to depend on libmarco0 (>=
+    1:2.15.21) and libdecoration0 (>= 0.5.0). Thanks Sune Vuorela.
+
+ -- Thierry Reding <thierry@gilfi.de>  Fri, 13 Jul 2007 11:25:13 +0200
+
+compiz (0.5.0.dfsg-1) unstable; urgency=low
+
+  [ Thierry Reding ]
+  * New upstream development release:
+    - Remove stencil buffer requirement.
+    - Focus stealing prevention support.
+    - Better occlusion detection and more efficient rendering.
+    - Added plugins:
+      + blur: blur windows and contents behind translucent windows
+      + fuse: map compiz options to a file-system
+      + ini: flat file configuration backend
+      + inotify: file change notification
+      + video: composited video interface for efficient playback
+  * Forward-port patches:
+    - Dropped 012_debian-kde-includes-dir.patch, no longer needed.
+    - Dropped 013_set-qtdir-fallback.patch, no longer needed.
+    - Refresh other patches.
+  * Use compiz' default set of plugins.
+  * Add build-dependency on libfuse-dev needed by the fuse plugin.
+  * No longer conflict with marco >= 2.15.21, now that marco 2.18 is in
+    unstable. (Closes: #411012)
+  * Add symlink to the compiz-core README to the compiz package.
+    (Closes: #408605)
+  * Drop po/*.gmo and kde/window-decorator/*.moc.cpp from the original
+    tarball. Add a note to debian/copyright.
+  * Pass QTDIR=/usr to the configure script so that the moc can be found.
+  * shlibs bump for libdecoration because it contains added symbols.
+    Thanks Julien Cristau.
+
+  [ Julien Cristau ]
+  * Don't remove .cvsignore files and autogen.sh in clean.
+
+ -- Thierry Reding <thierry@gilfi.de>  Sat, 19 May 2007 17:34:51 +0200
+
+compiz (0.3.6-1) experimental; urgency=low
+
+  [ Thierry Reding ]
+  * New upstream release:
+    + Drop 002_tfp-server-extension.patch, obsolete.
+    + Drop 005_glfinish.patch, fixed upstream.
+    + Refresh 011_snap-by-default.patch.
+  * Replace build-dependency on libdbus-1-dev by libdbus-glib-1-dev.
+  * Add build-dependency on kdebase-dev and libdbus-qt-1-dev for the KDE
+    window decorator.
+  * Add patch 012_debian-kde-includes-dir to correctly detect the KDE include
+    directory on Debian systems.
+  * Add patch 013_set-qtdir-fallback to set the QTDIR variable to /usr if it
+    has not explicitly been set before. This allows the configure script to
+    correctly detect the moc compiler.
+  * Add the compiz-kde package which provides a window decorator for KDE.
+    Closes: #390338.
+  * Add the libdecoration0 and libdecoration0-dev packages. libdecoration0 is
+    needed by both Gtk and KDE window decorators while libdecoration0-dev can
+    be used to write additional decorators.
+  * Add patch 015_optional-fbo which adds a command-line option for disabling
+    the use of FBOs (work around buggy drivers). Add the --no-fbo option to
+    command-line in the compiz wrapper.
+  * Remove the --strict-binding and --use-cow options from the command-line in
+    the compiz wrapper. These are now the defaults.
+  * Add png and svg to the list of default plugins. They are needed to load
+    PNG and SVG images (e.g. for the cube's top face).
+  * Check whether the GLX_EXT_texture_from_pixmap extension is available in
+    direct or indirect rendering contexts. If it is available only in indirect
+    rendering contexts, force compiz to use indirect rendering.
+
+ -- David Nusinow <dnusinow@debian.org>  Wed, 17 Jan 2007 23:46:34 -0500
+
+compiz (0.3.4-1) experimental; urgency=low
+
+  * New upstream release:
+    + Drop 012_marco-theme-support.patch, fixed upstream.
+    + Drop 013_fix-default-plugins.patch, fixed upstream.
+    + Refresh all other patches.
+  * Don't use xsfbs anymore until there's an easy way to keep it up-to-date
+    in git repositories. For now using quilt works just fine.
+  * Drop build-dependencies on automake1.9 and libtool because we don't run
+    the complete autotools stack anymore.
+  * Add missing dependencies to the compiz-dev package. It needs to pull in
+    all packages required by its pkgconfig file.
+  * Add a dependency on libgl1-mesa-dev | libgl-dev to compiz-dev because
+    compiz.h includes files provided in that package.
+
+ -- Thierry Reding <thierry@gilfi.de>  Sun, 26 Nov 2006 00:36:39 +0100
+
+
+compiz (0.3.2-1) experimental; urgency=low
+
+  * New upstream release. Closes: #396770.
+    + Remove 010_snap-inverted.patch, applied upstream.
+    + Refreshed other patches to apply cleanly again.
+    + Remove gtk-window-decorator.schemas and use the one provided by
+      upstream (gtk/window-decorator/gwd.schemas).
+  * Targetted at experimental until the release of etch.
+
+ -- Thierry Reding <thierry@gilfi.de>  Tue, 14 Nov 2006 02:36:40 +0100
+
+compiz (0.2.2-1) unstable; urgency=low
+
+  [ Thierry Reding ]
+  * New upstream release:
+    + Drop 013_dont-fail-if-theme-not-found.patch, applied upstream.
+  * Make 012_marco-theme-support also patch the configure script, not only
+    configure.ac.
+  * Add 013_fix-default-plugins.patch which fixes upstream's handling of the
+    default plugins configuration variable.
+  * Make all plugins that were enabled in previous versions default plugins so
+    compiz' behaviour doesn't change. Drop the 'water' plugin because our X
+    server does not support it yet.
+  * Drop --disable-kde from the configure flags because it is now disabled by
+    default.
+  * Add a dependency on mesa-utils to compiz-core to provide glxinfo that is
+    needed by the compiz wrapper. Thanks Per Bojsen.
+    Closes: #393113.
+  * Conflict with libmarco0 (>= 1:2.15.21) because it would currently make
+    gtk-window-decorator segfault.
+
+  [ David Nusinow ]
+  * Add myself to uploaders. Thierry is still the primary maintainer.
+
+ -- David Nusinow <dnusinow@debian.org>  Mon,  6 Nov 2006 23:13:41 -0500
+
+compiz (0.2.0-1) unstable; urgency=low
+
+  [ Thierry Reding ]
+  * New upstream release.
+    + Drop 011_plane-plugin-schema.patch, applied upstream.
+    + Drop 012_freedesktop-schema.patch, applied upstream.
+  * Replace 010_snap-by-default by the upstream patch 010_snap-inverted and
+    add 011_snap-by-default to enable snapping by default.
+  * Add 012_marco-theme-support.patch which uses an older version of the
+    marco library for theme support so that compiz can be built for Debian
+    unstable.
+  * Install a schemas file for the Gtk window decorator which is used to
+    enable the use of marco themes.
+  * Suggest nvidia-glx (>= 1.0.9625-1). (Closes: #390326).
+  * Add code to the compiz wrapper to handle the NVIDIA GLX implementation
+    Closes: #390814.
+  * No longer build static versions of the plugins.
+  * Remove .la files manually because they are not needed.
+  * Clean up build-dependencies:
+    + Remove unnecessarily versioned build-dependencies.
+    + Tighten the build-dependency on libxcomposite-dev to (>= 1:0.3-2).
+      Closes: 390304, 390416.
+  * Add a manpage documenting the compiz wrapper.
+  * Check if the mateconf plugin is installed before trying to load it in the
+    wrapper.
+  * Enable building the mateconf-dump plugin.
+  * Add a README file to the compiz-core package.
+  * List copyright holders and contributors in the copyright file.
+    Closes: #392422.
+  * Add 013_dont-fail-if-theme-not-found.patch which will make compiz use its
+    default theme if the marco theme cannot be found.
+  * Make compiz-gtk suggest mate-themes so people can take advantage of the
+    marco theme support.
+
+  [ David Nusinow ]
+  * Tighten up all the X library build-depends by explicitly using current
+    versions. Thanks aj.
+
+ -- David Nusinow <dnusinow@debian.org>  Fri, 13 Oct 2006 16:22:17 -0400
+
+compiz (0.0.13+git20060928-2) unstable; urgency=low
+
+  * Change the maintainer field to the Debian X Strike Force.
+  * Add myself to the uploaders field.
+  * Move compiz.{docs,install,manpages} to compiz-core.{docs,install,manpages}
+    so the installed files end up in the correct package.
+  * Rename compiz.1 to compiz.real.1, because it's actually documenting the
+    real compiz binary.
+
+ -- Thierry Reding <thierry@gilfi.de>  Fri, 29 Sep 2006 09:24:30 +0200
+
+compiz (0.0.13+git20060928-1) unstable; urgency=low
+
+  * Initial release. (Closes: #352151)
+  * Install the compiz schema during postinst and removes it during prerm
+    (using dh_gconf).
+  * Add patches by Kristian Høgsberg to make compiz work on AIGLX:
+    + 002_tfp-server-extension.patch
+    + 005_glfinish.patch
+  * No longer build the compiz-kde package, because it is unusable.
+  * Add gtk-window-decorator.1 manpage.
+  * Install the window settings configuration plugin into the right location
+    (/usr/lib/libmate-window-settings1/libcompiz.so).
+  * Bump build-dependency on libxcomposite-dev (>= 0.3) because it provides
+    the XComposite{Get,Release}OverlayWindow functions.
+  * Install a compiz wrapper as /usr/bin/compiz to call compiz.real with
+    required arguments (load mateconf plugin).
+  * Add 010_snap-by-default.patch to turn snapping on by default.
+  * Add a versioned build-dependency on x11proto-gl-dev (>= 1.4.8-1) to make
+    sure compiz gets built with the correct opcodes for the GLX_EXT_tfp
+    extension.
+  * Add build-dependency on libmarco-dev, which is needed for marco
+    theme support.
+  * Add the compiz-gtk package containing the former mate-window-decorator.
+    The compiz-mate package provides the files necessary to integrate compiz
+    and compiz-gtk with the MATE desktop environment.
+  * Add a build-dependency on libxinerama-dev, needed to build compiz with
+    support for the xinerama extension.
+  * Revise the compiz.1 manpage.
+  * Rename the compiz package to compiz-core and make compiz a meta-package
+    pulling in everything necessary to run compiz from within MATE.
+  * Add 011_plane-plugin-schema.patch by Eugene Konev adding mateconf settings
+    for the plane plugin.
+  * Add 012_freedesktop-schema.patch that fixes a typo in compiz.schema.in.
+
+ -- Thierry Reding <thierry@gilfi.de>  Fri, 29 Sep 2006 07:56:05 +0200
+

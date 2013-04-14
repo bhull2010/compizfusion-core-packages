@@ -1,0 +1,86 @@
+.TH COMPIZ 1 "July 13, 2007"
+
+.SH NAME
+compiz \- OpenGL window and compositing manager
+
+.SH SYNOPSIS
+.B compiz
+.RI [ options ]
+.RI [ plugins ]
+.SH DESCRIPTION
+.B compiz
+is a compositing window-manager using OpenGL for rendering.
+
+.SH OPTIONS
+.TP
+.BI "\-\-display " DISPLAY
+Manage the display called
+.I DISPLAY
+instead of the name obtained from the
+.I $DISPLAY
+environment variable.
+.TP
+.BI "\-\-bg\-image " IMAGE
+Use
+.I IMAGE
+as background image.
+.TP
+.BI "\-\-refresh\-rate " RATE
+Set the default refresh rate.
+.TP
+.BI \-\-fast\-filter
+Use a fast texture filter.
+.TP
+.BI \-\-indirect\-rendering
+Force an indirect rendering context. Use this when running compiz on AIGLX.
+.TP
+.BI \-\-loose\-binding
+Disable strict binding of textures. This may improve performance in some
+situations (running on XGL). As opposed to strict binding, however, this isn't
+guaranteed to work. Use with care.
+.TP
+.BI \-\-replace
+Replace any existing window managers on the given X display.
+.TP
+.BI \-\-sm\-disable
+Disable the session management.
+.TP
+.BI "\-\-sm\-client\-id " ID
+Use the given
+.I ID
+as the client ID for session management.
+.TP
+.BI \-\-no\-detection
+Disable output screen detection.
+.TP
+.BI \-\-no\-fbo
+Disable the use of FBOs (frame buffer objects). This can be useful to work
+around drivers with broken FBO implementations.
+.TP
+.BI \-\-ignore\-desktop\-hints
+Do not use desktop hints (number of desktops, current desktop) as left by the
+previous window manager.
+.TP
+.BI \-\-only\-current\-screen
+Manage only the screen defined by
+.I $DISPLAY
+(or given by the
+.I \-\-display
+option) and leave all other screens alone.
+.TP
+.BI \-\-use\-root\-window
+Use the root window instead of the composite overlay window for drawing.
+.TP
+.BI \-\-version
+Show the
+.B compiz
+version string.
+.TP
+.BI \-\-help
+Show a summary of the command-line options.
+
+.SH AUTHOR
+compiz was written by David Reveman <davidr@novell.com> and others.
+.PP
+This manual page was written by Thierry Reding <thierry@gilfi.de>,
+for the Debian project (but may be used by others).

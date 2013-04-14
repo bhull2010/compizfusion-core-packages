@@ -1,0 +1,33 @@
+Description: Remove deprecated metacity checks
+ These changes are necessary for proper integration with marco
+Author: Wolfgang Ulrich
+Origin: <other>, http://forums.mate-desktop.org/viewtopic.php?f=2&t=42#p248
+
+Description: Cleaned up patch and added dep3 header information
+ from 0.8.8-5 http://raveit65.fedorapeople.org/compiz/SRPM/
+Author: Jasmine Hassan
+Last-Update: 2012-
+---
+This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
+--- a/gtk/window-decorator/gtk-window-decorator.c
++++ b/gtk/window-decorator/gtk-window-decorator.c
+@@ -1417,19 +1417,10 @@ meta_get_corner_radius (const MetaFrameG
+ 			int		        *bottom_left_radius,
+ 			int			*bottom_right_radius)
+ {
+-
+-#ifdef HAVE_MARCO_2_17_0
+     *top_left_radius     = fgeom->top_left_corner_rounded_radius;
+     *top_right_radius    = fgeom->top_right_corner_rounded_radius;
+     *bottom_left_radius  = fgeom->bottom_left_corner_rounded_radius;
+     *bottom_right_radius = fgeom->bottom_right_corner_rounded_radius;
+-#else
+-    *top_left_radius     = fgeom->top_left_corner_rounded ? 5 : 0;
+-    *top_right_radius    = fgeom->top_right_corner_rounded ? 5 : 0;
+-    *bottom_left_radius  = fgeom->bottom_left_corner_rounded ? 5 : 0;
+-    *bottom_right_radius = fgeom->bottom_right_corner_rounded ? 5 : 0;
+-#endif
+-
+ }
+ 
+ static int

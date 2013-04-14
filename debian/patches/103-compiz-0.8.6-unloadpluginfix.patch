@@ -1,0 +1,45 @@
+Description: unload plugin fix
+Author: drago01 <drago01@fedoraproject.org>
+Origin: <vendor>, http://pkgs.fedoraproject.org/cgit/compiz.git/log/compiz-0.8.6-unloadpluginfix.patch
+
+Description: updated for MATE
+Author: raveit65 <chat-to-me@raveit.de>
+Origin: <vendor>, http://pkgs.fedoraproject.org/cgit/compiz.git/log/compiz-0.8.6-unloadpluginfix.patch
+
+Description: Add dep3 header
+Author: Jasmine Hassan <jasmine.aura@gmail.com>
+Last-Update: 2012-10-10
+---
+This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
+--- a/include/compiz-core.h
++++ b/include/compiz-core.h
+@@ -27,6 +27,7 @@
+ #define _COMPIZ_CORE_H
+ 
+ #include <compiz-plugin.h>
++#include <dlfcn.h>
+ 
+ #define CORE_ABIVERSION 20091102
+ 
+--- a/plugins/gconf.c
++++ b/plugins/gconf.c
+@@ -802,6 +802,8 @@ mateconfFiniObject (CompPlugin *p,
+ static Bool
+ mateconfInit (CompPlugin *p)
+ {
++    dlopen ("libmateconf-2.so.4", RTLD_LAZY);
++
+     if (!compInitPluginMetadataFromInfo (&mateconfMetadata, p->vTable->name,
+ 					 0, 0, 0, 0))
+ 	return FALSE;
+--- a/plugins/glib.c
++++ b/plugins/glib.c
+@@ -197,6 +197,8 @@ glibInitDisplay (CompPlugin  *p,
+ {
+     GLibDisplay *gd;
+ 
++    dlopen ("libglib-2.0.so.0", RTLD_LAZY);
++
+     if (!checkPluginABI ("core", CORE_ABIVERSION))
+ 	return FALSE;
+ 

@@ -1,0 +1,31 @@
+001-mate-compiz.patch
+002-mate-compiz_pot_files.patch
+### Patches imported from the Debian compiz packages ###
+012_snap-by-default.patch
+014_fix-no-border-window-shadow.patch
+015_optional-fbo.patch
+020_disable_gdk_gtk_disable_deprecated
+### End of Debian-imported patches ###
+### Patches imported from the ubuntu compiz packages ###
+010-disable-child-window-clipping.patch
+013-add-cursor-theme-support.patch
+014-fix-gtk-window-decorator-no-argb-crash.patch
+015_draw_dock_shadows_on_desktop.patch
+016_call_glxwaitx_before_drawing.patch
+017_always_unredirect_screensaver_on_nvidia.patch
+021_hide_tooltip_on_decorator.patch
+029_default_options.patch
+035_ignore_workspaces.patch
+037_fullscreen_stacking_fixes.patch
+049-damage-report-non-empty.patch
+050_stacking.patch
+061_KWD_stubs.patch
+### End of ubuntu-imported patches ###
+### http://forums.mate-desktop.org/viewtopic.php?f=8&t=818
+562027-fix-mateconf-ftbfs.patch
+101-mate-compiz_fix_gwd_window_buttons_placement.patch
+### Patches imported from Wolfgang's forked redhat fc16 rpm package ###
+102-compiz_windows-decorator.patch
+103-compiz-0.8.6-unloadpluginfix.patch
+#### End of Wolfgang/redhat-imported patches
+200-linuxmint-logo.patch

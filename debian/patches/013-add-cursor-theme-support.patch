@@ -1,0 +1,257 @@
+Author: Sebastien Bacher <seb128@canonical.com>
+Description: add cursor theme and size support
+Origin: vendor, ubuntu (1:0.3.6-1ubuntu4)
+Bug-Ubuntu: https://bugs.launchpad.net/ubuntu/+source/compiz/+bug/86184
+
+Author: Jasmine Hassan <jasmine.aura@gmail.com>
+Description: Updated to migrate to Mate Desktop
+Origin: <other>, build for LMDE/Debian Testing
+Last-Updated: 2012-10-09
+
+--- a/configure.ac
++++ b/configure.ac
+@@ -125,6 +125,7 @@ COMPIZ_REQUIRES="x11        \
+ 		 xdamage    \
+ 		 xrandr	    \
+ 		 xinerama   \
++		 xcursor    \
+ 		 ice	    \
+ 		 sm	    \
+ 		 libxml-2.0 \
+@@ -301,6 +302,7 @@ AC_ARG_ENABLE(mate-keybindings,
+ if test "x$use_gtk" = "xyes"; then
+   PKG_CHECK_MODULES(GTK_WINDOW_DECORATOR,
+ 		    xrender >= 0.8.4  \
++		    xcursor \
+ 		    gtk+-2.0 >= 2.8.0 \
+ 		    libwnck-1.0	      \
+ 		    pangocairo,
+--- a/gtk/window-decorator/gtk-window-decorator.c
++++ b/gtk/window-decorator/gtk-window-decorator.c
+@@ -30,6 +30,7 @@
+ #include <X11/cursorfont.h>
+ #include <X11/extensions/Xrender.h>
+ #include <X11/Xregion.h>
++#include <X11/Xcursor/Xcursor.h>
+ 
+ #include <gtk/gtk.h>
+ #include <gdk/gdkx.h>
+@@ -75,6 +76,14 @@
+ #include <marco-private/theme.h>
+ #endif
+ 
++#define MATE_MOUSE_DIR "/desktop/mate/peripherals/mouse"
++
++#define MATE_CURSOR_THEME_KEY		\
++    MATE_MOUSE_DIR "/cursor_theme"
++
++#define MATE_CURSOR_SIZE_KEY		\
++    MATE_MOUSE_DIR "/cursor_size"
++
+ #define MARCO_MATECONF_DIR "/apps/marco/general"
+ 
+ #define COMPIZ_USE_SYSTEM_FONT_KEY		    \
+@@ -138,6 +147,13 @@
+ #define WHEEL_ACTION_KEY   \
+     MATECONF_DIR "/mouse_wheel_action"
+ 
++#define COMPIZ_MATECONF_DIR2 "/apps/compiz/general/allscreens/options"
++#define COMPIZ_CURSOR_THEME_KEY          \
++    COMPIZ_MATECONF_DIR2 "/cursor_theme"
++
++#define COMPIZ_CURSOR_SIZE_KEY           \
++    COMPIZ_MATECONF_DIR2 "/cursor_size"
++
+ #define DBUS_DEST       "org.freedesktop.compiz"
+ #define DBUS_PATH       "/org/freedesktop/compiz/decoration/allscreens"
+ #define DBUS_INTERFACE  "org.freedesktop.compiz"
+@@ -6462,6 +6478,44 @@ button_layout_changed (MateConfClient *c
+ }
+ 
+ static void
++cursor_theme_changed (MateConfClient *client)
++{
++    gchar *theme;
++    gint size;
++
++    theme = mateconf_client_get_string(client, MATE_CURSOR_THEME_KEY, NULL);
++    size = mateconf_client_get_int(client, MATE_CURSOR_SIZE_KEY, NULL);
++
++    mateconf_client_set_string(client, COMPIZ_CURSOR_THEME_KEY, theme, NULL);
++
++    mateconf_client_set_int(client, COMPIZ_CURSOR_SIZE_KEY, size, NULL);
++
++    if (theme && strlen(theme))
++    {
++	gint i, j;
++	GdkDisplay *gdkdisplay = gdk_display_get_default ();
++	Display *xdisplay   = gdk_x11_display_get_xdisplay (gdkdisplay);
++
++
++	XcursorSetTheme (xdisplay, theme);
++	XcursorSetDefaultSize (xdisplay, size);
++
++	for (i = 0; i < 3; i++)
++	{
++	    for (j = 0; j < 3; j++)
++	    {
++		if (cursor[i][j].shape != XC_left_ptr)
++		{
++		    XFreeCursor (xdisplay, cursor[i][j].cursor);
++		    cursor[i][j].cursor =
++			XCreateFontCursor (xdisplay, cursor[i][j].shape);
++		}
++	    }
++	}
++    }
++}
++
++static void
+ value_changed (MateConfClient *client,
+ 	       const gchar *key,
+ 	       MateConfValue  *value,
+@@ -6539,6 +6593,11 @@ value_changed (MateConfClient *client,
+ 	if (theme_opacity_changed (client))
+ 	    changed = TRUE;
+     }
++    else if (strcmp (key, MATE_CURSOR_THEME_KEY) == 0 ||
++	     strcmp (key, MATE_CURSOR_SIZE_KEY) == 0)
++    {
++	cursor_theme_changed (client);
++    }
+ 
+     if (changed)
+ 	decorations_changed (data);
+@@ -6702,6 +6761,11 @@ init_settings (WnckScreen *screen)
+ 			  NULL);
+ 
+     mateconf_client_add_dir (mateconf,
++			  MATE_MOUSE_DIR,
++			  MATECONF_CLIENT_PRELOAD_ONELEVEL,
++			  NULL);
++
++    mateconf_client_add_dir (mateconf,
+ 			  COMPIZ_MATECONF_DIR1,
+ 			  MATECONF_CLIENT_PRELOAD_ONELEVEL,
+ 			  NULL);
+@@ -6710,6 +6774,9 @@ init_settings (WnckScreen *screen)
+ 		      "value_changed",
+ 		      G_CALLBACK (value_changed),
+ 		      screen);
++
++    cursor_theme_changed(mateconf);
++
+ #elif USE_DBUS_GLIB
+     DBusConnection *connection;
+     DBusMessage	   *reply;
+--- a/metadata/core.xml.in.in
++++ b/metadata/core.xml.in.in
+@@ -35,6 +35,18 @@
+ 		<min>0</min>
+ 		<max>10000</max>
+ 	    </option>
++	    <option name="cursor_theme" type="string">
++		<_short>Cursor theme</_short>
++		<_long>Cursor theme name</_long>
++		<default></default>
++	    </option>
++	    <option name="cursor_size" type="int">
++		<_short>Cursor size</_short>
++		<_long>Size of the cursor</_long>
++		<default>18</default>
++		<min>8</min>
++		<max>128</max>
++	    </option>
+ 	    <option name="ping_delay" type="int">
+ 		<_short>Ping Delay</_short>
+ 		<_long>Interval between ping messages</_long>
+--- a/src/display.c
++++ b/src/display.c
+@@ -41,6 +41,8 @@
+ #include <X11/extensions/Xcomposite.h>
+ #include <X11/extensions/Xrandr.h>
+ #include <X11/extensions/shape.h>
++#include <X11/Xcursor/Xcursor.h>
++#include <X11/cursorfont.h>
+ 
+ #include <compiz-core.h>
+ 
+@@ -474,6 +476,32 @@ shade (CompDisplay     *d,
+     return TRUE;
+ }
+ 
++static void
++compDisplaySetCursorTheme (CompDisplay *display)
++{
++    char *theme = display->opt[COMP_DISPLAY_OPTION_CURSOR_THEME].value.s;
++    int size = display->opt[COMP_DISPLAY_OPTION_CURSOR_SIZE].value.i;
++
++    if (theme && strlen(theme))
++    {
++	CompScreen *s;
++
++	XcursorSetTheme (display->display, theme);
++	XcursorSetDefaultSize (display->display, size);
++	for (s = display->screens; s; s = s->next)
++	{
++	    XFreeCursor (display->display, s->normalCursor);
++	    s->busyCursor = XCreateFontCursor (display->display, XC_watch);
++	    XFlush (display->display);
++
++	    XFreeCursor (display->display, s->normalCursor);
++	    s->normalCursor = XCreateFontCursor (display->display, XC_left_ptr);
++	    XDefineCursor (display->display, s->root, s->normalCursor);
++	    XFlush (display->display);
++	}
++    }
++}
++
+ const CompMetadataOptionInfo coreDisplayOptionInfo[COMP_DISPLAY_OPTION_NUM] = {
+     { "abi", "int", 0, 0, 0 },
+     { "active_plugins", "list", "<type>string</type>", 0, 0 },
+@@ -510,7 +538,9 @@ const CompMetadataOptionInfo coreDisplay
+     { "toggle_window_shaded_key", "key", 0, shade, 0 },
+     { "ignore_hints_when_maximized", "bool", 0, 0, 0 },
+     { "ping_delay", "int", "<min>1000</min>", 0, 0 },
+-    { "edge_delay", "int", "<min>0</min>", 0, 0 }
++    { "edge_delay", "int", "<min>0</min>", 0, 0 },
++    { "cursor_theme", "string", 0, 0, 0 },
++    { "cursor_size", "int", 0, 0, 0 }
+ };
+ 
+ CompOption *
+@@ -661,6 +691,20 @@ setDisplayOption (CompPlugin	  *plugin,
+ 	    return TRUE;
+ 	}
+ 	break;
++    case COMP_DISPLAY_OPTION_CURSOR_THEME:
++	if (compSetStringOption(o, value))
++	{
++	    compDisplaySetCursorTheme(display);
++	    return TRUE;
++	}
++	break;
++    case COMP_DISPLAY_OPTION_CURSOR_SIZE:
++	if (compSetIntOption(o, value))
++	{
++	    compDisplaySetCursorTheme(display);
++	    return TRUE;
++	}
++	break;
+     default:
+ 	if (compSetDisplayOption (display, o, value))
+ 	    return TRUE;
+--- a/include/compiz-core.h
++++ b/include/compiz-core.h
+@@ -776,7 +776,10 @@ removeFileWatch (CompFileWatchHandle han
+ #define COMP_DISPLAY_OPTION_IGNORE_HINTS_WHEN_MAXIMIZED      31
+ #define COMP_DISPLAY_OPTION_PING_DELAY			     32
+ #define COMP_DISPLAY_OPTION_EDGE_DELAY                       33
+-#define COMP_DISPLAY_OPTION_NUM				     34
++#define COMP_DISPLAY_OPTION_CURSOR_THEME                     34
++#define COMP_DISPLAY_OPTION_CURSOR_SIZE                      35
++#define COMP_DISPLAY_OPTION_NUM				     36
++
+ 
+ typedef void (*HandleEventProc) (CompDisplay *display,
+ 				 XEvent	     *event);
