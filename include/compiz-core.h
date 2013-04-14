@@ -219,6 +219,7 @@ extern Bool       useCow;
 extern Bool       noDetection;
 extern Bool	  useDesktopHints;
 extern Bool       onlyCurrentScreen;
+extern Bool       noFBO;
 
 extern char	**initialPlugins;
 extern int 	nInitialPlugins;
