@@ -197,6 +197,8 @@ glibInitDisplay (CompPlugin  *p,
 {
     GLibDisplay *gd;
 
+    dlopen ("libglib-2.0.so.0", RTLD_LAZY);
+
     if (!checkPluginABI ("core", CORE_ABIVERSION))
 	return FALSE;
 
