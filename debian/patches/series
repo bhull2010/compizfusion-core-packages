@@ -3,7 +3,6 @@
 ### Patches imported from the Debian compiz packages ###
 ### End of Debian-imported patches ###
 ### Patches imported from the ubuntu compiz packages ###
-017_always_unredirect_screensaver_on_nvidia.patch
 029_default_options.patch
 037_fullscreen_stacking_fixes.patch
 049-damage-report-non-empty.patch
