@@ -2,12 +2,7 @@
 
 function runCompiz() {
 	gtk-window-decorator &
-	if ( [ -e /usr/lib/compizconfig/backends/libmateconf.so ] || [ -e /usr/lib64/compizconfig/backends/libmateconf.so ] )
-        then
-                exec compiz --replace --ignore-desktop-hints ccp $@
-        else
-        	exec compiz --replace --ignore-desktop-hints glib mateconf matecompat $@
-        fi
+    exec compiz --replace --ignore-desktop-hints ccp $@
 }
 
 ISSW=`glxinfo | grep "Software Rasterizer" -c`
