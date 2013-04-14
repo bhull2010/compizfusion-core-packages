@@ -3,7 +3,7 @@
 
 #include <glib-object.h>
 
-#include "gnome-window-manager.h"
+#include "mate-window-manager.h"
 
 #define COMPIZ_WINDOW_MANAGER(obj)					\
     G_TYPE_CHECK_INSTANCE_CAST (obj, compiz_window_manager_get_type (), \
@@ -11,7 +11,7 @@
 
 #define COMPIZ_WINDOW_MANAGER_CLASS(klass)			       \
     G_TYPE_CHECK_CLASS_CAST (klass, compiz_window_manager_get_type (), \
-			     MetacityWindowManagerClass)
+			     MarcoWindowManagerClass)
 
 #define IS_COMPIZ_WINDOW_MANAGER(obj)					\
     G_TYPE_CHECK_INSTANCE_TYPE (obj, compiz_window_manager_get_type ())
@@ -22,12 +22,12 @@ typedef struct _CompizWindowManagerClass   CompizWindowManagerClass;
 typedef struct _CompizWindowManagerPrivate CompizWindowManagerPrivate;
 
 struct _CompizWindowManager {
-    GnomeWindowManager	       parent;
+    MateWindowManager	       parent;
     CompizWindowManagerPrivate *p;
 };
 
 struct _CompizWindowManagerClass {
-    GnomeWindowManagerClass klass;
+    MateWindowManagerClass klass;
 };
 
 GType

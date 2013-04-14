@@ -8,14 +8,14 @@ EXTRA_DIST =		    \
 	compiz.pc.in	    \
 	compiz-cube.pc.in   \
 	compiz-scale.pc.in  \
-	compiz-gconf.pc.in
+	compiz-mateconf.pc.in
 
 DISTCLEANFILES =	 \
 	po/stamp-it	 \
 	po/.intltool-merge-cache
 
-if USE_GCONF
-gconfdata = compiz-gconf.pc
+if USE_MATECONF
+mateconfdata = compiz-mateconf.pc
 endif
 
 if USE_KCONFIG
@@ -27,7 +27,7 @@ pkgconfig_DATA =	\
 	compiz.pc	\
 	compiz-cube.pc	\
 	compiz-scale.pc \
-	$(gconfdata)	\
+	$(mateconfdata)	\
 	$(kconfigdata)
 
 # Some custom targets to make it easier to release things.

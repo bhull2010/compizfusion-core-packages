@@ -1,7 +1,7 @@
 <compiz>
-    <plugin name="gconf">
-	<_short>GConf</_short>
-	<_long>GConf Control Backend</_long>
+    <plugin name="mateconf">
+	<_short>MateConf</_short>
+	<_long>MateConf Control Backend</_long>
 	<deps>
 	    <relation type="after">
 		<plugin>glib</plugin>

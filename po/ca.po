@@ -18,60 +18,60 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 1.1.0\n"
 
-#: ../gtk/gnome/50-compiz-desktop-key.xml.in.h:1
+#: ../gtk/mate/50-compiz-desktop-key.xml.in.h:1
 msgid "Desktop"
 msgstr "Escriptori"
 
-#: ../gtk/gnome/50-compiz-key.xml.in.h:1
+#: ../gtk/mate/50-compiz-key.xml.in.h:1
 #, fuzzy
 msgid "Window Management"
 msgstr "Menú de la finestra"
 
-#: ../gtk/gnome/compiz.desktop.in.h:1
+#: ../gtk/mate/compiz.desktop.in.h:1
 msgid "Compiz"
 msgstr "Compiz"
 
-#: ../gtk/gnome/compiz-window-manager.c:426 ../metadata/scale.xml.in.h:25
+#: ../gtk/mate/compiz-window-manager.c:426 ../metadata/scale.xml.in.h:25
 #: ../metadata/wobbly.xml.in.h:16
 msgid "None"
 msgstr "Cap"
 
-#: ../gtk/gnome/compiz-window-manager.c:427
+#: ../gtk/mate/compiz-window-manager.c:427
 #: ../gtk/window-decorator/gtk-window-decorator.c:4625
 #, fuzzy
 msgid "Shade"
 msgstr "Canvia la mida"
 
-#: ../gtk/gnome/compiz-window-manager.c:428 ../metadata/place.xml.in.h:9
+#: ../gtk/mate/compiz-window-manager.c:428 ../metadata/place.xml.in.h:9
 #, fuzzy
 msgid "Maximize"
 msgstr "Minimitzades"
 
-#: ../gtk/gnome/compiz-window-manager.c:429
+#: ../gtk/mate/compiz-window-manager.c:429
 #, fuzzy
 msgid "Maximize Horizontally"
 msgstr "Maximitza la finestra horitzontalment"
 
-#: ../gtk/gnome/compiz-window-manager.c:430
+#: ../gtk/mate/compiz-window-manager.c:430
 #, fuzzy
 msgid "Maximize Vertically"
 msgstr "Maximitza la finestra verticalment"
 
-#: ../gtk/gnome/compiz-window-manager.c:431
+#: ../gtk/mate/compiz-window-manager.c:431
 #, fuzzy
 msgid "Minimize"
 msgstr "Minimitzades"
 
-#: ../gtk/gnome/compiz-window-manager.c:432
+#: ../gtk/mate/compiz-window-manager.c:432
 #, fuzzy
 msgid "Raise"
 msgstr "Elevació automàtica"
 
-#: ../gtk/gnome/compiz-window-manager.c:433
+#: ../gtk/mate/compiz-window-manager.c:433
 msgid "Lower"
 msgstr ""
 
-#: ../gtk/gnome/compiz-window-manager.c:434
+#: ../gtk/mate/compiz-window-manager.c:434
 #: ../gtk/window-decorator/gtk-window-decorator.c:4606
 #: ../metadata/core.xml.in.in.h:100
 msgid "Window Menu"
@@ -90,44 +90,44 @@ msgstr "Velocitat de plegament"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:3
 #, fuzzy
-msgid "Metacity theme active window opacity"
+msgid "Marco theme active window opacity"
 msgstr "Redueix l'opacitat de la finestra"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:4
 #, fuzzy
-msgid "Metacity theme active window opacity shade"
+msgid "Marco theme active window opacity shade"
 msgstr "Maximitza la finestra activa horitzontalment"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:5
-msgid "Metacity theme opacity"
+msgid "Marco theme opacity"
 msgstr "Tema opacitat"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:6
-msgid "Metacity theme opacity shade"
+msgid "Marco theme opacity shade"
 msgstr "Tema opacitat ombra"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:7
-msgid "Opacity to use for active windows with metacity theme decorations"
+msgid "Opacity to use for active windows with marco theme decorations"
 msgstr ""
-"Opacitat d'utilitzar finestres actives amb el Metacity tema per decoracions"
+"Opacitat d'utilitzar finestres actives amb el Marco tema per decoracions"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:8
-msgid "Opacity to use for metacity theme decorations"
-msgstr "Opacitat d´utilitzar per Metacity tema per decoracions"
+msgid "Opacity to use for marco theme decorations"
+msgstr "Opacitat d´utilitzar per Marco tema per decoracions"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:9
 msgid ""
-"Shade active windows with metacity theme decorations from opaque to "
+"Shade active windows with marco theme decorations from opaque to "
 "translucent"
 msgstr ""
-"Finestres actives amb ombra i amb el tema Metacity per decoracions desde "
+"Finestres actives amb ombra i amb el tema Marco per decoracions desde "
 "opac al translucíd"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:10
 msgid ""
-"Shade windows with metacity theme decorations from opaque to translucent"
+"Shade windows with marco theme decorations from opaque to translucent"
 msgstr ""
-"Finestra amb ombra amb el tema Metacity per decoracions desde opac fins a "
+"Finestra amb ombra amb el tema Marco per decoracions desde opac fins a "
 "translucíd"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:11
@@ -139,12 +139,12 @@ msgid "Type of blur used for window decorations"
 msgstr "Tipus de blur utilizat en decoracions de finestres"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:13
-msgid "Use metacity theme"
-msgstr "Utilitzar el tema Metacity"
+msgid "Use marco theme"
+msgstr "Utilitzar el tema Marco"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:14
-msgid "Use metacity theme when drawing window decorations"
-msgstr "Utilitzar el tema Metacity quan dibuixes decoracions de finestres"
+msgid "Use marco theme when drawing window decorations"
+msgstr "Utilitzar el tema Marco quan dibuixes decoracions de finestres"
 
 #: ../gtk/window-decorator/gtk-window-decorator.c:4414
 #: ../metadata/core.xml.in.in.h:12
@@ -916,7 +916,7 @@ msgstr ""
 "Línia d'ordres que s'executarà a l'intèrpret d'ordres en invocar run_command%"
 "d"
 
-#: ../metadata/commands.xml.in.h:63 ../metadata/gnomecompat.xml.in.h:1
+#: ../metadata/commands.xml.in.h:63 ../metadata/matecompat.xml.in.h:1
 #, fuzzy
 msgid "Commands"
 msgstr "Ordre"
@@ -1842,12 +1842,12 @@ msgstr ""
 msgid "Userspace file system"
 msgstr ""
 
-#: ../metadata/gconf.xml.in.h:1
-msgid "GConf"
+#: ../metadata/mateconf.xml.in.h:1
+msgid "MateConf"
 msgstr ""
 
-#: ../metadata/gconf.xml.in.h:2
-msgid "GConf Control Backend"
+#: ../metadata/mateconf.xml.in.h:2
+msgid "MateConf Control Backend"
 msgstr ""
 
 #: ../metadata/glib.xml.in.h:1
@@ -1858,57 +1858,57 @@ msgstr ""
 msgid "GLib main loop support"
 msgstr ""
 
-#: ../metadata/gnomecompat.xml.in.h:2
-msgid "Gnome Compatibility"
+#: ../metadata/matecompat.xml.in.h:2
+msgid "Mate Compatibility"
 msgstr ""
 
-#: ../metadata/gnomecompat.xml.in.h:3
+#: ../metadata/matecompat.xml.in.h:3
 msgid "Open a terminal"
 msgstr ""
 
-#: ../metadata/gnomecompat.xml.in.h:4
-msgid "Options that keep Compiz compatible to the Gnome desktop environment"
+#: ../metadata/matecompat.xml.in.h:4
+msgid "Options that keep Compiz compatible to the Mate desktop environment"
 msgstr ""
 
-#: ../metadata/gnomecompat.xml.in.h:5
+#: ../metadata/matecompat.xml.in.h:5
 msgid "Run Dialog"
 msgstr "Diàleg d'execució"
 
-#: ../metadata/gnomecompat.xml.in.h:6
+#: ../metadata/matecompat.xml.in.h:6
 #, fuzzy
 msgid "Run terminal command"
 msgstr "Línia d'ordres de captura de pantalla"
 
-#: ../metadata/gnomecompat.xml.in.h:7
+#: ../metadata/matecompat.xml.in.h:7
 msgid "Screenshot command line"
 msgstr "Línia d'ordres de captura de pantalla"
 
-#: ../metadata/gnomecompat.xml.in.h:8
+#: ../metadata/matecompat.xml.in.h:8
 msgid "Show Main Menu"
 msgstr "Mostra el menú principal"
 
-#: ../metadata/gnomecompat.xml.in.h:9
+#: ../metadata/matecompat.xml.in.h:9
 msgid "Show Run Application dialog"
 msgstr "Mostra el diàleg d'execució de l'aplicació"
 
-#: ../metadata/gnomecompat.xml.in.h:10
+#: ../metadata/matecompat.xml.in.h:10
 msgid "Show the main menu"
 msgstr "Mostra el menú principal"
 
-#: ../metadata/gnomecompat.xml.in.h:11
+#: ../metadata/matecompat.xml.in.h:11
 msgid "Take a screenshot"
 msgstr "Fes una captura de pantalla"
 
-#: ../metadata/gnomecompat.xml.in.h:12
+#: ../metadata/matecompat.xml.in.h:12
 msgid "Take a screenshot of a window"
 msgstr "Fes una captura de pantalla d'una finestra"
 
-#: ../metadata/gnomecompat.xml.in.h:13
+#: ../metadata/matecompat.xml.in.h:13
 #, fuzzy
 msgid "Terminal command line"
 msgstr "Línia d'ordres de captura de pantalla"
 
-#: ../metadata/gnomecompat.xml.in.h:14
+#: ../metadata/matecompat.xml.in.h:14
 msgid "Window screenshot command line"
 msgstr "Línia d'ordres de captura de pantalla de finestra"
 

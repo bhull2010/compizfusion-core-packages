@@ -35,8 +35,8 @@
 #include <gdk/gdkx.h>
 #include <glib/gi18n.h>
 
-#ifdef USE_GCONF
-#include <gconf/gconf-client.h>
+#ifdef USE_MATECONF
+#include <mateconf/mateconf-client.h>
 #endif
 
 #ifdef USE_DBUS_GLIB
@@ -71,72 +71,72 @@
 #include <sys/types.h>
 #include <signal.h>
 
-#ifdef USE_METACITY
-#include <metacity-private/theme.h>
+#ifdef USE_MARCO
+#include <marco-private/theme.h>
 #endif
 
-#define METACITY_GCONF_DIR "/apps/metacity/general"
+#define MARCO_MATECONF_DIR "/apps/marco/general"
 
 #define COMPIZ_USE_SYSTEM_FONT_KEY		    \
-    METACITY_GCONF_DIR "/titlebar_uses_system_font"
+    MARCO_MATECONF_DIR "/titlebar_uses_system_font"
 
 #define COMPIZ_TITLEBAR_FONT_KEY	\
-    METACITY_GCONF_DIR "/titlebar_font"
+    MARCO_MATECONF_DIR "/titlebar_font"
 
 #define COMPIZ_DOUBLE_CLICK_TITLEBAR_KEY	       \
-    METACITY_GCONF_DIR "/action_double_click_titlebar"
+    MARCO_MATECONF_DIR "/action_double_click_titlebar"
 
 #define COMPIZ_MIDDLE_CLICK_TITLEBAR_KEY	       \
-    METACITY_GCONF_DIR "/action_middle_click_titlebar"
+    MARCO_MATECONF_DIR "/action_middle_click_titlebar"
 
 #define COMPIZ_RIGHT_CLICK_TITLEBAR_KEY	       \
-    METACITY_GCONF_DIR "/action_right_click_titlebar"
+    MARCO_MATECONF_DIR "/action_right_click_titlebar"
 
-#define COMPIZ_GCONF_DIR1 "/apps/compiz/plugins/decoration/allscreens/options"
+#define COMPIZ_MATECONF_DIR1 "/apps/compiz/plugins/decoration/allscreens/options"
 
 #define COMPIZ_SHADOW_RADIUS_KEY \
-    COMPIZ_GCONF_DIR1 "/shadow_radius"
+    COMPIZ_MATECONF_DIR1 "/shadow_radius"
 
 #define COMPIZ_SHADOW_OPACITY_KEY \
-    COMPIZ_GCONF_DIR1 "/shadow_opacity"
+    COMPIZ_MATECONF_DIR1 "/shadow_opacity"
 
 #define COMPIZ_SHADOW_COLOR_KEY \
-    COMPIZ_GCONF_DIR1 "/shadow_color"
+    COMPIZ_MATECONF_DIR1 "/shadow_color"
 
 #define COMPIZ_SHADOW_OFFSET_X_KEY \
-    COMPIZ_GCONF_DIR1 "/shadow_x_offset"
+    COMPIZ_MATECONF_DIR1 "/shadow_x_offset"
 
 #define COMPIZ_SHADOW_OFFSET_Y_KEY \
-    COMPIZ_GCONF_DIR1 "/shadow_y_offset"
+    COMPIZ_MATECONF_DIR1 "/shadow_y_offset"
 
 #define META_THEME_KEY		\
-    METACITY_GCONF_DIR "/theme"
+    MARCO_MATECONF_DIR "/theme"
 
 #define META_BUTTON_LAYOUT_KEY		\
-    METACITY_GCONF_DIR "/button_layout"
+    MARCO_MATECONF_DIR "/button_layout"
 
-#define GCONF_DIR "/apps/gwd"
+#define MATECONF_DIR "/apps/gwd"
 
 #define USE_META_THEME_KEY	    \
-    GCONF_DIR "/use_metacity_theme"
+    MATECONF_DIR "/use_marco_theme"
 
 #define META_THEME_OPACITY_KEY	        \
-    GCONF_DIR "/metacity_theme_opacity"
+    MATECONF_DIR "/marco_theme_opacity"
 
 #define META_THEME_SHADE_OPACITY_KEY	      \
-    GCONF_DIR "/metacity_theme_shade_opacity"
+    MATECONF_DIR "/marco_theme_shade_opacity"
 
 #define META_THEME_ACTIVE_OPACITY_KEY	       \
-    GCONF_DIR "/metacity_theme_active_opacity"
+    MATECONF_DIR "/marco_theme_active_opacity"
 
 #define META_THEME_ACTIVE_SHADE_OPACITY_KEY          \
-    GCONF_DIR "/metacity_theme_active_shade_opacity"
+    MATECONF_DIR "/marco_theme_active_shade_opacity"
 
 #define BLUR_TYPE_KEY	   \
-    GCONF_DIR "/blur_type"
+    MATECONF_DIR "/blur_type"
 
 #define WHEEL_ACTION_KEY   \
-    GCONF_DIR "/mouse_wheel_action"
+    MATECONF_DIR "/mouse_wheel_action"
 
 #define DBUS_DEST       "org.freedesktop.compiz"
 #define DBUS_PATH       "/org/freedesktop/compiz/decoration/allscreens"
@@ -275,7 +275,7 @@ static gushort shadow_color[3] = {
 static gint    shadow_offset_x = SHADOW_OFFSET_X;
 static gint    shadow_offset_y = SHADOW_OFFSET_Y;
 
-#ifdef USE_METACITY
+#ifdef USE_MARCO
 static double   meta_opacity              = META_OPACITY;
 static gboolean meta_shade_opacity        = META_SHADE_OPACITY;
 static double   meta_active_opacity       = META_ACTIVE_OPACITY;
@@ -1310,7 +1310,7 @@ draw_window_decoration (decor_t *d)
     }
 }
 
-#ifdef USE_METACITY
+#ifdef USE_MARCO
 static void
 decor_update_meta_window_property (decor_t	  *d,
 				   MetaTheme	  *theme,
@@ -1397,7 +1397,7 @@ meta_get_corner_radius (const MetaFrameGeometry *fgeom,
 			int			*bottom_right_radius)
 {
 
-#ifdef HAVE_METACITY_2_17_0
+#ifdef HAVE_MARCO_2_17_0
     *top_left_radius     = fgeom->top_left_corner_rounded_radius;
     *top_right_radius    = fgeom->top_right_corner_rounded_radius;
     *bottom_left_radius  = fgeom->bottom_left_corner_rounded_radius;
@@ -1618,7 +1618,7 @@ meta_function_to_type (MetaButtonFunction function)
     case META_BUTTON_FUNCTION_CLOSE:
 	return META_BUTTON_TYPE_CLOSE;
 
-#ifdef HAVE_METACITY_2_17_0
+#ifdef HAVE_MARCO_2_17_0
     case META_BUTTON_FUNCTION_SHADE:
 	return META_BUTTON_TYPE_SHADE;
     case META_BUTTON_FUNCTION_ABOVE:
@@ -1676,7 +1676,7 @@ meta_button_state_for_button_type (decor_t	  *d,
     case META_BUTTON_TYPE_MENU:
 	return meta_button_state (d->button_states[BUTTON_MENU]);
 
-#ifdef HAVE_METACITY_2_17_0
+#ifdef HAVE_MARCO_2_17_0
     case META_BUTTON_TYPE_SHADE:
 	return meta_button_state (d->button_states[BUTTON_SHADE]);
     case META_BUTTON_TYPE_ABOVE:
@@ -1777,7 +1777,7 @@ meta_get_decoration_geometry (decor_t		*d,
     if (d->state & WNCK_WINDOW_STATE_SHADED)
 	*flags |= META_FRAME_SHADED;
 
-#ifdef HAVE_METACITY_2_17_0
+#ifdef HAVE_MARCO_2_17_0
     if (d->state & WNCK_WINDOW_STATE_ABOVE)
 	*flags |= META_FRAME_ABOVE;
 #endif
@@ -1877,7 +1877,7 @@ meta_draw_window_decoration (decor_t *d)
     bg_color = style->bg[GTK_STATE_NORMAL];
     bg_alpha = 1.0;
 
-#ifdef HAVE_METACITY_2_17_0
+#ifdef HAVE_MARCO_2_17_0
     if (frame_style->window_background_color)
     {
 	meta_color_spec_render (frame_style->window_background_color,
@@ -2760,7 +2760,7 @@ get_button_position (decor_t *d,
     return TRUE;
 }
 
-#ifdef USE_METACITY
+#ifdef USE_MARCO
 
 #define TOP_RESIZE_HEIGHT 2
 #define RESIZE_EXTENDS 15
@@ -2914,7 +2914,7 @@ meta_get_button_position (decor_t *d,
     MetaTheme	      *theme;
     GdkRectangle      clip;
 
-#ifdef HAVE_METACITY_2_15_21
+#ifdef HAVE_MARCO_2_15_21
     MetaButtonSpace   *space;
 #else
     GdkRectangle      *space;
@@ -2959,7 +2959,7 @@ meta_get_button_position (decor_t *d,
 	space = &fgeom.close_rect;
 	break;
 
-#if defined (HAVE_METACITY_2_17_0) && defined (HAVE_LIBWNCK_2_18_1)
+#if defined (HAVE_MARCO_2_17_0) && defined (HAVE_LIBWNCK_2_18_1)
     case BUTTON_SHADE:
 	if (!meta_button_present (&button_layout, META_BUTTON_FUNCTION_SHADE))
 	    return FALSE;
@@ -3002,7 +3002,7 @@ meta_get_button_position (decor_t *d,
 	return FALSE;
     }
 
-#ifdef HAVE_METACITY_2_15_21
+#ifdef HAVE_MARCO_2_15_21
     if (!space->clickable.width && !space->clickable.height)
 	return FALSE;
 
@@ -3357,7 +3357,7 @@ calc_decoration_size (decor_t *d,
     return FALSE;
 }
 
-#ifdef USE_METACITY
+#ifdef USE_MARCO
 
 static void
 meta_calc_button_size (decor_t *d)
@@ -5744,13 +5744,13 @@ get_titlebar_font (void)
 	return titlebar_font;
 }
 
-#ifdef USE_GCONF
+#ifdef USE_MATECONF
 static void
-titlebar_font_changed (GConfClient *client)
+titlebar_font_changed (MateConfClient *client)
 {
     gchar *str;
 
-    str = gconf_client_get_string (client,
+    str = mateconf_client_get_string (client,
 				   COMPIZ_TITLEBAR_FONT_KEY,
 				   NULL);
     if (!str)
@@ -5765,7 +5765,7 @@ titlebar_font_changed (GConfClient *client)
 }
 
 static void
-titlebar_click_action_changed (GConfClient *client,
+titlebar_click_action_changed (MateConfClient *client,
 			       const gchar *key,
 			       int         *action_value,
 			       int          default_value)
@@ -5774,7 +5774,7 @@ titlebar_click_action_changed (GConfClient *client,
 
     *action_value = default_value;
 
-    action = gconf_client_get_string (client, key, NULL);
+    action = mateconf_client_get_string (client, key, NULL);
     if (action)
     {
 	if (strcmp (action, "toggle_shade") == 0)
@@ -5801,13 +5801,13 @@ titlebar_click_action_changed (GConfClient *client,
 }
 
 static void
-wheel_action_changed (GConfClient *client)
+wheel_action_changed (MateConfClient *client)
 {
     gchar *action;
 
     wheel_action = WHEEL_ACTION_DEFAULT;
 
-    action = gconf_client_get_string (client, WHEEL_ACTION_KEY, NULL);
+    action = mateconf_client_get_string (client, WHEEL_ACTION_KEY, NULL);
     if (action)
     {
 	if (strcmp (action, "shade") == 0)
@@ -5820,7 +5820,7 @@ wheel_action_changed (GConfClient *client)
 }
 #endif
 
-#ifdef USE_METACITY
+#ifdef USE_MARCO
 static MetaButtonFunction
 meta_button_function_from_string (const char *str)
 {
@@ -5833,7 +5833,7 @@ meta_button_function_from_string (const char *str)
     else if (strcmp (str, "close") == 0)
 	return META_BUTTON_FUNCTION_CLOSE;
 
-#ifdef HAVE_METACITY_2_17_0
+#ifdef HAVE_MARCO_2_17_0
     else if (strcmp (str, "shade") == 0)
 	return META_BUTTON_FUNCTION_SHADE;
     else if (strcmp (str, "above") == 0)
@@ -5857,7 +5857,7 @@ meta_button_opposite_function (MetaButtonFunction ofwhat)
 {
     switch (ofwhat)
     {
-#ifdef HAVE_METACITY_2_17_0
+#ifdef HAVE_MARCO_2_17_0
     case META_BUTTON_FUNCTION_SHADE:
 	return META_BUTTON_FUNCTION_UNSHADE;
     case META_BUTTON_FUNCTION_UNSHADE:
@@ -5888,7 +5888,7 @@ meta_initialize_button_layout (MetaButtonLayout *layout)
     {
 	layout->left_buttons[i] = META_BUTTON_FUNCTION_LAST;
 	layout->right_buttons[i] = META_BUTTON_FUNCTION_LAST;
-#ifdef HAVE_METACITY_2_23_2
+#ifdef HAVE_MARCO_2_23_2
 	layout->left_buttons_has_spacer[i] = FALSE;
 	layout->right_buttons_has_spacer[i] = FALSE;
 #endif
@@ -5922,7 +5922,7 @@ meta_update_button_layout (const char *value)
 	while (buttons[b] != NULL)
 	{
 	    f = meta_button_function_from_string (buttons[b]);
-#ifdef HAVE_METACITY_2_23_2
+#ifdef HAVE_MARCO_2_23_2
 	    if (i > 0 && strcmp("spacer", buttons[b]) == 0)
             {
 	       new_layout.left_buttons_has_spacer[i - 1] = TRUE;
@@ -5969,7 +5969,7 @@ meta_update_button_layout (const char *value)
 	    while (buttons[b] != NULL)
 	    {
 	       f = meta_button_function_from_string (buttons[b]);
-#ifdef HAVE_METACITY_2_23_2
+#ifdef HAVE_MARCO_2_23_2
 	       if (i > 0 && strcmp("spacer", buttons[b]) == 0)
 	       {
 		  new_layout.right_buttons_has_spacer[i - 1] = TRUE;
@@ -6022,7 +6022,7 @@ meta_update_button_layout (const char *value)
 	for (j = 0; j < i; j++)
 	{
 	    rtl_layout.right_buttons[j] = new_layout.left_buttons[i - j - 1];
-#ifdef HAVE_METACITY_2_23_2
+#ifdef HAVE_MARCO_2_23_2
 	    if (j == 0)
 		rtl_layout.right_buttons_has_spacer[i - 1] =
 		    new_layout.left_buttons_has_spacer[i - j - 1];
@@ -6039,7 +6039,7 @@ meta_update_button_layout (const char *value)
 	for (j = 0; j < i; j++)
 	{
 	    rtl_layout.left_buttons[j] = new_layout.right_buttons[i - j - 1];
-#ifdef HAVE_METACITY_2_23_2
+#ifdef HAVE_MARCO_2_23_2
 	    if (j == 0)
 		rtl_layout.left_buttons_has_spacer[i - 1] =
 		    new_layout.right_buttons_has_spacer[i - j - 1];
@@ -6065,7 +6065,7 @@ update_border_extents (gint text_height)
 	(text_height < 17) ? 17 : text_height;
 }
 
-#ifdef USE_METACITY
+#ifdef USE_MARCO
 static void
 meta_update_border_extents (gint text_height)
 {
@@ -6160,7 +6160,7 @@ decorations_changed (WnckScreen *screen)
 	if (d->decorated)
 	{
 
-#ifdef USE_METACITY
+#ifdef USE_MARCO
 	    if (d->draw == draw_window_decoration ||
 		d->draw == meta_draw_window_decoration)
 		d->draw = theme_draw_window_decoration;
@@ -6192,16 +6192,16 @@ style_changed (GtkWidget *widget)
     decorations_changed (screen);
 }
 
-#ifdef USE_GCONF
+#ifdef USE_MATECONF
 static gboolean
-shadow_settings_changed (GConfClient *client)
+shadow_settings_changed (MateConfClient *client)
 {
     double   radius, opacity;
     int      offset;
     gchar    *color;
     gboolean changed = FALSE;
 
-    radius = gconf_client_get_float (client,
+    radius = mateconf_client_get_float (client,
 				     COMPIZ_SHADOW_RADIUS_KEY,
 				     NULL);
     radius = MAX (0.0, MIN (radius, 48.0));
@@ -6211,7 +6211,7 @@ shadow_settings_changed (GConfClient *client)
 	changed = TRUE;
     }
 
-    opacity = gconf_client_get_float (client,
+    opacity = mateconf_client_get_float (client,
 				      COMPIZ_SHADOW_OPACITY_KEY,
 				      NULL);
     opacity = MAX (0.0, MIN (opacity, 6.0));
@@ -6221,7 +6221,7 @@ shadow_settings_changed (GConfClient *client)
 	changed = TRUE;
     }
 
-    color = gconf_client_get_string (client,
+    color = mateconf_client_get_string (client,
 				     COMPIZ_SHADOW_COLOR_KEY,
 				     NULL);
     if (color)
@@ -6239,7 +6239,7 @@ shadow_settings_changed (GConfClient *client)
 	g_free (color);
     }
 
-    offset = gconf_client_get_int (client,
+    offset = mateconf_client_get_int (client,
 				   COMPIZ_SHADOW_OFFSET_X_KEY,
 				   NULL);
     offset = MAX (-16, MIN (offset, 16));
@@ -6249,7 +6249,7 @@ shadow_settings_changed (GConfClient *client)
 	changed = TRUE;
     }
 
-    offset = gconf_client_get_int (client,
+    offset = mateconf_client_get_int (client,
 				   COMPIZ_SHADOW_OFFSET_Y_KEY,
 				   NULL);
     offset = MAX (-16, MIN (offset, 16));
@@ -6263,7 +6263,7 @@ shadow_settings_changed (GConfClient *client)
 }
 
 static gboolean
-blur_settings_changed (GConfClient *client)
+blur_settings_changed (MateConfClient *client)
 {
     gchar *type;
     int   new_type = blur_type;
@@ -6271,7 +6271,7 @@ blur_settings_changed (GConfClient *client)
     if (cmdline_options & CMDLINE_BLUR)
 	return FALSE;
 
-    type = gconf_client_get_string (client,
+    type = mateconf_client_get_string (client,
 				    BLUR_TYPE_KEY,
 				    NULL);
 
@@ -6297,16 +6297,16 @@ blur_settings_changed (GConfClient *client)
 }
 
 static gboolean
-theme_changed (GConfClient *client)
+theme_changed (MateConfClient *client)
 {
 
-#ifdef USE_METACITY
+#ifdef USE_MARCO
     gboolean use_meta_theme;
 
     if (cmdline_options & CMDLINE_THEME)
 	return FALSE;
 
-    use_meta_theme = gconf_client_get_bool (client,
+    use_meta_theme = mateconf_client_get_bool (client,
 					    USE_META_THEME_KEY,
 					    NULL);
 
@@ -6314,7 +6314,7 @@ theme_changed (GConfClient *client)
     {
 	gchar *theme;
 
-	theme = gconf_client_get_string (client,
+	theme = mateconf_client_get_string (client,
 					 META_THEME_KEY,
 					 NULL);
 
@@ -6363,14 +6363,14 @@ theme_changed (GConfClient *client)
 }
 
 static gboolean
-theme_opacity_changed (GConfClient *client)
+theme_opacity_changed (MateConfClient *client)
 {
 
-#ifdef USE_METACITY
+#ifdef USE_MARCO
     gboolean shade_opacity, changed = FALSE;
     gdouble  opacity;
 
-    opacity = gconf_client_get_float (client,
+    opacity = mateconf_client_get_float (client,
 				      META_THEME_OPACITY_KEY,
 				      NULL);
 
@@ -6383,7 +6383,7 @@ theme_opacity_changed (GConfClient *client)
 
     if (opacity < 1.0)
     {
-	shade_opacity = gconf_client_get_bool (client,
+	shade_opacity = mateconf_client_get_bool (client,
 					       META_THEME_SHADE_OPACITY_KEY,
 					       NULL);
 
@@ -6395,7 +6395,7 @@ theme_opacity_changed (GConfClient *client)
 	}
     }
 
-    opacity = gconf_client_get_float (client,
+    opacity = mateconf_client_get_float (client,
 				      META_THEME_ACTIVE_OPACITY_KEY,
 				      NULL);
 
@@ -6409,7 +6409,7 @@ theme_opacity_changed (GConfClient *client)
     if (opacity < 1.0)
     {
 	shade_opacity =
-	    gconf_client_get_bool (client,
+	    mateconf_client_get_bool (client,
 				   META_THEME_ACTIVE_SHADE_OPACITY_KEY,
 				   NULL);
 
@@ -6429,13 +6429,13 @@ theme_opacity_changed (GConfClient *client)
 }
 
 static gboolean
-button_layout_changed (GConfClient *client)
+button_layout_changed (MateConfClient *client)
 {
 
-#ifdef USE_METACITY
+#ifdef USE_MARCO
     gchar *button_layout;
 
-    button_layout = gconf_client_get_string (client,
+    button_layout = mateconf_client_get_string (client,
 					     META_BUTTON_LAYOUT_KEY,
 					     NULL);
 
@@ -6461,16 +6461,16 @@ button_layout_changed (GConfClient *client)
 }
 
 static void
-value_changed (GConfClient *client,
+value_changed (MateConfClient *client,
 	       const gchar *key,
-	       GConfValue  *value,
+	       MateConfValue  *value,
 	       void        *data)
 {
     gboolean changed = FALSE;
 
     if (strcmp (key, COMPIZ_USE_SYSTEM_FONT_KEY) == 0)
     {
-	if (gconf_client_get_bool (client,
+	if (mateconf_client_get_bool (client,
 				   COMPIZ_USE_SYSTEM_FONT_KEY,
 				   NULL) != use_system_font)
 	{
@@ -6685,27 +6685,27 @@ init_settings (WnckScreen *screen)
     GdkColormap	   *colormap;
     AtkObject	   *switcher_label_obj;
 
-#ifdef USE_GCONF
-    GConfClient	   *gconf;
+#ifdef USE_MATECONF
+    MateConfClient	   *mateconf;
 
-    gconf = gconf_client_get_default ();
+    mateconf = mateconf_client_get_default ();
 
-    gconf_client_add_dir (gconf,
-			  GCONF_DIR,
-			  GCONF_CLIENT_PRELOAD_ONELEVEL,
+    mateconf_client_add_dir (mateconf,
+			  MATECONF_DIR,
+			  MATECONF_CLIENT_PRELOAD_ONELEVEL,
 			  NULL);
 
-    gconf_client_add_dir (gconf,
-			  METACITY_GCONF_DIR,
-			  GCONF_CLIENT_PRELOAD_ONELEVEL,
+    mateconf_client_add_dir (mateconf,
+			  MARCO_MATECONF_DIR,
+			  MATECONF_CLIENT_PRELOAD_ONELEVEL,
 			  NULL);
 
-    gconf_client_add_dir (gconf,
-			  COMPIZ_GCONF_DIR1,
-			  GCONF_CLIENT_PRELOAD_ONELEVEL,
+    mateconf_client_add_dir (mateconf,
+			  COMPIZ_MATECONF_DIR1,
+			  MATECONF_CLIENT_PRELOAD_ONELEVEL,
 			  NULL);
 
-    g_signal_connect (G_OBJECT (gconf),
+    g_signal_connect (G_OBJECT (mateconf),
 		      "value_changed",
 		      G_CALLBACK (value_changed),
 		      screen);
@@ -6829,39 +6829,39 @@ init_settings (WnckScreen *screen)
 
     pango_context = gtk_widget_create_pango_context (style_window);
 
-#ifdef USE_GCONF
-    use_system_font = gconf_client_get_bool (gconf,
+#ifdef USE_MATECONF
+    use_system_font = mateconf_client_get_bool (mateconf,
 					     COMPIZ_USE_SYSTEM_FONT_KEY,
 					     NULL);
-    theme_changed (gconf);
-    theme_opacity_changed (gconf);
-    button_layout_changed (gconf);
+    theme_changed (mateconf);
+    theme_opacity_changed (mateconf);
+    button_layout_changed (mateconf);
 #endif
 
     update_style (style_window);
 
-#ifdef USE_GCONF
-    titlebar_font_changed (gconf);
+#ifdef USE_MATECONF
+    titlebar_font_changed (mateconf);
 #endif
 
     update_titlebar_font ();
 
-#ifdef USE_GCONF
-    titlebar_click_action_changed (gconf,
+#ifdef USE_MATECONF
+    titlebar_click_action_changed (mateconf,
 				   COMPIZ_DOUBLE_CLICK_TITLEBAR_KEY,
 				   &double_click_action,
 				   DOUBLE_CLICK_ACTION_DEFAULT);
-    titlebar_click_action_changed (gconf,
+    titlebar_click_action_changed (mateconf,
 				   COMPIZ_MIDDLE_CLICK_TITLEBAR_KEY,
 				   &middle_click_action,
 				   MIDDLE_CLICK_ACTION_DEFAULT);
-    titlebar_click_action_changed (gconf,
+    titlebar_click_action_changed (mateconf,
 				   COMPIZ_RIGHT_CLICK_TITLEBAR_KEY,
 				   &right_click_action,
 				   RIGHT_CLICK_ACTION_DEFAULT);
-    wheel_action_changed (gconf);
-    shadow_settings_changed (gconf);
-    blur_settings_changed (gconf);
+    wheel_action_changed (mateconf);
+    shadow_settings_changed (mateconf);
+    blur_settings_changed (mateconf);
 #endif
 
     (*theme_update_border_extents) (text_height);
@@ -6881,7 +6881,7 @@ main (int argc, char *argv[])
     gint       i, j, status;
     gboolean   replace = FALSE;
 
-#ifdef USE_METACITY
+#ifdef USE_MARCO
     char       *meta_theme = NULL;
 #endif
 
@@ -6915,7 +6915,7 @@ main (int argc, char *argv[])
 	    cmdline_options |= CMDLINE_BLUR;
 	}
 
-#ifdef USE_METACITY
+#ifdef USE_MARCO
 	else if (strcmp (argv[i], "--opacity") == 0)
 	{
 	    if (argc > ++i)
@@ -6938,7 +6938,7 @@ main (int argc, char *argv[])
 	    meta_active_shade_opacity = FALSE;
 	    cmdline_options |= CMDLINE_ACTIVE_OPACITY_SHADE;
 	}
-	else if (strcmp (argv[i], "--metacity-theme") == 0)
+	else if (strcmp (argv[i], "--marco-theme") == 0)
 	{
 	    if (argc > ++i)
 		meta_theme = argv[i];
@@ -6953,12 +6953,12 @@ main (int argc, char *argv[])
 		     "[--replace] "
 		     "[--blur none|titlebar|all] "
 
-#ifdef USE_METACITY
+#ifdef USE_MARCO
 		     "[--opacity OPACITY] "
 		     "[--no-opacity-shade] "
 		     "[--active-opacity OPACITY] "
 		     "[--no-active-opacity-shade] "
-		     "[--metacity-theme THEME] "
+		     "[--marco-theme THEME] "
 #endif
 
 		     "[--help]"
@@ -6974,7 +6974,7 @@ main (int argc, char *argv[])
     theme_get_event_window_position = get_event_window_position;
     theme_get_button_position       = get_button_position;
 
-#ifdef USE_METACITY
+#ifdef USE_MARCO
     if (meta_theme)
     {
 	meta_theme_set_current (meta_theme, TRUE);

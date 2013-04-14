@@ -31,39 +31,39 @@
 
 #include <glib.h>
 #include <glib/gprintf.h>
-#include <gconf/gconf-client.h>
+#include <mateconf/mateconf-client.h>
 
 #include <compiz-core.h>
 
-static CompMetadata gconfMetadata;
+static CompMetadata mateconfMetadata;
 
 #define APP_NAME "compiz"
 
-/* From gconf-internal.h. Bleah. */
-int gconf_value_compare (const GConfValue *value_a,
-			 const GConfValue *value_b);
+/* From mateconf-internal.h. Bleah. */
+int mateconf_value_compare (const MateConfValue *value_a,
+			 const MateConfValue *value_b);
 
 static int corePrivateIndex;
 
-typedef struct _GConfCore {
-    GConfClient *client;
+typedef struct _MateConfCore {
+    MateConfClient *client;
     guint	cnxn;
 
     CompTimeoutHandle reloadHandle;
 
     InitPluginForObjectProc initPluginForObject;
     SetOptionForPluginProc  setOptionForPlugin;
-} GConfCore;
+} MateConfCore;
 
-#define GET_GCONF_CORE(c)				     \
-    ((GConfCore *) (c)->base.privates[corePrivateIndex].ptr)
+#define GET_MATECONF_CORE(c)				     \
+    ((MateConfCore *) (c)->base.privates[corePrivateIndex].ptr)
 
-#define GCONF_CORE(c)		       \
-    GConfCore *gc = GET_GCONF_CORE (c)
+#define MATECONF_CORE(c)		       \
+    MateConfCore *gc = GET_MATECONF_CORE (c)
 
 
 static gchar *
-gconfGetKey (CompObject  *object,
+mateconfGetKey (CompObject  *object,
 	     const gchar *plugin,
 	     const gchar *option)
 {
@@ -95,57 +95,57 @@ gconfGetKey (CompObject  *object,
     return key;
 }
 
-static GConfValueType
-gconfTypeFromCompType (CompOptionType type)
+static MateConfValueType
+mateconfTypeFromCompType (CompOptionType type)
 {
     switch (type) {
     case CompOptionTypeBool:
     case CompOptionTypeBell:
-	return GCONF_VALUE_BOOL;
+	return MATECONF_VALUE_BOOL;
     case CompOptionTypeInt:
-	return GCONF_VALUE_INT;
+	return MATECONF_VALUE_INT;
     case CompOptionTypeFloat:
-	return GCONF_VALUE_FLOAT;
+	return MATECONF_VALUE_FLOAT;
     case CompOptionTypeString:
     case CompOptionTypeColor:
     case CompOptionTypeKey:
     case CompOptionTypeButton:
     case CompOptionTypeEdge:
     case CompOptionTypeMatch:
-	return GCONF_VALUE_STRING;
+	return MATECONF_VALUE_STRING;
     case CompOptionTypeList:
-	return GCONF_VALUE_LIST;
+	return MATECONF_VALUE_LIST;
     default:
 	break;
     }
 
-    return GCONF_VALUE_INVALID;
+    return MATECONF_VALUE_INVALID;
 }
 
 static void
-gconfSetValue (CompObject      *object,
+mateconfSetValue (CompObject      *object,
 	       CompOptionValue *value,
 	       CompOptionType  type,
-	       GConfValue      *gvalue)
+	       MateConfValue      *gvalue)
 {
     switch (type) {
     case CompOptionTypeBool:
-	gconf_value_set_bool (gvalue, value->b);
+	mateconf_value_set_bool (gvalue, value->b);
 	break;
     case CompOptionTypeInt:
-	gconf_value_set_int (gvalue, value->i);
+	mateconf_value_set_int (gvalue, value->i);
 	break;
     case CompOptionTypeFloat:
-	gconf_value_set_float (gvalue, value->f);
+	mateconf_value_set_float (gvalue, value->f);
 	break;
     case CompOptionTypeString:
-	gconf_value_set_string (gvalue, value->s);
+	mateconf_value_set_string (gvalue, value->s);
 	break;
     case CompOptionTypeColor: {
 	gchar *color;
 
 	color = colorToString (value->c);
-	gconf_value_set_string (gvalue, color);
+	mateconf_value_set_string (gvalue, color);
 
 	free (color);
     } break;
@@ -159,7 +159,7 @@ gconfSetValue (CompObject      *object,
 	    return;
 
 	action = keyActionToString (GET_CORE_DISPLAY (object), &value->action);
-	gconf_value_set_string (gvalue, action);
+	mateconf_value_set_string (gvalue, action);
 
 	free (action);
     } break;
@@ -174,7 +174,7 @@ gconfSetValue (CompObject      *object,
 
 	action = buttonActionToString (GET_CORE_DISPLAY (object),
 				       &value->action);
-	gconf_value_set_string (gvalue, action);
+	mateconf_value_set_string (gvalue, action);
 
 	free (action);
     } break;
@@ -182,18 +182,18 @@ gconfSetValue (CompObject      *object,
 	gchar *edge;
 
 	edge = edgeMaskToString (value->action.edgeMask);
-	gconf_value_set_string (gvalue, edge);
+	mateconf_value_set_string (gvalue, edge);
 
 	free (edge);
     } break;
     case CompOptionTypeBell:
-	gconf_value_set_bool (gvalue, value->action.bell);
+	mateconf_value_set_bool (gvalue, value->action.bell);
 	break;
     case CompOptionTypeMatch: {
 	gchar *match;
 
 	match = matchToString (&value->match);
-	gconf_value_set_string (gvalue, match);
+	mateconf_value_set_string (gvalue, match);
 
 	free (match);
     } break;
@@ -203,98 +203,98 @@ gconfSetValue (CompObject      *object,
 }
 
 static void
-gconfSetOption (CompObject  *object,
+mateconfSetOption (CompObject  *object,
 		CompOption  *o,
 		const gchar *plugin)
 {
-    GConfValueType type = gconfTypeFromCompType (o->type);
-    GConfValue     *gvalue, *existingValue = NULL;
+    MateConfValueType type = mateconfTypeFromCompType (o->type);
+    MateConfValue     *gvalue, *existingValue = NULL;
     gchar          *key;
 
-    GCONF_CORE (&core);
+    MATECONF_CORE (&core);
 
-    if (type == GCONF_VALUE_INVALID)
+    if (type == MATECONF_VALUE_INVALID)
 	return;
 
-    key = gconfGetKey (object, plugin, o->name);
+    key = mateconfGetKey (object, plugin, o->name);
 
-    existingValue = gconf_client_get (gc->client, key, NULL);
-    gvalue = gconf_value_new (type);
+    existingValue = mateconf_client_get (gc->client, key, NULL);
+    gvalue = mateconf_value_new (type);
 
     if (o->type == CompOptionTypeList)
     {
 	GSList     *node, *list = NULL;
-	GConfValue *gv;
+	MateConfValue *gv;
 	int	   i;
 
-	type = gconfTypeFromCompType (o->value.list.type);
+	type = mateconfTypeFromCompType (o->value.list.type);
 
 	for (i = 0; i < o->value.list.nValue; i++)
 	{
-	    gv = gconf_value_new (type);
-	    gconfSetValue (object, &o->value.list.value[i],
+	    gv = mateconf_value_new (type);
+	    mateconfSetValue (object, &o->value.list.value[i],
 			   o->value.list.type, gv);
 	    list = g_slist_append (list, gv);
 	}
 
-	gconf_value_set_list_type (gvalue, type);
-	gconf_value_set_list (gvalue, list);
+	mateconf_value_set_list_type (gvalue, type);
+	mateconf_value_set_list (gvalue, list);
 
-	if (!existingValue || gconf_value_compare (existingValue, gvalue))
-	    gconf_client_set (gc->client, key, gvalue, NULL);
+	if (!existingValue || mateconf_value_compare (existingValue, gvalue))
+	    mateconf_client_set (gc->client, key, gvalue, NULL);
 
 	for (node = list; node; node = node->next)
-	    gconf_value_free ((GConfValue *) node->data);
+	    mateconf_value_free ((MateConfValue *) node->data);
 
 	g_slist_free (list);
     }
     else
     {
-	gconfSetValue (object, &o->value, o->type, gvalue);
+	mateconfSetValue (object, &o->value, o->type, gvalue);
 
-	if (!existingValue || gconf_value_compare (existingValue, gvalue))
-	    gconf_client_set (gc->client, key, gvalue, NULL);
+	if (!existingValue || mateconf_value_compare (existingValue, gvalue))
+	    mateconf_client_set (gc->client, key, gvalue, NULL);
     }
 
-    gconf_value_free (gvalue);
+    mateconf_value_free (gvalue);
 
     if (existingValue)
-	gconf_value_free (existingValue);
+	mateconf_value_free (existingValue);
 
     g_free (key);
 }
 
 static Bool
-gconfGetValue (CompObject      *object,
+mateconfGetValue (CompObject      *object,
 	       CompOptionValue *value,
 	       CompOptionType  type,
-	       GConfValue      *gvalue)
+	       MateConfValue      *gvalue)
 
 {
     if (type         == CompOptionTypeBool &&
-	gvalue->type == GCONF_VALUE_BOOL)
+	gvalue->type == MATECONF_VALUE_BOOL)
     {
-	value->b = gconf_value_get_bool (gvalue);
+	value->b = mateconf_value_get_bool (gvalue);
 	return TRUE;
     }
     else if (type         == CompOptionTypeInt &&
-	     gvalue->type == GCONF_VALUE_INT)
+	     gvalue->type == MATECONF_VALUE_INT)
     {
-	value->i = gconf_value_get_int (gvalue);
+	value->i = mateconf_value_get_int (gvalue);
 	return TRUE;
     }
     else if (type         == CompOptionTypeFloat &&
-	     gvalue->type == GCONF_VALUE_FLOAT)
+	     gvalue->type == MATECONF_VALUE_FLOAT)
     {
-	value->f = gconf_value_get_float (gvalue);
+	value->f = mateconf_value_get_float (gvalue);
 	return TRUE;
     }
     else if (type         == CompOptionTypeString &&
-	     gvalue->type == GCONF_VALUE_STRING)
+	     gvalue->type == MATECONF_VALUE_STRING)
     {
 	const char *str;
 
-	str = gconf_value_get_string (gvalue);
+	str = mateconf_value_get_string (gvalue);
 	if (str)
 	{
 	    value->s = strdup (str);
@@ -303,21 +303,21 @@ gconfGetValue (CompObject      *object,
 	}
     }
     else if (type         == CompOptionTypeColor &&
-	     gvalue->type == GCONF_VALUE_STRING)
+	     gvalue->type == MATECONF_VALUE_STRING)
     {
 	const gchar *color;
 
-	color = gconf_value_get_string (gvalue);
+	color = mateconf_value_get_string (gvalue);
 
 	if (stringToColor (color, value->c))
 	    return TRUE;
     }
     else if (type         == CompOptionTypeKey &&
-	     gvalue->type == GCONF_VALUE_STRING)
+	     gvalue->type == MATECONF_VALUE_STRING)
     {
 	const gchar *action;
 
-	action = gconf_value_get_string (gvalue);
+	action = mateconf_value_get_string (gvalue);
 
 	while (object && object->type != COMP_OBJECT_TYPE_DISPLAY)
 	    object = object->parent;
@@ -329,11 +329,11 @@ gconfGetValue (CompObject      *object,
 	return TRUE;
     }
     else if (type         == CompOptionTypeButton &&
-	     gvalue->type == GCONF_VALUE_STRING)
+	     gvalue->type == MATECONF_VALUE_STRING)
     {
 	const gchar *action;
 
-	action = gconf_value_get_string (gvalue);
+	action = mateconf_value_get_string (gvalue);
 
 	while (object && object->type != COMP_OBJECT_TYPE_DISPLAY)
 	    object = object->parent;
@@ -346,27 +346,27 @@ gconfGetValue (CompObject      *object,
 	return TRUE;
     }
     else if (type         == CompOptionTypeEdge &&
-	     gvalue->type == GCONF_VALUE_STRING)
+	     gvalue->type == MATECONF_VALUE_STRING)
     {
 	const gchar *edge;
 
-	edge = gconf_value_get_string (gvalue);
+	edge = mateconf_value_get_string (gvalue);
 
 	value->action.edgeMask = stringToEdgeMask (edge);
 	return TRUE;
     }
     else if (type         == CompOptionTypeBell &&
-	     gvalue->type == GCONF_VALUE_BOOL)
+	     gvalue->type == MATECONF_VALUE_BOOL)
     {
-	value->action.bell = gconf_value_get_bool (gvalue);
+	value->action.bell = mateconf_value_get_bool (gvalue);
 	return TRUE;
     }
     else if (type         == CompOptionTypeMatch &&
-	     gvalue->type == GCONF_VALUE_STRING)
+	     gvalue->type == MATECONF_VALUE_STRING)
     {
 	const gchar *match;
 
-	match = gconf_value_get_string (gvalue);
+	match = mateconf_value_get_string (gvalue);
 
 	matchInit (&value->match);
 	matchAddFromString (&value->match, match);
@@ -377,31 +377,31 @@ gconfGetValue (CompObject      *object,
 }
 
 static Bool
-gconfReadOptionValue (CompObject      *object,
-		      GConfEntry      *entry,
+mateconfReadOptionValue (CompObject      *object,
+		      MateConfEntry      *entry,
 		      CompOption      *o,
 		      CompOptionValue *value)
 {
-    GConfValue *gvalue;
+    MateConfValue *gvalue;
 
-    gvalue = gconf_entry_get_value (entry);
+    gvalue = mateconf_entry_get_value (entry);
     if (!gvalue)
 	return FALSE;
 
     compInitOptionValue (value);
 
     if (o->type      == CompOptionTypeList &&
-	gvalue->type == GCONF_VALUE_LIST)
+	gvalue->type == MATECONF_VALUE_LIST)
     {
-	GConfValueType type;
+	MateConfValueType type;
 	GSList	       *list;
 	int	       i, n;
 
-	type = gconf_value_get_list_type (gvalue);
-	if (gconfTypeFromCompType (o->value.list.type) != type)
+	type = mateconf_value_get_list_type (gvalue);
+	if (mateconfTypeFromCompType (o->value.list.type) != type)
 	    return FALSE;
 
-	list = gconf_value_get_list (gvalue);
+	list = mateconf_value_get_list (gvalue);
 	n    = g_slist_length (list);
 
 	value->list.value  = NULL;
@@ -415,10 +415,10 @@ gconfReadOptionValue (CompObject      *object,
 	    {
 		for (i = 0; i < n; i++)
 		{
-		    if (!gconfGetValue (object,
+		    if (!mateconfGetValue (object,
 					&value->list.value[i],
 					o->value.list.type,
-					(GConfValue *) list->data))
+					(MateConfValue *) list->data))
 			break;
 
 		    value->list.nValue++;
@@ -436,7 +436,7 @@ gconfReadOptionValue (CompObject      *object,
     }
     else
     {
-	if (!gconfGetValue (object, value, o->type, gvalue))
+	if (!mateconfGetValue (object, value, o->type, gvalue))
 	    return FALSE;
     }
 
@@ -444,54 +444,54 @@ gconfReadOptionValue (CompObject      *object,
 }
 
 static void
-gconfGetOption (CompObject *object,
+mateconfGetOption (CompObject *object,
 		CompOption *o,
 		const char *plugin)
 {
-    GConfEntry *entry;
+    MateConfEntry *entry;
     gchar      *key;
 
-    GCONF_CORE (&core);
+    MATECONF_CORE (&core);
 
-    key = gconfGetKey (object, plugin, o->name);
+    key = mateconfGetKey (object, plugin, o->name);
 
-    entry = gconf_client_get_entry (gc->client, key, NULL, TRUE, NULL);
+    entry = mateconf_client_get_entry (gc->client, key, NULL, TRUE, NULL);
     if (entry)
     {
 	CompOptionValue value;
 
-	if (gconfReadOptionValue (object, entry, o, &value))
+	if (mateconfReadOptionValue (object, entry, o, &value))
 	{
 	    (*core.setOptionForPlugin) (object, plugin, o->name, &value);
 	    compFiniOptionValue (&value, o->type);
 	}
 	else
 	{
-	    gconfSetOption (object, o, plugin);
+	    mateconfSetOption (object, o, plugin);
 	}
 
-	gconf_entry_free (entry);
+	mateconf_entry_free (entry);
     }
 
     g_free (key);
 }
 
 static CompBool
-gconfReloadObjectTree (CompObject *object,
+mateconfReloadObjectTree (CompObject *object,
 			 void       *closure);
 
 static CompBool
-gconfReloadObjectsWithType (CompObjectType type,
+mateconfReloadObjectsWithType (CompObjectType type,
 			      CompObject     *parent,
 			      void	     *closure)
 {
-    compObjectForEach (parent, type, gconfReloadObjectTree, closure);
+    compObjectForEach (parent, type, mateconfReloadObjectTree, closure);
 
     return TRUE;
 }
 
 static CompBool
-gconfReloadObjectTree (CompObject *object,
+mateconfReloadObjectTree (CompObject *object,
 		       void       *closure)
 {
     CompPlugin *p = (CompPlugin *) closure;
@@ -500,26 +500,26 @@ gconfReloadObjectTree (CompObject *object,
 
     option = (*p->vTable->getObjectOptions) (p, object, &nOption);
     while (nOption--)
-	gconfGetOption (object, option++, p->vTable->name);
+	mateconfGetOption (object, option++, p->vTable->name);
 
-    compObjectForEachType (object, gconfReloadObjectsWithType, closure);
+    compObjectForEachType (object, mateconfReloadObjectsWithType, closure);
 
     return TRUE;
 }
 
 static Bool
-gconfReload (void *closure)
+mateconfReload (void *closure)
 {
     CompPlugin  *p;
 
-    GCONF_CORE (&core);
+    MATECONF_CORE (&core);
 
     for (p = getPlugins (); p; p = p->next)
     {
 	if (!p->vTable->getObjectOptions)
 	    continue;
 
-	gconfReloadObjectTree (&core.base, (void *) p);
+	mateconfReloadObjectTree (&core.base, (void *) p);
     }
 
     gc->reloadHandle = 0;
@@ -528,18 +528,18 @@ gconfReload (void *closure)
 }
 
 static Bool
-gconfSetOptionForPlugin (CompObject      *object,
+mateconfSetOptionForPlugin (CompObject      *object,
 			 const char	 *plugin,
 			 const char	 *name,
 			 CompOptionValue *value)
 {
     CompBool status;
 
-    GCONF_CORE (&core);
+    MATECONF_CORE (&core);
 
     UNWRAP (gc, &core, setOptionForPlugin);
     status = (*core.setOptionForPlugin) (object, plugin, name, value);
-    WRAP (gc, &core, setOptionForPlugin, gconfSetOptionForPlugin);
+    WRAP (gc, &core, setOptionForPlugin, mateconfSetOptionForPlugin);
 
     if (status && !gc->reloadHandle)
     {
@@ -554,7 +554,7 @@ gconfSetOptionForPlugin (CompObject      *object,
 	    option = (*p->vTable->getObjectOptions) (p, object, &nOption);
 	    option = compFindOption (option, nOption, name, 0);
 	    if (option)
-		gconfSetOption (object, option, p->vTable->name);
+		mateconfSetOption (object, option, p->vTable->name);
 	}
     }
 
@@ -562,16 +562,16 @@ gconfSetOptionForPlugin (CompObject      *object,
 }
 
 static CompBool
-gconfInitPluginForObject (CompPlugin *p,
+mateconfInitPluginForObject (CompPlugin *p,
 			  CompObject *o)
 {
     CompBool status;
 
-    GCONF_CORE (&core);
+    MATECONF_CORE (&core);
 
     UNWRAP (gc, &core, initPluginForObject);
     status = (*core.initPluginForObject) (p, o);
-    WRAP (gc, &core, initPluginForObject, gconfInitPluginForObject);
+    WRAP (gc, &core, initPluginForObject, mateconfInitPluginForObject);
 
     if (status && p->vTable->getObjectOptions)
     {
@@ -580,7 +580,7 @@ gconfInitPluginForObject (CompPlugin *p,
 
 	option = (*p->vTable->getObjectOptions) (p, o, &nOption);
 	while (nOption--)
-	    gconfGetOption (o, option++, p->vTable->name);
+	    mateconfGetOption (o, option++, p->vTable->name);
     }
 
     return status;
@@ -588,9 +588,9 @@ gconfInitPluginForObject (CompPlugin *p,
 
 /* MULTIDPYERROR: only works with one or less displays present */
 static void
-gconfKeyChanged (GConfClient *client,
+mateconfKeyChanged (MateConfClient *client,
 		 guint	     cnxn_id,
-		 GConfEntry  *entry,
+		 MateConfEntry  *entry,
 		 gpointer    user_data)
 {
     CompPlugin *plugin;
@@ -676,7 +676,7 @@ gconfKeyChanged (GConfClient *client,
     {
 	CompOptionValue value;
 
-	if (gconfReadOptionValue (object, entry, option, &value))
+	if (mateconfReadOptionValue (object, entry, option, &value))
 	{
 	    (*core.setOptionForPlugin) (object,
 					plugin->vTable->name,
@@ -691,7 +691,7 @@ gconfKeyChanged (GConfClient *client,
 }
 
 static void
-gconfSendGLibNotify (CompScreen *s)
+mateconfSendGLibNotify (CompScreen *s)
 {
     Display *dpy = s->display->display;
     XEvent  xev;
@@ -713,32 +713,32 @@ gconfSendGLibNotify (CompScreen *s)
 }
 
 static Bool
-gconfInitCore (CompPlugin *p,
+mateconfInitCore (CompPlugin *p,
 	       CompCore   *c)
 {
-    GConfCore *gc;
+    MateConfCore *gc;
 
     if (!checkPluginABI ("core", CORE_ABIVERSION))
 	return FALSE;
 
-    gc = malloc (sizeof (GConfCore));
+    gc = malloc (sizeof (MateConfCore));
     if (!gc)
 	return FALSE;
 
     g_type_init ();
 
-    gc->client = gconf_client_get_default ();
+    gc->client = mateconf_client_get_default ();
 
-    gconf_client_add_dir (gc->client, "/apps/" APP_NAME,
-			  GCONF_CLIENT_PRELOAD_NONE, NULL);
+    mateconf_client_add_dir (gc->client, "/apps/" APP_NAME,
+			  MATECONF_CLIENT_PRELOAD_NONE, NULL);
 
-    gc->reloadHandle = compAddTimeout (0, 0, gconfReload, 0);
+    gc->reloadHandle = compAddTimeout (0, 0, mateconfReload, 0);
 
-    gc->cnxn = gconf_client_notify_add (gc->client, "/apps/" APP_NAME,
-					gconfKeyChanged, c, NULL, NULL);
+    gc->cnxn = mateconf_client_notify_add (gc->client, "/apps/" APP_NAME,
+					mateconfKeyChanged, c, NULL, NULL);
 
-    WRAP (gc, c, initPluginForObject, gconfInitPluginForObject);
-    WRAP (gc, c, setOptionForPlugin, gconfSetOptionForPlugin);
+    WRAP (gc, c, initPluginForObject, mateconfInitPluginForObject);
+    WRAP (gc, c, setOptionForPlugin, mateconfSetOptionForPlugin);
 
     c->base.privates[corePrivateIndex].ptr = gc;
 
@@ -746,10 +746,10 @@ gconfInitCore (CompPlugin *p,
 }
 
 static void
-gconfFiniCore (CompPlugin *p,
+mateconfFiniCore (CompPlugin *p,
 	       CompCore   *c)
 {
-    GCONF_CORE (c);
+    MATECONF_CORE (c);
 
     UNWRAP (gc, c, initPluginForObject);
     UNWRAP (gc, c, setOptionForPlugin);
@@ -758,86 +758,86 @@ gconfFiniCore (CompPlugin *p,
 	compRemoveTimeout (gc->reloadHandle);
 
     if (gc->cnxn)
-	gconf_client_notify_remove (gc->client, gc->cnxn);
+	mateconf_client_notify_remove (gc->client, gc->cnxn);
 
-    gconf_client_remove_dir (gc->client, "/apps/" APP_NAME, NULL);
-    gconf_client_clear_cache (gc->client);
+    mateconf_client_remove_dir (gc->client, "/apps/" APP_NAME, NULL);
+    mateconf_client_clear_cache (gc->client);
 
     free (gc);
 }
 
 static Bool
-gconfInitScreen (CompPlugin *p,
+mateconfInitScreen (CompPlugin *p,
 		 CompScreen *s)
 {
-    gconfSendGLibNotify (s);
+    mateconfSendGLibNotify (s);
 
     return TRUE;
 }
 
 static CompBool
-gconfInitObject (CompPlugin *p,
+mateconfInitObject (CompPlugin *p,
 		 CompObject *o)
 {
     static InitPluginObjectProc dispTab[] = {
-	(InitPluginObjectProc) gconfInitCore,
+	(InitPluginObjectProc) mateconfInitCore,
 	(InitPluginObjectProc) 0, /* InitDisplay */
-	(InitPluginObjectProc) gconfInitScreen
+	(InitPluginObjectProc) mateconfInitScreen
     };
 
     RETURN_DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), TRUE, (p, o));
 }
 
 static void
-gconfFiniObject (CompPlugin *p,
+mateconfFiniObject (CompPlugin *p,
 		 CompObject *o)
 {
     static FiniPluginObjectProc dispTab[] = {
-	(FiniPluginObjectProc) gconfFiniCore
+	(FiniPluginObjectProc) mateconfFiniCore
     };
 
     DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), (p, o));
 }
 
 static Bool
-gconfInit (CompPlugin *p)
+mateconfInit (CompPlugin *p)
 {
-    if (!compInitPluginMetadataFromInfo (&gconfMetadata, p->vTable->name,
+    if (!compInitPluginMetadataFromInfo (&mateconfMetadata, p->vTable->name,
 					 0, 0, 0, 0))
 	return FALSE;
 
     corePrivateIndex = allocateCorePrivateIndex ();
     if (corePrivateIndex < 0)
     {
-	compFiniMetadata (&gconfMetadata);
+	compFiniMetadata (&mateconfMetadata);
 	return FALSE;
     }
 
-    compAddMetadataFromFile (&gconfMetadata, p->vTable->name);
+    compAddMetadataFromFile (&mateconfMetadata, p->vTable->name);
 
     return TRUE;
 }
 
 static void
-gconfFini (CompPlugin *p)
+mateconfFini (CompPlugin *p)
 {
     freeCorePrivateIndex (corePrivateIndex);
-    compFiniMetadata (&gconfMetadata);
+    compFiniMetadata (&mateconfMetadata);
 }
 
 static CompMetadata *
-gconfGetMetadata (CompPlugin *plugin)
+mateconfGetMetadata (CompPlugin *plugin)
 {
-    return &gconfMetadata;
+    return &mateconfMetadata;
 }
 
-CompPluginVTable gconfVTable = {
-    "gconf",
-    gconfGetMetadata,
-    gconfInit,
-    gconfFini,
-    gconfInitObject,
-    gconfFiniObject,
+CompPluginVTable mateconfVTable = {
+    "mateconf",
+    mateconfGetMetadata,
+    mateconfInit,
+    mateconfFini,
+    mateconfInitObject,
+    mateconfFiniObject,
     0, /* GetObjectOptions */
     0  /* SetObjectOption */
 };
@@ -845,5 +845,5 @@ CompPluginVTable gconfVTable = {
 CompPluginVTable *
 getCompPluginInfo20070830 (void)
 {
-    return &gconfVTable;
+    return &mateconfVTable;
 }

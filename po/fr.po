@@ -20,53 +20,53 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Pootle 1.1.0\n"
 
-#: ../gtk/gnome/50-compiz-desktop-key.xml.in.h:1
+#: ../gtk/mate/50-compiz-desktop-key.xml.in.h:1
 msgid "Desktop"
 msgstr "Bureau"
 
-#: ../gtk/gnome/50-compiz-key.xml.in.h:1
+#: ../gtk/mate/50-compiz-key.xml.in.h:1
 msgid "Window Management"
 msgstr "Gestion des Fenêtres"
 
-#: ../gtk/gnome/compiz.desktop.in.h:1
+#: ../gtk/mate/compiz.desktop.in.h:1
 msgid "Compiz"
 msgstr "Compiz"
 
-#: ../gtk/gnome/compiz-window-manager.c:426 ../metadata/scale.xml.in.h:25
+#: ../gtk/mate/compiz-window-manager.c:426 ../metadata/scale.xml.in.h:25
 #: ../metadata/wobbly.xml.in.h:16
 msgid "None"
 msgstr "Aucun"
 
-#: ../gtk/gnome/compiz-window-manager.c:427
+#: ../gtk/mate/compiz-window-manager.c:427
 #: ../gtk/window-decorator/gtk-window-decorator.c:4625
 msgid "Shade"
 msgstr "Ombrer"
 
-#: ../gtk/gnome/compiz-window-manager.c:428 ../metadata/place.xml.in.h:9
+#: ../gtk/mate/compiz-window-manager.c:428 ../metadata/place.xml.in.h:9
 msgid "Maximize"
 msgstr "Maximiser"
 
-#: ../gtk/gnome/compiz-window-manager.c:429
+#: ../gtk/mate/compiz-window-manager.c:429
 msgid "Maximize Horizontally"
 msgstr "Maximiser horizontalement"
 
-#: ../gtk/gnome/compiz-window-manager.c:430
+#: ../gtk/mate/compiz-window-manager.c:430
 msgid "Maximize Vertically"
 msgstr "Maximiser verticalement"
 
-#: ../gtk/gnome/compiz-window-manager.c:431
+#: ../gtk/mate/compiz-window-manager.c:431
 msgid "Minimize"
 msgstr "Minimiser"
 
-#: ../gtk/gnome/compiz-window-manager.c:432
+#: ../gtk/mate/compiz-window-manager.c:432
 msgid "Raise"
 msgstr "Augmenter"
 
-#: ../gtk/gnome/compiz-window-manager.c:433
+#: ../gtk/mate/compiz-window-manager.c:433
 msgid "Lower"
 msgstr "Diminuer"
 
-#: ../gtk/gnome/compiz-window-manager.c:434
+#: ../gtk/mate/compiz-window-manager.c:434
 #: ../gtk/window-decorator/gtk-window-decorator.c:4606
 #: ../metadata/core.xml.in.in.h:100
 msgid "Window Menu"
@@ -83,44 +83,44 @@ msgid "Blur type"
 msgstr "Type de flou"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:3
-msgid "Metacity theme active window opacity"
-msgstr "Opacité de la fenêtre active du thème Metacity"
+msgid "Marco theme active window opacity"
+msgstr "Opacité de la fenêtre active du thème Marco"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:4
-msgid "Metacity theme active window opacity shade"
-msgstr "Nuance de l'opacité de la fenêtre active du thème Metacity"
+msgid "Marco theme active window opacity shade"
+msgstr "Nuance de l'opacité de la fenêtre active du thème Marco"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:5
-msgid "Metacity theme opacity"
-msgstr "Opacité du thème Metacity"
+msgid "Marco theme opacity"
+msgstr "Opacité du thème Marco"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:6
-msgid "Metacity theme opacity shade"
-msgstr "Nuance de l'opacité du thème Metacity"
+msgid "Marco theme opacity shade"
+msgstr "Nuance de l'opacité du thème Marco"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:7
-msgid "Opacity to use for active windows with metacity theme decorations"
+msgid "Opacity to use for active windows with marco theme decorations"
 msgstr ""
 "Opacité à utiliser pour les fenêtres actives avec les décorations des thèmes "
-"Metacity"
+"Marco"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:8
-msgid "Opacity to use for metacity theme decorations"
-msgstr "Opacité à utiliser pour les décorations des thèmes Metacity"
+msgid "Opacity to use for marco theme decorations"
+msgstr "Opacité à utiliser pour les décorations des thèmes Marco"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:9
 msgid ""
-"Shade active windows with metacity theme decorations from opaque to "
+"Shade active windows with marco theme decorations from opaque to "
 "translucent"
 msgstr ""
-"Nuancer les fenêtres actives avec les décorations du thème Metacity, "
+"Nuancer les fenêtres actives avec les décorations du thème Marco, "
 "d'opaque à transparent"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:10
 msgid ""
-"Shade windows with metacity theme decorations from opaque to translucent"
+"Shade windows with marco theme decorations from opaque to translucent"
 msgstr ""
-"Nuancer les fenêtres avec les décorations du thème Metacity, d'opaque à "
+"Nuancer les fenêtres avec les décorations du thème Marco, d'opaque à "
 "transparent"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:11
@@ -132,12 +132,12 @@ msgid "Type of blur used for window decorations"
 msgstr "Type de flou utilisé pour les décorations des fenêtres"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:13
-msgid "Use metacity theme"
-msgstr "Utiliser le thème Metacity"
+msgid "Use marco theme"
+msgstr "Utiliser le thème Marco"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:14
-msgid "Use metacity theme when drawing window decorations"
-msgstr "Utiliser le thème Metacity pour dessiner les décorations de fenêtres"
+msgid "Use marco theme when drawing window decorations"
+msgstr "Utiliser le thème Marco pour dessiner les décorations de fenêtres"
 
 #: ../gtk/window-decorator/gtk-window-decorator.c:4414
 #: ../metadata/core.xml.in.in.h:12
@@ -835,7 +835,7 @@ msgid "Command line to be executed in shell when run_command9 is invoked"
 msgstr ""
 "Ligne de commande à exécuter dans le shell lorsque run_command9 est appelé"
 
-#: ../metadata/commands.xml.in.h:63 ../metadata/gnomecompat.xml.in.h:1
+#: ../metadata/commands.xml.in.h:63 ../metadata/matecompat.xml.in.h:1
 msgid "Commands"
 msgstr "Commandes"
 
@@ -1723,13 +1723,13 @@ msgstr "Système de fichier de l'Espace Utilisateur"
 msgid "Userspace file system"
 msgstr "Système de fichier de l'espace utilisateur"
 
-#: ../metadata/gconf.xml.in.h:1
-msgid "GConf"
-msgstr "GConf"
+#: ../metadata/mateconf.xml.in.h:1
+msgid "MateConf"
+msgstr "MateConf"
 
-#: ../metadata/gconf.xml.in.h:2
-msgid "GConf Control Backend"
-msgstr "Backend de contrôle GConf"
+#: ../metadata/mateconf.xml.in.h:2
+msgid "MateConf Control Backend"
+msgstr "Backend de contrôle MateConf"
 
 #: ../metadata/glib.xml.in.h:1
 msgid "GLib"
@@ -1739,56 +1739,56 @@ msgstr "GLib"
 msgid "GLib main loop support"
 msgstr "Support de la boucle principale GLib"
 
-#: ../metadata/gnomecompat.xml.in.h:2
-msgid "Gnome Compatibility"
-msgstr "Compatibilité avec Gnome"
+#: ../metadata/matecompat.xml.in.h:2
+msgid "Mate Compatibility"
+msgstr "Compatibilité avec Mate"
 
-#: ../metadata/gnomecompat.xml.in.h:3
+#: ../metadata/matecompat.xml.in.h:3
 msgid "Open a terminal"
 msgstr "Ouvrir un terminal"
 
-#: ../metadata/gnomecompat.xml.in.h:4
-msgid "Options that keep Compiz compatible to the Gnome desktop environment"
+#: ../metadata/matecompat.xml.in.h:4
+msgid "Options that keep Compiz compatible to the Mate desktop environment"
 msgstr ""
-"Options qui rendent Compiz compatible avec l'environnement de bureau Gnome"
+"Options qui rendent Compiz compatible avec l'environnement de bureau Mate"
 
-#: ../metadata/gnomecompat.xml.in.h:5
+#: ../metadata/matecompat.xml.in.h:5
 msgid "Run Dialog"
 msgstr "Boîte de dialogue d'exécution"
 
-#: ../metadata/gnomecompat.xml.in.h:6
+#: ../metadata/matecompat.xml.in.h:6
 msgid "Run terminal command"
 msgstr "Commande pour lancer le Terminal"
 
-#: ../metadata/gnomecompat.xml.in.h:7
+#: ../metadata/matecompat.xml.in.h:7
 msgid "Screenshot command line"
 msgstr "Ligne de commande de capture d'écran"
 
-#: ../metadata/gnomecompat.xml.in.h:8
+#: ../metadata/matecompat.xml.in.h:8
 msgid "Show Main Menu"
 msgstr "Afficher le menu principal"
 
-#: ../metadata/gnomecompat.xml.in.h:9
+#: ../metadata/matecompat.xml.in.h:9
 msgid "Show Run Application dialog"
 msgstr "Afficher la boîte de dialogue d'exécution de l'application"
 
-#: ../metadata/gnomecompat.xml.in.h:10
+#: ../metadata/matecompat.xml.in.h:10
 msgid "Show the main menu"
 msgstr "Afficher le menu principal"
 
-#: ../metadata/gnomecompat.xml.in.h:11
+#: ../metadata/matecompat.xml.in.h:11
 msgid "Take a screenshot"
 msgstr "Faire une capture d'écran"
 
-#: ../metadata/gnomecompat.xml.in.h:12
+#: ../metadata/matecompat.xml.in.h:12
 msgid "Take a screenshot of a window"
 msgstr "Faire une capture d'écran d'une fenêtre"
 
-#: ../metadata/gnomecompat.xml.in.h:13
+#: ../metadata/matecompat.xml.in.h:13
 msgid "Terminal command line"
 msgstr "Commande à lancer pour le Terminal"
 
-#: ../metadata/gnomecompat.xml.in.h:14
+#: ../metadata/matecompat.xml.in.h:14
 msgid "Window screenshot command line"
 msgstr "Ligne de commande de capture de fenêtre"
 

@@ -10,9 +10,9 @@ xml_in_files =		   \
 	decoration.xml.in  \
 	fade.xml.in	   \
 	fs.xml.in	   \
-	gconf.xml.in	   \
+	mateconf.xml.in	   \
 	glib.xml.in	   \
-	gnomecompat.xml.in \
+	matecompat.xml.in \
 	ini.xml.in	   \
 	inotify.xml.in	   \
 	kconfig.xml.in	   \
@@ -43,8 +43,8 @@ core.xml.in: core.xml.in.in Makefile
 
 @INTLTOOL_XML_RULE@
 
-if USE_GCONF
-schemadir    = $(GCONF_SCHEMA_FILE_DIR)
+if USE_MATECONF
+schemadir    = $(MATECONF_SCHEMA_FILE_DIR)
 schema_files = $(patsubst %.xml.in,compiz-%.schemas,$(xml_in_files))
 schema_DATA  = $(schema_files)
 
@@ -81,10 +81,10 @@ noinst_DATA =		  \
 	$(kde_config_files)
 
 install-data-local:
-if USE_GCONF
-if GCONF_SCHEMAS_INSTALL
+if USE_MATECONF
+if MATECONF_SCHEMAS_INSTALL
 	if test -z "$(DESTDIR)" ; then \
-		GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(schema_DATA); \
+		MATECONF_CONFIG_SOURCE=$(MATECONF_SCHEMA_CONFIG_SOURCE) $(MATECONFTOOL) --makefile-install-rule $(schema_DATA); \
         fi
 endif
 endif

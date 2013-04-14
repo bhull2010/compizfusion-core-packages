@@ -71,8 +71,8 @@ libobs_la_SOURCES = obs.c
 libcommands_la_LDFLAGS = -module -avoid-version -no-undefined
 libcommands_la_SOURCES = commands.c
 
-libgnomecompat_la_LDFLAGS = -module -avoid-version -no-undefined
-libgnomecompat_la_SOURCES = gnomecompat.c
+libmatecompat_la_LDFLAGS = -module -avoid-version -no-undefined
+libmatecompat_la_SOURCES = matecompat.c
 
 if USE_LIBRSVG
 libsvg_la_DEPENDENCIES = $(top_builddir)/libdecoration/libdecoration.la
@@ -98,11 +98,11 @@ libglib_la_SOURCES = glib.c
 libglib_module = libglib.la
 endif
 
-if USE_GCONF
-libgconf_la_LDFLAGS = -module -avoid-version -no-undefined
-libgconf_la_LIBADD = @GCONF_LIBS@
-libgconf_la_SOURCES = gconf.c
-libgconf_module = libgconf.la
+if USE_MATECONF
+libmateconf_la_LDFLAGS = -module -avoid-version -no-undefined
+libmateconf_la_LIBADD = @MATECONF_LIBS@
+libmateconf_la_SOURCES = mateconf.c
+libmateconf_module = libmateconf.la
 endif
 
 if USE_KCONFIG
@@ -137,7 +137,7 @@ INCLUDES =					\
 	@LIBPNG_CFLAGS@				\
 	@LIBRSVG_CFLAGS@			\
 	@ANNOTATE_CFLAGS@			\
-	@GCONF_CFLAGS@				\
+	@MATECONF_CFLAGS@				\
 	@KCONFIG_CFLAGS@			\
 	@DBUS_CFLAGS@				\
 	@GLIB_CFLAGS@				\
@@ -155,7 +155,7 @@ moduledir = $(plugindir)
 
 module_LTLIBRARIES =		\
 	$(libglib_module)	\
-	$(libgconf_module)	\
+	$(libmateconf_module)	\
 	$(libkconfig_module)	\
 	libdecoration.la	\
 	libwobbly.la		\
@@ -180,7 +180,7 @@ module_LTLIBRARIES =		\
 	libini.la		\
 	libobs.la		\
 	libcommands.la		\
-	libgnomecompat.la	\
+	libmatecompat.la	\
 	$(libsvg_module)	\
 	$(libannotate_module)	\
 	$(libinotify_module)	\

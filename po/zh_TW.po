@@ -16,53 +16,53 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Pootle 1.1.0\n"
 
-#: ../gtk/gnome/50-compiz-desktop-key.xml.in.h:1
+#: ../gtk/mate/50-compiz-desktop-key.xml.in.h:1
 msgid "Desktop"
 msgstr "桌面"
 
-#: ../gtk/gnome/50-compiz-key.xml.in.h:1
+#: ../gtk/mate/50-compiz-key.xml.in.h:1
 msgid "Window Management"
 msgstr "視窗管理員"
 
-#: ../gtk/gnome/compiz.desktop.in.h:1
+#: ../gtk/mate/compiz.desktop.in.h:1
 msgid "Compiz"
 msgstr "Compiz"
 
-#: ../gtk/gnome/compiz-window-manager.c:426 ../metadata/scale.xml.in.h:25
+#: ../gtk/mate/compiz-window-manager.c:426 ../metadata/scale.xml.in.h:25
 #: ../metadata/wobbly.xml.in.h:16
 msgid "None"
 msgstr "無"
 
-#: ../gtk/gnome/compiz-window-manager.c:427
+#: ../gtk/mate/compiz-window-manager.c:427
 #: ../gtk/window-decorator/gtk-window-decorator.c:4625
 msgid "Shade"
 msgstr "陰影"
 
-#: ../gtk/gnome/compiz-window-manager.c:428 ../metadata/place.xml.in.h:9
+#: ../gtk/mate/compiz-window-manager.c:428 ../metadata/place.xml.in.h:9
 msgid "Maximize"
 msgstr "最大化"
 
-#: ../gtk/gnome/compiz-window-manager.c:429
+#: ../gtk/mate/compiz-window-manager.c:429
 msgid "Maximize Horizontally"
 msgstr "將視窗水平最大化"
 
-#: ../gtk/gnome/compiz-window-manager.c:430
+#: ../gtk/mate/compiz-window-manager.c:430
 msgid "Maximize Vertically"
 msgstr "將視窗垂直最大化"
 
-#: ../gtk/gnome/compiz-window-manager.c:431
+#: ../gtk/mate/compiz-window-manager.c:431
 msgid "Minimize"
 msgstr "最小化"
 
-#: ../gtk/gnome/compiz-window-manager.c:432
+#: ../gtk/mate/compiz-window-manager.c:432
 msgid "Raise"
 msgstr "前景視窗"
 
-#: ../gtk/gnome/compiz-window-manager.c:433
+#: ../gtk/mate/compiz-window-manager.c:433
 msgid "Lower"
 msgstr "低"
 
-#: ../gtk/gnome/compiz-window-manager.c:434
+#: ../gtk/mate/compiz-window-manager.c:434
 #: ../gtk/window-decorator/gtk-window-decorator.c:4606
 #: ../metadata/core.xml.in.in.h:100
 msgid "Window Menu"
@@ -77,39 +77,39 @@ msgid "Blur type"
 msgstr "柔化方式"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:3
-msgid "Metacity theme active window opacity"
-msgstr "Metacity 佈景主題使用中的視窗透明度"
+msgid "Marco theme active window opacity"
+msgstr "Marco 佈景主題使用中的視窗透明度"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:4
-msgid "Metacity theme active window opacity shade"
-msgstr "Metacity 佈景主題使用中的視窗陰影透明度"
+msgid "Marco theme active window opacity shade"
+msgstr "Marco 佈景主題使用中的視窗陰影透明度"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:5
-msgid "Metacity theme opacity"
-msgstr "Metacity 佈景主題透明度"
+msgid "Marco theme opacity"
+msgstr "Marco 佈景主題透明度"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:6
-msgid "Metacity theme opacity shade"
-msgstr "Metacity 佈景主題的陰影透明度"
+msgid "Marco theme opacity shade"
+msgstr "Marco 佈景主題的陰影透明度"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:7
-msgid "Opacity to use for active windows with metacity theme decorations"
-msgstr "使用 Metacity 視窗管理員時，作用中視窗的透明度。"
+msgid "Opacity to use for active windows with marco theme decorations"
+msgstr "使用 Marco 視窗管理員時，作用中視窗的透明度。"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:8
-msgid "Opacity to use for metacity theme decorations"
-msgstr "使用 Metacity 佈景主題的透明度"
+msgid "Opacity to use for marco theme decorations"
+msgstr "使用 Marco 佈景主題的透明度"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:9
 msgid ""
-"Shade active windows with metacity theme decorations from opaque to "
+"Shade active windows with marco theme decorations from opaque to "
 "translucent"
-msgstr "使用 Metacity 佈景主題，從不透明到半透明的作用中視窗陰影"
+msgstr "使用 Marco 佈景主題，從不透明到半透明的作用中視窗陰影"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:10
 msgid ""
-"Shade windows with metacity theme decorations from opaque to translucent"
-msgstr "使用 Metacity 佈景主題，並添加從透明到不透明的漸變效果。"
+"Shade windows with marco theme decorations from opaque to translucent"
+msgstr "使用 Marco 佈景主題，並添加從透明到不透明的漸變效果。"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:11
 msgid "Title bar mouse wheel action"
@@ -120,12 +120,12 @@ msgid "Type of blur used for window decorations"
 msgstr "針對視窗裝飾的模糊方式"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:13
-msgid "Use metacity theme"
-msgstr "使用 metacity 主題"
+msgid "Use marco theme"
+msgstr "使用 marco 主題"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:14
-msgid "Use metacity theme when drawing window decorations"
-msgstr "給視窗裝飾引擎指定使用 metacity 佈景主題"
+msgid "Use marco theme when drawing window decorations"
+msgstr "給視窗裝飾引擎指定使用 marco 佈景主題"
 
 #: ../gtk/window-decorator/gtk-window-decorator.c:4414
 #: ../metadata/core.xml.in.in.h:12
@@ -710,7 +710,7 @@ msgstr "當shell指令8設定之後，將會在shell裏面執行這個指令。"
 msgid "Command line to be executed in shell when run_command9 is invoked"
 msgstr "當shell指令9設定之後，將會在shell裏面執行這個指令。"
 
-#: ../metadata/commands.xml.in.h:63 ../metadata/gnomecompat.xml.in.h:1
+#: ../metadata/commands.xml.in.h:63 ../metadata/matecompat.xml.in.h:1
 msgid "Commands"
 msgstr "預設指令(Commands)"
 
@@ -1565,13 +1565,13 @@ msgstr "使用者紀錄放置位置"
 msgid "Userspace file system"
 msgstr "使用者的紀錄放置位置"
 
-#: ../metadata/gconf.xml.in.h:1
-msgid "GConf"
-msgstr "GConf"
+#: ../metadata/mateconf.xml.in.h:1
+msgid "MateConf"
+msgstr "MateConf"
 
-#: ../metadata/gconf.xml.in.h:2
-msgid "GConf Control Backend"
-msgstr "GConf 控制台"
+#: ../metadata/mateconf.xml.in.h:2
+msgid "MateConf Control Backend"
+msgstr "MateConf 控制台"
 
 #: ../metadata/glib.xml.in.h:1
 msgid "GLib"
@@ -1581,55 +1581,55 @@ msgstr "GLib"
 msgid "GLib main loop support"
 msgstr "GLib main loop支援。(GLib為一個補助GTK+的函式庫)"
 
-#: ../metadata/gnomecompat.xml.in.h:2
-msgid "Gnome Compatibility"
-msgstr "Gnome的相容性"
+#: ../metadata/matecompat.xml.in.h:2
+msgid "Mate Compatibility"
+msgstr "Mate的相容性"
 
-#: ../metadata/gnomecompat.xml.in.h:3
+#: ../metadata/matecompat.xml.in.h:3
 msgid "Open a terminal"
 msgstr "開啟一個終端機執行"
 
-#: ../metadata/gnomecompat.xml.in.h:4
-msgid "Options that keep Compiz compatible to the Gnome desktop environment"
-msgstr "使Compiz能與Gnome桌面環境相容的環境設定"
+#: ../metadata/matecompat.xml.in.h:4
+msgid "Options that keep Compiz compatible to the Mate desktop environment"
+msgstr "使Compiz能與Mate桌面環境相容的環境設定"
 
-#: ../metadata/gnomecompat.xml.in.h:5
+#: ../metadata/matecompat.xml.in.h:5
 msgid "Run Dialog"
 msgstr "執行對話方塊"
 
-#: ../metadata/gnomecompat.xml.in.h:6
+#: ../metadata/matecompat.xml.in.h:6
 msgid "Run terminal command"
 msgstr "執行終端機指令"
 
-#: ../metadata/gnomecompat.xml.in.h:7
+#: ../metadata/matecompat.xml.in.h:7
 msgid "Screenshot command line"
 msgstr "螢幕擷取指令"
 
-#: ../metadata/gnomecompat.xml.in.h:8
+#: ../metadata/matecompat.xml.in.h:8
 msgid "Show Main Menu"
 msgstr "顯示主功能表"
 
-#: ../metadata/gnomecompat.xml.in.h:9
+#: ../metadata/matecompat.xml.in.h:9
 msgid "Show Run Application dialog"
 msgstr "顯示執行應用程式對話方塊"
 
-#: ../metadata/gnomecompat.xml.in.h:10
+#: ../metadata/matecompat.xml.in.h:10
 msgid "Show the main menu"
 msgstr "顯示主功能表"
 
-#: ../metadata/gnomecompat.xml.in.h:11
+#: ../metadata/matecompat.xml.in.h:11
 msgid "Take a screenshot"
 msgstr "擷取螢幕畫面"
 
-#: ../metadata/gnomecompat.xml.in.h:12
+#: ../metadata/matecompat.xml.in.h:12
 msgid "Take a screenshot of a window"
 msgstr "擷取視窗螢幕畫面"
 
-#: ../metadata/gnomecompat.xml.in.h:13
+#: ../metadata/matecompat.xml.in.h:13
 msgid "Terminal command line"
 msgstr "終端機的指令"
 
-#: ../metadata/gnomecompat.xml.in.h:14
+#: ../metadata/matecompat.xml.in.h:14
 msgid "Window screenshot command line"
 msgstr "視窗螢幕擷取指令"
 

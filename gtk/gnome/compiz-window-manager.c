@@ -27,7 +27,7 @@
 #include <sys/types.h>
 #include <dirent.h>
 #include <string.h>
-#include <gconf/gconf-client.h>
+#include <mateconf/mateconf-client.h>
 #include <glib/gi18n.h>
 
 #include "compiz-window-manager.h"
@@ -44,19 +44,19 @@
 #define COMPIZ_MOUSE_MOVE_KEY				 \
     "/apps/compiz/plugins/move/allscreens/options/initiate_button"
 
-#define GCONF_DIR "/apps/metacity/general"
+#define MATECONF_DIR "/apps/marco/general"
 
 #define COMPIZ_DOUBLE_CLICK_TITLEBAR_KEY      \
-    GCONF_DIR "/action_double_click_titlebar"
+    MATECONF_DIR "/action_double_click_titlebar"
 
 #define COMPIZ_USE_SYSTEM_FONT_KEY         \
-    GCONF_DIR "/titlebar_uses_system_font"
+    MATECONF_DIR "/titlebar_uses_system_font"
 
 #define COMPIZ_TITLEBAR_FONT_KEY \
-    GCONF_DIR "/titlebar_font"
+    MATECONF_DIR "/titlebar_font"
 
 #define COMPIZ_THEME_KEY \
-    GCONF_DIR "/theme"
+    MATECONF_DIR "/theme"
 
 enum {
     DOUBLE_CLICK_NONE,
@@ -85,26 +85,26 @@ static const struct {
     { DOUBLE_CLICK_MENU,                  "menu" }
 };
 
-static GnomeWindowManagerClass *parent_class;
+static MateWindowManagerClass *parent_class;
 
 struct _CompizWindowManagerPrivate {
-    GConfClient *gconf;
+    MateConfClient *mateconf;
     gchar	*font;
     gchar	*theme;
     gchar	*mouse_modifier;
 };
 
 static void
-value_changed (GConfClient *client,
+value_changed (MateConfClient *client,
 	       const gchar *key,
-	       GConfValue  *value,
+	       MateConfValue  *value,
 	       void        *data)
 {
     CompizWindowManager *wm;
 
     wm = COMPIZ_WINDOW_MANAGER (data);
 
-    gnome_window_manager_settings_changed (GNOME_WINDOW_MANAGER (wm));
+    mate_window_manager_settings_changed (MATE_WINDOW_MANAGER (wm));
 }
 
 /* this function is called when the shared lib is loaded */
@@ -113,10 +113,10 @@ window_manager_new (int expected_interface_version)
 {
     GObject *wm;
 
-    if (expected_interface_version != GNOME_WINDOW_MANAGER_INTERFACE_VERSION)
+    if (expected_interface_version != MATE_WINDOW_MANAGER_INTERFACE_VERSION)
     {
 	g_warning ("Compiz window manager module wasn't compiled with the "
-		   "current version of gnome-control-center");
+		   "current version of mate-control-center");
 	return NULL;
     }
 
@@ -126,51 +126,51 @@ window_manager_new (int expected_interface_version)
 }
 
 static void
-compiz_change_settings (GnomeWindowManager    *wm,
-			const GnomeWMSettings *settings)
+compiz_change_settings (MateWindowManager    *wm,
+			const MateWMSettings *settings)
 {
     CompizWindowManager *cwm;
 
     cwm = COMPIZ_WINDOW_MANAGER (wm);
 
-    if (settings->flags & GNOME_WM_SETTING_FONT)
-	gconf_client_set_string (cwm->p->gconf,
+    if (settings->flags & MATE_WM_SETTING_FONT)
+	mateconf_client_set_string (cwm->p->mateconf,
 				 COMPIZ_TITLEBAR_FONT_KEY,
 				 settings->font, NULL);
 
-    if (settings->flags & GNOME_WM_SETTING_MOUSE_FOCUS)
-	gconf_client_set_bool (cwm->p->gconf,
+    if (settings->flags & MATE_WM_SETTING_MOUSE_FOCUS)
+	mateconf_client_set_bool (cwm->p->mateconf,
 			       COMPIZ_CLICK_TO_FOCUS_KEY,
 			       settings->focus_follows_mouse == FALSE,
 			       NULL);
 
-     if (settings->flags & GNOME_WM_SETTING_AUTORAISE)
-	gconf_client_set_bool (cwm->p->gconf,
+     if (settings->flags & MATE_WM_SETTING_AUTORAISE)
+	mateconf_client_set_bool (cwm->p->mateconf,
 			       COMPIZ_AUTORAISE_KEY,
 			       settings->autoraise, NULL);
 
-     if (settings->flags & GNOME_WM_SETTING_AUTORAISE_DELAY)
-	gconf_client_set_int (cwm->p->gconf,
+     if (settings->flags & MATE_WM_SETTING_AUTORAISE_DELAY)
+	mateconf_client_set_int (cwm->p->mateconf,
 			      COMPIZ_AUTORAISE_DELAY_KEY,
 			      settings->autoraise_delay, NULL);
 
-    if (settings->flags & GNOME_WM_SETTING_MOUSE_MOVE_MODIFIER)
+    if (settings->flags & MATE_WM_SETTING_MOUSE_MOVE_MODIFIER)
     {
 	char *value;
 
 	value = g_strdup_printf ("<%s>Button1", settings->mouse_move_modifier);
-	gconf_client_set_string (cwm->p->gconf,
+	mateconf_client_set_string (cwm->p->mateconf,
 				 COMPIZ_MOUSE_MOVE_KEY,
 				 value, NULL);
 	g_free (value);
     }
 
-    if (settings->flags & GNOME_WM_SETTING_THEME)
-	gconf_client_set_string (cwm->p->gconf,
+    if (settings->flags & MATE_WM_SETTING_THEME)
+	mateconf_client_set_string (cwm->p->mateconf,
 				 COMPIZ_THEME_KEY,
 				 settings->theme, NULL);
 
-    if (settings->flags & GNOME_WM_SETTING_DOUBLE_CLICK_ACTION)
+    if (settings->flags & MATE_WM_SETTING_DOUBLE_CLICK_ACTION)
     {
 	const char   *action = NULL;
 	unsigned int i;
@@ -186,15 +186,15 @@ compiz_change_settings (GnomeWindowManager    *wm,
 	}
 
 	if (action)
-	    gconf_client_set_string (cwm->p->gconf,
+	    mateconf_client_set_string (cwm->p->mateconf,
 				     COMPIZ_DOUBLE_CLICK_TITLEBAR_KEY,
 				     action, NULL);
     }
 }
 
 static void
-compiz_get_settings (GnomeWindowManager *wm,
-		     GnomeWMSettings    *settings)
+compiz_get_settings (MateWindowManager *wm,
+		     MateWMSettings    *settings)
 {
     CompizWindowManager *cwm;
     int			to_get;
@@ -204,11 +204,11 @@ compiz_get_settings (GnomeWindowManager *wm,
     to_get = settings->flags;
     settings->flags = 0;
 
-    if (to_get & GNOME_WM_SETTING_FONT)
+    if (to_get & MATE_WM_SETTING_FONT)
     {
 	char *str;
 
-	str = gconf_client_get_string (cwm->p->gconf,
+	str = mateconf_client_get_string (cwm->p->mateconf,
 				       COMPIZ_TITLEBAR_FONT_KEY,
 				       NULL);
 
@@ -222,43 +222,43 @@ compiz_get_settings (GnomeWindowManager *wm,
 
 	settings->font = cwm->p->font;
 
-	settings->flags |= GNOME_WM_SETTING_FONT;
+	settings->flags |= MATE_WM_SETTING_FONT;
     }
 
-    if (to_get & GNOME_WM_SETTING_MOUSE_FOCUS)
+    if (to_get & MATE_WM_SETTING_MOUSE_FOCUS)
     {
 	settings->focus_follows_mouse =
-	    gconf_client_get_bool (cwm->p->gconf,
+	    mateconf_client_get_bool (cwm->p->mateconf,
 				   COMPIZ_CLICK_TO_FOCUS_KEY, NULL) == FALSE;
 
-	settings->flags |= GNOME_WM_SETTING_MOUSE_FOCUS;
+	settings->flags |= MATE_WM_SETTING_MOUSE_FOCUS;
     }
 
-    if (to_get & GNOME_WM_SETTING_AUTORAISE)
+    if (to_get & MATE_WM_SETTING_AUTORAISE)
     {
-	settings->autoraise = gconf_client_get_bool (cwm->p->gconf,
+	settings->autoraise = mateconf_client_get_bool (cwm->p->mateconf,
 						     COMPIZ_AUTORAISE_KEY,
 						     NULL);
 
-	settings->flags |= GNOME_WM_SETTING_AUTORAISE;
+	settings->flags |= MATE_WM_SETTING_AUTORAISE;
     }
 
-    if (to_get & GNOME_WM_SETTING_AUTORAISE_DELAY)
+    if (to_get & MATE_WM_SETTING_AUTORAISE_DELAY)
     {
 	settings->autoraise_delay =
-	    gconf_client_get_int (cwm->p->gconf,
+	    mateconf_client_get_int (cwm->p->mateconf,
 				  COMPIZ_AUTORAISE_DELAY_KEY,
 				  NULL);
 
-	settings->flags |= GNOME_WM_SETTING_AUTORAISE_DELAY;
+	settings->flags |= MATE_WM_SETTING_AUTORAISE_DELAY;
     }
 
-    if (to_get & GNOME_WM_SETTING_MOUSE_MOVE_MODIFIER)
+    if (to_get & MATE_WM_SETTING_MOUSE_MOVE_MODIFIER)
     {
 	const char *new;
 	char	   *str;
 
-	str = gconf_client_get_string (cwm->p->gconf,
+	str = mateconf_client_get_string (cwm->p->mateconf,
 				       COMPIZ_MOUSE_MOVE_KEY,
 				       NULL);
 
@@ -287,14 +287,14 @@ compiz_get_settings (GnomeWindowManager *wm,
 
 	settings->mouse_move_modifier = cwm->p->mouse_modifier;
 
-	settings->flags |= GNOME_WM_SETTING_MOUSE_MOVE_MODIFIER;
+	settings->flags |= MATE_WM_SETTING_MOUSE_MOVE_MODIFIER;
     }
 
-    if (to_get & GNOME_WM_SETTING_THEME)
+    if (to_get & MATE_WM_SETTING_THEME)
     {
 	char *str;
 
-	str = gconf_client_get_string (cwm->p->gconf,
+	str = mateconf_client_get_string (cwm->p->mateconf,
 				       COMPIZ_THEME_KEY,
 				       NULL);
 
@@ -305,16 +305,16 @@ compiz_get_settings (GnomeWindowManager *wm,
 	cwm->p->theme = str;
 	settings->theme = cwm->p->theme;
 
-	settings->flags |= GNOME_WM_SETTING_THEME;
+	settings->flags |= MATE_WM_SETTING_THEME;
     }
 
-    if (to_get & GNOME_WM_SETTING_DOUBLE_CLICK_ACTION)
+    if (to_get & MATE_WM_SETTING_DOUBLE_CLICK_ACTION)
     {
 	char *str;
 
 	settings->double_click_action = DOUBLE_CLICK_MAXIMIZE;
 
-	str = gconf_client_get_string (cwm->p->gconf,
+	str = mateconf_client_get_string (cwm->p->mateconf,
 				       COMPIZ_DOUBLE_CLICK_TITLEBAR_KEY,
 				       NULL);
 
@@ -333,14 +333,14 @@ compiz_get_settings (GnomeWindowManager *wm,
 	    }
 	}
 
-	settings->flags |= GNOME_WM_SETTING_DOUBLE_CLICK_ACTION;
+	settings->flags |= MATE_WM_SETTING_DOUBLE_CLICK_ACTION;
     }
 }
 
 static int
-compiz_get_settings_mask (GnomeWindowManager *wm)
+compiz_get_settings_mask (MateWindowManager *wm)
 {
-    return GNOME_WM_SETTING_MASK;
+    return MATE_WM_SETTING_MASK;
 }
 
 static GList *
@@ -370,7 +370,7 @@ add_themes_from_dir (GList	*current_list,
     {
 	theme_file_path =
 	    g_build_filename (path, entry->d_name,
-			      "metacity-1/metacity-theme-1.xml", NULL);
+			      "marco-1/marco-theme-1.xml", NULL);
 
 	if (g_file_test (theme_file_path, G_FILE_TEST_EXISTS))
 	{
@@ -394,14 +394,14 @@ add_themes_from_dir (GList	*current_list,
 }
 
 static GList *
-compiz_get_theme_list (GnomeWindowManager *wm)
+compiz_get_theme_list (MateWindowManager *wm)
 {
     GList *themes = NULL;
     char  *home_dir_themes;
 
     home_dir_themes = g_build_filename (g_get_home_dir (), ".themes", NULL);
 
-    themes = add_themes_from_dir (themes, METACITY_THEME_DIR);
+    themes = add_themes_from_dir (themes, MARCO_THEME_DIR);
     themes = add_themes_from_dir (themes, "/usr/share/themes");
     themes = add_themes_from_dir (themes, home_dir_themes);
 
@@ -411,18 +411,18 @@ compiz_get_theme_list (GnomeWindowManager *wm)
 }
 
 static char *
-compiz_get_user_theme_folder (GnomeWindowManager *wm)
+compiz_get_user_theme_folder (MateWindowManager *wm)
 {
     return g_build_filename (g_get_home_dir (), ".themes", NULL);
 }
 
 static void
-compiz_get_double_click_actions (GnomeWindowManager             *wm,
-				 const GnomeWMDoubleClickAction **actions_p,
+compiz_get_double_click_actions (MateWindowManager             *wm,
+				 const MateWMDoubleClickAction **actions_p,
 				 int                            *n_actions_p)
 {
     static gboolean initialized = FALSE;
-    static GnomeWMDoubleClickAction actions[] = {
+    static MateWMDoubleClickAction actions[] = {
 	{ DOUBLE_CLICK_NONE,		      N_("None")		  },
 	{ DOUBLE_CLICK_SHADE,		      N_("Shade")		  },
 	{ DOUBLE_CLICK_MAXIMIZE,	      N_("Maximize")		  },
@@ -453,23 +453,23 @@ compiz_window_manager_init (CompizWindowManager	     *cwm,
 			    CompizWindowManagerClass *class)
 {
     cwm->p		   = g_new0 (CompizWindowManagerPrivate, 1);
-    cwm->p->gconf	   = gconf_client_get_default ();
+    cwm->p->mateconf	   = mateconf_client_get_default ();
     cwm->p->mouse_modifier = NULL;
     cwm->p->font	   = NULL;
     cwm->p->theme	   = NULL;
 
-    gconf_client_add_dir (cwm->p->gconf,
+    mateconf_client_add_dir (cwm->p->mateconf,
 			  "/apps/compiz",
-			  GCONF_CLIENT_PRELOAD_ONELEVEL,
+			  MATECONF_CLIENT_PRELOAD_ONELEVEL,
 			  NULL);
 
-    gconf_client_add_dir (cwm->p->gconf,
-			  GCONF_DIR,
-			  GCONF_CLIENT_PRELOAD_ONELEVEL,
+    mateconf_client_add_dir (cwm->p->mateconf,
+			  MATECONF_DIR,
+			  MATECONF_CLIENT_PRELOAD_ONELEVEL,
 			  NULL);
 
 
-    g_signal_connect (G_OBJECT (cwm->p->gconf),
+    g_signal_connect (G_OBJECT (cwm->p->mateconf),
 		      "value_changed",
 		      G_CALLBACK (value_changed),
 		      cwm);
@@ -485,7 +485,7 @@ compiz_window_manager_finalize (GObject *object)
 
     cwm = COMPIZ_WINDOW_MANAGER (object);
 
-    g_signal_handlers_disconnect_by_func (G_OBJECT (cwm->p->gconf),
+    g_signal_handlers_disconnect_by_func (G_OBJECT (cwm->p->mateconf),
 					  G_CALLBACK (value_changed),
 					  cwm);
 
@@ -498,7 +498,7 @@ compiz_window_manager_finalize (GObject *object)
     if (cwm->p->theme)
 	g_free (cwm->p->theme);
 
-    g_object_unref (G_OBJECT (cwm->p->gconf));
+    g_object_unref (G_OBJECT (cwm->p->mateconf));
     g_free (cwm->p);
 
     G_OBJECT_CLASS (parent_class)->finalize (object);
@@ -508,14 +508,14 @@ static void
 compiz_window_manager_class_init (CompizWindowManagerClass *class)
 {
     GObjectClass	    *object_class;
-    GnomeWindowManagerClass *wm_class;
+    MateWindowManagerClass *wm_class;
 
     bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
     bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
     textdomain (GETTEXT_PACKAGE);
 
     object_class = G_OBJECT_CLASS (class);
-    wm_class	 = GNOME_WINDOW_MANAGER_CLASS (class);
+    wm_class	 = MATE_WINDOW_MANAGER_CLASS (class);
 
     object_class->finalize = compiz_window_manager_finalize;
 
@@ -550,7 +550,7 @@ compiz_window_manager_get_type (void)
 	};
 
 	compiz_window_manager_type =
-	    g_type_register_static (gnome_window_manager_get_type (),
+	    g_type_register_static (mate_window_manager_get_type (),
 				    "CompizWindowManager",
 				    &compiz_window_manager_info, 0);
     }

@@ -183,24 +183,24 @@ if test "$use_glib" = yes; then
   AC_DEFINE(USE_GLIB, 1, [Build glib plugin])
 fi
 
-AC_ARG_ENABLE(gconf,
-  [  --disable-gconf         Disable gconf plugin],
-  [use_gconf=$enableval], [use_gconf=yes])
+AC_ARG_ENABLE(mateconf,
+  [  --disable-mateconf         Disable mateconf plugin],
+  [use_mateconf=$enableval], [use_mateconf=yes])
 
-if test "x$use_gconf" = "xyes"; then
-  PKG_CHECK_MODULES(GCONF, gconf-2.0)
+if test "x$use_mateconf" = "xyes"; then
+  PKG_CHECK_MODULES(MATECONF, mateconf-2.0)
 
-  AC_PATH_PROG(GCONFTOOL, gconftool-2, no)
-  if test x"$GCONFTOOL" = xno; then
-    AC_MSG_ERROR([gconftool-2 executable not found in your path - should be installed with GConf])
+  AC_PATH_PROG(MATECONFTOOL, mateconftool-2, no)
+  if test x"$MATECONFTOOL" = xno; then
+    AC_MSG_ERROR([mateconftool-2 executable not found in your path - should be installed with MateConf])
   fi
 fi
 
-AM_GCONF_SOURCE_2
+AM_MATECONF_SOURCE_2
 
-AM_CONDITIONAL(USE_GCONF, test "x$use_gconf" = "xyes")
-if test "$use_gconf" = yes; then
-  AC_DEFINE(USE_GCONF, 1, [Build gconf plugin])
+AM_CONDITIONAL(USE_MATECONF, test "x$use_mateconf" = "xyes")
+if test "$use_mateconf" = yes; then
+  AC_DEFINE(USE_MATECONF, 1, [Build mateconf plugin])
 fi
 
 stylesheetdir=$datadir/compiz
@@ -287,17 +287,17 @@ AC_ARG_ENABLE(gtk,
   [  --disable-gtk           Disable gtk window decorator],
   [use_gtk=$enableval], [use_gtk=yes])
 
-AC_ARG_ENABLE(metacity,
-  [  --disable-metacity      Disable metacity theme support],
-  [use_metacity=$enableval], [use_metacity=yes])
+AC_ARG_ENABLE(marco,
+  [  --disable-marco      Disable marco theme support],
+  [use_marco=$enableval], [use_marco=yes])
 
-AC_ARG_ENABLE(gnome,
-  [  --disable-gnome         Disable gnome settings module],
-  [use_gnome=$enableval], [use_gnome=yes])
+AC_ARG_ENABLE(mate,
+  [  --disable-mate         Disable mate settings module],
+  [use_mate=$enableval], [use_mate=yes])
 
-AC_ARG_ENABLE(gnome-keybindings,
-  [  --disable-gnome-keybindings Disable gnome keybindings],
-  [use_gnome_keybindings=$enableval], [use_gnome_keybindings=yes])
+AC_ARG_ENABLE(mate-keybindings,
+  [  --disable-mate-keybindings Disable mate keybindings],
+  [use_mate_keybindings=$enableval], [use_mate_keybindings=yes])
 
 if test "x$use_gtk" = "xyes"; then
   PKG_CHECK_MODULES(GTK_WINDOW_DECORATOR,
@@ -322,38 +322,38 @@ if test "x$use_gtk" = "xyes"; then
 	PKG_CHECK_EXISTS(libwnck-1.0 >= 2.19.4,
 		     [have_libwnck_2_19_4=yes], [have_libwnck_2_19_4=no])
 
-    if test "x$use_metacity" = "xyes"; then
-      PKG_CHECK_MODULES(METACITY, libmetacity-private,
-			[use_metacity=yes], [use_metacity=no])
-      PKG_CHECK_EXISTS(libmetacity-private >= 2.15.21,
-		       [have_metacity_2_15_21=yes], [have_metacity_2_15_21=no])
-      PKG_CHECK_EXISTS(libmetacity-private >= 2.17.0,
-		       [have_metacity_2_17_0=yes], [have_metacity_2_17_0=no])
-      PKG_CHECK_EXISTS(libmetacity-private >= 2.23.2,
-		       [have_metacity_2_23_2=yes], [have_metacity_2_23_2=no])
+    if test "x$use_marco" = "xyes"; then
+      PKG_CHECK_MODULES(MARCO, libmarco-private,
+			[use_marco=yes], [use_marco=no])
+      PKG_CHECK_EXISTS(libmarco-private >= 2.15.21,
+		       [have_marco_2_15_21=yes], [have_marco_2_15_21=no])
+      PKG_CHECK_EXISTS(libmarco-private >= 2.17.0,
+		       [have_marco_2_17_0=yes], [have_marco_2_17_0=no])
+      PKG_CHECK_EXISTS(libmarco-private >= 2.23.2,
+		       [have_marco_2_23_2=yes], [have_marco_2_23_2=no])
     fi
 
-    if test "x$use_gnome" = "xyes"; then
-      PKG_CHECK_MODULES(GNOME_WINDOW_SETTINGS,
-			gnome-window-settings-2.0 gnome-desktop-2.0 gconf-2.0,
-			[use_gnome=yes], [use_gnome=no])
+    if test "x$use_mate" = "xyes"; then
+      PKG_CHECK_MODULES(MATE_WINDOW_SETTINGS,
+			mate-window-settings-2.0 mate-desktop-2.0 mateconf-2.0,
+			[use_mate=yes], [use_mate=no])
     fi
 
-    if test "x$use_gnome_keybindings" = "xyes"; then
-      PKG_CHECK_MODULES(GNOME_KEY_BINDINGS,
-			gnome-keybindings,
-			[use_gnome_keybindings=yes], [use_gnome_keybindings=no])
+    if test "x$use_mate_keybindings" = "xyes"; then
+      PKG_CHECK_MODULES(MATE_KEY_BINDINGS,
+			mate-keybindings,
+			[use_mate_keybindings=yes], [use_mate_keybindings=no])
     fi
 
-    windowsettingsdatadir=`pkg-config --variable=prefix gnome-window-settings-2.0`/share
-    windowsettingslibdir=`pkg-config --variable=libdir gnome-window-settings-2.0`    keybindingsdir=`pkg-config --variable=keysdir gnome-keybindings`
+    windowsettingsdatadir=`pkg-config --variable=prefix mate-window-settings-2.0`/share
+    windowsettingslibdir=`pkg-config --variable=libdir mate-window-settings-2.0`    keybindingsdir=`pkg-config --variable=keysdir mate-keybindings`
   else
-    use_metacity="no"
-    use_gnome="no"
+    use_marco="no"
+    use_mate="no"
   fi
 else
-  use_metacity="no"
-  use_gnome="no"
+  use_marco="no"
+  use_mate="no"
 fi
 
 AC_SUBST(windowsettingsdatadir)
@@ -373,31 +373,31 @@ if test "$use_gtk" = yes; then
   fi
 fi
 
-AM_CONDITIONAL(USE_METACITY, test "x$use_metacity" = "xyes")
-if test "$use_metacity" = yes; then
-  AC_DEFINE(USE_METACITY, 1, [Build metacity theme support])
-  if test "$have_metacity_2_15_21" = yes; then
-    AC_DEFINE(HAVE_METACITY_2_15_21, 1,
-	      [Define to 1 if metacity version >= 2.15.21])
+AM_CONDITIONAL(USE_MARCO, test "x$use_marco" = "xyes")
+if test "$use_marco" = yes; then
+  AC_DEFINE(USE_MARCO, 1, [Build marco theme support])
+  if test "$have_marco_2_15_21" = yes; then
+    AC_DEFINE(HAVE_MARCO_2_15_21, 1,
+	      [Define to 1 if marco version >= 2.15.21])
   fi
-  if test "$have_metacity_2_17_0" = yes; then
-    AC_DEFINE(HAVE_METACITY_2_17_0, 1,
-	      [Define to 1 if metacity version >= 2.17.0])
+  if test "$have_marco_2_17_0" = yes; then
+    AC_DEFINE(HAVE_MARCO_2_17_0, 1,
+	      [Define to 1 if marco version >= 2.17.0])
   fi
-  if test "$have_metacity_2_23_2" = yes; then
-    AC_DEFINE(HAVE_METACITY_2_23_2, 1,
-	      [Define to 1 if metacity version >= 2.23.2])
+  if test "$have_marco_2_23_2" = yes; then
+    AC_DEFINE(HAVE_MARCO_2_23_2, 1,
+	      [Define to 1 if marco version >= 2.23.2])
   fi
 fi
 
-AM_CONDITIONAL(USE_GNOME, test "x$use_gnome" = "xyes")
-if test "$use_gnome" = yes; then
-  AC_DEFINE(USE_GNOME, 1, [Build gnome settings module])
+AM_CONDITIONAL(USE_MATE, test "x$use_mate" = "xyes")
+if test "$use_mate" = yes; then
+  AC_DEFINE(USE_MATE, 1, [Build mate settings module])
 fi
 
-AM_CONDITIONAL(USE_GNOME_KEYBINDINGS, test "x$use_gnome_keybindings" = "xyes")
-if test "$use_gnome_keybindings" = yes; then
-  AC_DEFINE(USE_GNOME_KEYBINDINGS, 1, [Install custom keybindings])
+AM_CONDITIONAL(USE_MATE_KEYBINDINGS, test "x$use_mate_keybindings" = "xyes")
+if test "$use_mate_keybindings" = yes; then
+  AC_DEFINE(USE_MATE_KEYBINDINGS, 1, [Install custom keybindings])
 fi
 
 AC_ARG_ENABLE(kde,
@@ -619,7 +619,7 @@ AC_OUTPUT([
 compiz.pc
 compiz-cube.pc
 compiz-scale.pc
-compiz-gconf.pc
+compiz-mateconf.pc
 compiz-kconfig.pc
 Makefile
 src/Makefile
@@ -630,7 +630,7 @@ plugins/Makefile
 images/Makefile
 gtk/Makefile
 gtk/window-decorator/Makefile
-gtk/gnome/Makefile
+gtk/mate/Makefile
 kde/Makefile
 kde/window-decorator/Makefile
 kde/window-decorator-kde4/Makefile
@@ -641,7 +641,7 @@ metadata/Makefile
 echo ""
 echo "the following optional plugins will be compiled:"
 echo "  glib:     $use_glib"
-echo "  gconf:    $use_gconf"
+echo "  mateconf:    $use_mateconf"
 echo "  kconfig:  $use_kconfig"
 echo "  dbus:     $use_dbus"
 echo "  annotate: $use_annotate"
@@ -651,8 +651,8 @@ echo "  fuse:     $use_fuse"
 echo ""
 echo "and the following optional features will be compiled:"
 echo "  gtk:      $use_gtk"
-echo "  metacity: $use_metacity"
-echo "  gnome:    $use_gnome"
+echo "  marco: $use_marco"
+echo "  mate:    $use_mate"
 echo "  kde:      $use_kde"
 echo "  kde4:     $use_kde4"
 echo ""

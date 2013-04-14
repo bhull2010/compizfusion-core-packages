@@ -22,53 +22,53 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 1.1.0\n"
 
-#: ../gtk/gnome/50-compiz-desktop-key.xml.in.h:1
+#: ../gtk/mate/50-compiz-desktop-key.xml.in.h:1
 msgid "Desktop"
 msgstr "Työpöytä"
 
-#: ../gtk/gnome/50-compiz-key.xml.in.h:1
+#: ../gtk/mate/50-compiz-key.xml.in.h:1
 msgid "Window Management"
 msgstr "Ikkunoiden hallinta"
 
-#: ../gtk/gnome/compiz.desktop.in.h:1
+#: ../gtk/mate/compiz.desktop.in.h:1
 msgid "Compiz"
 msgstr "Compiz"
 
-#: ../gtk/gnome/compiz-window-manager.c:426 ../metadata/scale.xml.in.h:25
+#: ../gtk/mate/compiz-window-manager.c:426 ../metadata/scale.xml.in.h:25
 #: ../metadata/wobbly.xml.in.h:16
 msgid "None"
 msgstr "Ei mitään"
 
-#: ../gtk/gnome/compiz-window-manager.c:427
+#: ../gtk/mate/compiz-window-manager.c:427
 #: ../gtk/window-decorator/gtk-window-decorator.c:4625
 msgid "Shade"
 msgstr "Näytä rullattuna"
 
-#: ../gtk/gnome/compiz-window-manager.c:428 ../metadata/place.xml.in.h:9
+#: ../gtk/mate/compiz-window-manager.c:428 ../metadata/place.xml.in.h:9
 msgid "Maximize"
 msgstr "Suurenna"
 
-#: ../gtk/gnome/compiz-window-manager.c:429
+#: ../gtk/mate/compiz-window-manager.c:429
 msgid "Maximize Horizontally"
 msgstr "Suurenna vaakatasossa"
 
-#: ../gtk/gnome/compiz-window-manager.c:430
+#: ../gtk/mate/compiz-window-manager.c:430
 msgid "Maximize Vertically"
 msgstr "Suurenna pystytasossa"
 
-#: ../gtk/gnome/compiz-window-manager.c:431
+#: ../gtk/mate/compiz-window-manager.c:431
 msgid "Minimize"
 msgstr "Pienennä"
 
-#: ../gtk/gnome/compiz-window-manager.c:432
+#: ../gtk/mate/compiz-window-manager.c:432
 msgid "Raise"
 msgstr "Nosta"
 
-#: ../gtk/gnome/compiz-window-manager.c:433
+#: ../gtk/mate/compiz-window-manager.c:433
 msgid "Lower"
 msgstr "Laske"
 
-#: ../gtk/gnome/compiz-window-manager.c:434
+#: ../gtk/mate/compiz-window-manager.c:434
 #: ../gtk/window-decorator/gtk-window-decorator.c:4606
 #: ../metadata/core.xml.in.in.h:100
 msgid "Window Menu"
@@ -84,45 +84,45 @@ msgid "Blur type"
 msgstr "Sumennustyyppi"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:3
-msgid "Metacity theme active window opacity"
+msgid "Marco theme active window opacity"
 msgstr ""
-"Aktiivisen Metacity-ikkunan läpinäkyvyysMetacity-teeman aktiivisen ikkunan "
+"Aktiivisen Marco-ikkunan läpinäkyvyysMarco-teeman aktiivisen ikkunan "
 "läpinäkyvyys"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:4
-msgid "Metacity theme active window opacity shade"
-msgstr "Metacity-teeman aktiivisen ikkunan läpinäkyvyyden varjo"
+msgid "Marco theme active window opacity shade"
+msgstr "Marco-teeman aktiivisen ikkunan läpinäkyvyyden varjo"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:5
-msgid "Metacity theme opacity"
-msgstr "Metacity-teeman läpinäkyvyys"
+msgid "Marco theme opacity"
+msgstr "Marco-teeman läpinäkyvyys"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:6
-msgid "Metacity theme opacity shade"
-msgstr "Metacity-teeman läpinäkyvyyden varjo"
+msgid "Marco theme opacity shade"
+msgstr "Marco-teeman läpinäkyvyyden varjo"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:7
-msgid "Opacity to use for active windows with metacity theme decorations"
+msgid "Opacity to use for active windows with marco theme decorations"
 msgstr ""
-"Läpinäkyvyys aktiivisessa ikkunassa käytettäessä Metacity-teemaa kehyksineen"
+"Läpinäkyvyys aktiivisessa ikkunassa käytettäessä Marco-teemaa kehyksineen"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:8
-msgid "Opacity to use for metacity theme decorations"
-msgstr "Metacity-teeman kehyksiin käytettävä läpinäkyvyys"
+msgid "Opacity to use for marco theme decorations"
+msgstr "Marco-teeman kehyksiin käytettävä läpinäkyvyys"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:9
 msgid ""
-"Shade active windows with metacity theme decorations from opaque to "
+"Shade active windows with marco theme decorations from opaque to "
 "translucent"
 msgstr ""
-"Varjosta aktiiviset ikkunat Metacity-teemaa kehyksineen käytettäessä "
+"Varjosta aktiiviset ikkunat Marco-teemaa kehyksineen käytettäessä "
 "läpikuultamattomasta läpikuultavaan"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:10
 msgid ""
-"Shade windows with metacity theme decorations from opaque to translucent"
+"Shade windows with marco theme decorations from opaque to translucent"
 msgstr ""
-"Varjosta ikkunat Metacity-teemaa kehyksineen käytettäessä "
+"Varjosta ikkunat Marco-teemaa kehyksineen käytettäessä "
 "läpikuultamattomasta läpikuultavaan"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:11
@@ -134,12 +134,12 @@ msgid "Type of blur used for window decorations"
 msgstr "Sumennustyyppi ikkunan kehyksille"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:13
-msgid "Use metacity theme"
-msgstr "Käytä Metacity-teemaa"
+msgid "Use marco theme"
+msgstr "Käytä Marco-teemaa"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:14
-msgid "Use metacity theme when drawing window decorations"
-msgstr "Käytä Metacity-teemaa ikkunoiden kehyksissä"
+msgid "Use marco theme when drawing window decorations"
+msgstr "Käytä Marco-teemaa ikkunoiden kehyksissä"
 
 #: ../gtk/window-decorator/gtk-window-decorator.c:4414
 #: ../metadata/core.xml.in.in.h:12
@@ -730,7 +730,7 @@ msgstr "Suoritettava komentorivi, kun run_command8 suoritetaan"
 msgid "Command line to be executed in shell when run_command9 is invoked"
 msgstr "Suoritettava komentorivi, kun run_command9 suoritetaan"
 
-#: ../metadata/commands.xml.in.h:63 ../metadata/gnomecompat.xml.in.h:1
+#: ../metadata/commands.xml.in.h:63 ../metadata/matecompat.xml.in.h:1
 msgid "Commands"
 msgstr "Komennot"
 
@@ -1599,13 +1599,13 @@ msgstr "Käyttäjätilan tiedostojärjestelmä"
 msgid "Userspace file system"
 msgstr "Käyttäjätilan tiedostojärjestelmä"
 
-#: ../metadata/gconf.xml.in.h:1
-msgid "GConf"
-msgstr "GConf"
+#: ../metadata/mateconf.xml.in.h:1
+msgid "MateConf"
+msgstr "MateConf"
 
-#: ../metadata/gconf.xml.in.h:2
-msgid "GConf Control Backend"
-msgstr "GConf-tietokannan hallinta"
+#: ../metadata/mateconf.xml.in.h:2
+msgid "MateConf Control Backend"
+msgstr "MateConf-tietokannan hallinta"
 
 #: ../metadata/glib.xml.in.h:1
 msgid "GLib"
@@ -1615,57 +1615,57 @@ msgstr "GLib"
 msgid "GLib main loop support"
 msgstr "GLib-pääsilmukan tuki"
 
-#: ../metadata/gnomecompat.xml.in.h:2
-msgid "Gnome Compatibility"
-msgstr "Gnome-yhteensopivuus"
+#: ../metadata/matecompat.xml.in.h:2
+msgid "Mate Compatibility"
+msgstr "Mate-yhteensopivuus"
 
-#: ../metadata/gnomecompat.xml.in.h:3
+#: ../metadata/matecompat.xml.in.h:3
 msgid "Open a terminal"
 msgstr "Avaa pääte"
 
-#: ../metadata/gnomecompat.xml.in.h:4
-msgid "Options that keep Compiz compatible to the Gnome desktop environment"
+#: ../metadata/matecompat.xml.in.h:4
+msgid "Options that keep Compiz compatible to the Mate desktop environment"
 msgstr ""
-"Valinnat, joilla Compiz pidetään yhteensopivana Gnome-työpöytäympäristön "
+"Valinnat, joilla Compiz pidetään yhteensopivana Mate-työpöytäympäristön "
 "kanssa"
 
-#: ../metadata/gnomecompat.xml.in.h:5
+#: ../metadata/matecompat.xml.in.h:5
 msgid "Run Dialog"
 msgstr "Suorita komento -valintaikkuna"
 
-#: ../metadata/gnomecompat.xml.in.h:6
+#: ../metadata/matecompat.xml.in.h:6
 msgid "Run terminal command"
 msgstr "Suorita päätekomento"
 
-#: ../metadata/gnomecompat.xml.in.h:7
+#: ../metadata/matecompat.xml.in.h:7
 msgid "Screenshot command line"
 msgstr "Kuvakaappauksen komento"
 
-#: ../metadata/gnomecompat.xml.in.h:8
+#: ../metadata/matecompat.xml.in.h:8
 msgid "Show Main Menu"
 msgstr "Näytä päävalikko"
 
-#: ../metadata/gnomecompat.xml.in.h:9
+#: ../metadata/matecompat.xml.in.h:9
 msgid "Show Run Application dialog"
 msgstr "Näytä Suorita komento -valintaikkuna"
 
-#: ../metadata/gnomecompat.xml.in.h:10
+#: ../metadata/matecompat.xml.in.h:10
 msgid "Show the main menu"
 msgstr "Näytä päävalikko"
 
-#: ../metadata/gnomecompat.xml.in.h:11
+#: ../metadata/matecompat.xml.in.h:11
 msgid "Take a screenshot"
 msgstr "Ota kuvankaappaus"
 
-#: ../metadata/gnomecompat.xml.in.h:12
+#: ../metadata/matecompat.xml.in.h:12
 msgid "Take a screenshot of a window"
 msgstr "Ota kuvankaappaus ikkunasta"
 
-#: ../metadata/gnomecompat.xml.in.h:13
+#: ../metadata/matecompat.xml.in.h:13
 msgid "Terminal command line"
 msgstr "Päätteen komentorivi"
 
-#: ../metadata/gnomecompat.xml.in.h:14
+#: ../metadata/matecompat.xml.in.h:14
 msgid "Window screenshot command line"
 msgstr "Ikkunan kuvakaappauksen komento"
 

@@ -1,8 +1,8 @@
 moduledir = $(DESTDIR)$(windowsettingslibdir)/window-manager-settings
 
-if USE_GNOME
+if USE_MATE
 libcompiz_la_LDFLAGS = -export-dynamic -avoid-version -rpath $(moduledir)
-libcompiz_la_LIBADD  = @GNOME_WINDOW_SETTINGS_LIBS@
+libcompiz_la_LIBADD  = @MATE_WINDOW_SETTINGS_LIBS@
 libcompiz_la_SOURCES = 		\
 	compiz-window-manager.c	\
 	compiz-window-manager.h
@@ -12,13 +12,13 @@ desktopfilesdir	      = $(DESTDIR)$(datadir)/applications
 desktopfiles_in_files = compiz.desktop.in
 desktopfiles_files    = $(desktopfiles_in_files:.desktop.in=.desktop)
 
-wmpropertiesdir	      = $(DESTDIR)$(windowsettingsdatadir)/gnome/wm-properties
+wmpropertiesdir	      = $(DESTDIR)$(windowsettingsdatadir)/mate/wm-properties
 wmproperties_in_files = compiz-wm.desktop.in
 wmproperties_files    = $(wmproperties_in_files:.desktop.in=.desktop)
 
 @INTLTOOL_DESKTOP_RULE@
 
-if USE_GNOME_KEYBINDINGS
+if USE_MATE_KEYBINDINGS
 
 xmldir       = $(DESTDIR)$(keybindingsdir)
 xml_in_files = 50-compiz-desktop-key.xml.in 50-compiz-key.xml.in
@@ -47,7 +47,7 @@ install-data-local:
 		); \
 	fi
 
-if USE_GNOME_KEYBINDINGS
+if USE_MATE_KEYBINDINGS
 	if mkdir -p $(xmldir) && test -w $(xmldir); then ( \
 		$(INSTALL) -m 644 $(xml_files) \
 		$(xmldir) \
@@ -68,7 +68,7 @@ uninstall-local:
 		rm -f $(wmpropertiesdir)/compiz-wm.desktop \
 		); \
 	fi
-if USE_GNOME_KEYBINDINGS
+if USE_MATE_KEYBINDINGS
 	if test -w $(xmldir); then ( \
 		rm -f $(xmldir)/50-compiz*key.xml \
 		); \
@@ -76,8 +76,8 @@ if USE_GNOME_KEYBINDINGS
 endif
 endif
 
-INCLUDES = @GNOME_WINDOW_SETTINGS_CFLAGS@			   \
-	-DMETACITY_THEME_DIR=\""$(windowsettingsdatadir)/themes"\" \
+INCLUDES = @MATE_WINDOW_SETTINGS_CFLAGS@			   \
+	-DMARCO_THEME_DIR=\""$(windowsettingsdatadir)/themes"\" \
 	-DLOCALEDIR="\"@datadir@/locale"\"
 
 noinst_LTLIBRARIES = \

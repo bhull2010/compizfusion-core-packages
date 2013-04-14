@@ -18,57 +18,57 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Pootle 1.0.2\n"
 
-#: ../gtk/gnome/50-compiz-desktop-key.xml.in.h:1
+#: ../gtk/mate/50-compiz-desktop-key.xml.in.h:1
 msgid "Desktop"
 msgstr "Skrivebord"
 
-#: ../gtk/gnome/50-compiz-key.xml.in.h:1
+#: ../gtk/mate/50-compiz-key.xml.in.h:1
 msgid "Window Management"
 msgstr "Vindushåndtering"
 
-#: ../gtk/gnome/compiz.desktop.in.h:1
+#: ../gtk/mate/compiz.desktop.in.h:1
 msgid "Compiz"
 msgstr "Compiz"
 
-#: ../gtk/gnome/compiz-window-manager.c:426 ../metadata/scale.xml.in.h:25
+#: ../gtk/mate/compiz-window-manager.c:426 ../metadata/scale.xml.in.h:25
 #: ../metadata/wobbly.xml.in.h:16
 msgid "None"
 msgstr "Ingen"
 
-#: ../gtk/gnome/compiz-window-manager.c:427
+#: ../gtk/mate/compiz-window-manager.c:427
 #: ../gtk/window-decorator/gtk-window-decorator.c:4625
 msgid "Shade"
 msgstr "Skyggelegg"
 
-#: ../gtk/gnome/compiz-window-manager.c:428 ../metadata/place.xml.in.h:9
+#: ../gtk/mate/compiz-window-manager.c:428 ../metadata/place.xml.in.h:9
 msgid "Maximize"
 msgstr "Maksimer"
 
-#: ../gtk/gnome/compiz-window-manager.c:429
+#: ../gtk/mate/compiz-window-manager.c:429
 #, fuzzy
 msgid "Maximize Horizontally"
 msgstr "Maksimer vindu horisontalt"
 
-#: ../gtk/gnome/compiz-window-manager.c:430
+#: ../gtk/mate/compiz-window-manager.c:430
 #, fuzzy
 msgid "Maximize Vertically"
 msgstr "Maksimer vindu vertikalt"
 
-#: ../gtk/gnome/compiz-window-manager.c:431
+#: ../gtk/mate/compiz-window-manager.c:431
 #, fuzzy
 msgid "Minimize"
 msgstr "Minimert"
 
-#: ../gtk/gnome/compiz-window-manager.c:432
+#: ../gtk/mate/compiz-window-manager.c:432
 #, fuzzy
 msgid "Raise"
 msgstr "Auto-hev"
 
-#: ../gtk/gnome/compiz-window-manager.c:433
+#: ../gtk/mate/compiz-window-manager.c:433
 msgid "Lower"
 msgstr ""
 
-#: ../gtk/gnome/compiz-window-manager.c:434
+#: ../gtk/mate/compiz-window-manager.c:434
 #: ../gtk/window-decorator/gtk-window-decorator.c:4606
 #: ../metadata/core.xml.in.in.h:100
 msgid "Window Menu"
@@ -84,42 +84,42 @@ msgid "Blur type"
 msgstr "Sløringstype"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:3
-msgid "Metacity theme active window opacity"
-msgstr "Dekkevne for aktive vinduer med Metacity-tema"
+msgid "Marco theme active window opacity"
+msgstr "Dekkevne for aktive vinduer med Marco-tema"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:4
-msgid "Metacity theme active window opacity shade"
-msgstr "Dekkevne for aktive vinduer med Metacity-tema som er rullet opp"
+msgid "Marco theme active window opacity shade"
+msgstr "Dekkevne for aktive vinduer med Marco-tema som er rullet opp"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:5
-msgid "Metacity theme opacity"
-msgstr "Dekkevne for Metacity-tema"
+msgid "Marco theme opacity"
+msgstr "Dekkevne for Marco-tema"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:6
-msgid "Metacity theme opacity shade"
-msgstr "Dekkevne ved opprulling med Metacity-tema"
+msgid "Marco theme opacity shade"
+msgstr "Dekkevne ved opprulling med Marco-tema"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:7
-msgid "Opacity to use for active windows with metacity theme decorations"
-msgstr "Dekkevne å bruke for aktive vinduer med Metacity temadekorasjoner"
+msgid "Opacity to use for active windows with marco theme decorations"
+msgstr "Dekkevne å bruke for aktive vinduer med Marco temadekorasjoner"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:8
-msgid "Opacity to use for metacity theme decorations"
-msgstr "Dekkevne å bruke for Metacity temadekorasjoner"
+msgid "Opacity to use for marco theme decorations"
+msgstr "Dekkevne å bruke for Marco temadekorasjoner"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:9
 msgid ""
-"Shade active windows with metacity theme decorations from opaque to "
+"Shade active windows with marco theme decorations from opaque to "
 "translucent"
 msgstr ""
-"Skyggelegg aktive vinuder med Metacity temadekorasjoner fra fulldekkende til "
+"Skyggelegg aktive vinuder med Marco temadekorasjoner fra fulldekkende til "
 "gjennomsiktig"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:10
 msgid ""
-"Shade windows with metacity theme decorations from opaque to translucent"
+"Shade windows with marco theme decorations from opaque to translucent"
 msgstr ""
-"Skyggelegg vinduer med Metacity temadekorasjoner fra fulldekkende til "
+"Skyggelegg vinduer med Marco temadekorasjoner fra fulldekkende til "
 "gjennomsiktig"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:11
@@ -131,12 +131,12 @@ msgid "Type of blur used for window decorations"
 msgstr "Type sløring som brukes for vindusdekorasjoner"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:13
-msgid "Use metacity theme"
-msgstr "Bruk Metacity-tema"
+msgid "Use marco theme"
+msgstr "Bruk Marco-tema"
 
 #: ../gtk/window-decorator/gwd.schemas.in.h:14
-msgid "Use metacity theme when drawing window decorations"
-msgstr "Bruk Metacity-tema når vindusdekorasjoner tegnes"
+msgid "Use marco theme when drawing window decorations"
+msgstr "Bruk Marco-tema når vindusdekorasjoner tegnes"
 
 #: ../gtk/window-decorator/gtk-window-decorator.c:4414
 #: ../metadata/core.xml.in.in.h:12
@@ -834,7 +834,7 @@ msgid "Command line to be executed in shell when run_command9 is invoked"
 msgstr ""
 "Kommandolinje som skal kjøres i konsoll når kjør_kommando9 blir innhentet"
 
-#: ../metadata/commands.xml.in.h:63 ../metadata/gnomecompat.xml.in.h:1
+#: ../metadata/commands.xml.in.h:63 ../metadata/matecompat.xml.in.h:1
 #, fuzzy
 msgid "Commands"
 msgstr "Kommando"
@@ -1714,12 +1714,12 @@ msgstr "Filsystem på brukerområde"
 msgid "Userspace file system"
 msgstr "Filsystem på brukerens område"
 
-#: ../metadata/gconf.xml.in.h:1
-msgid "GConf"
+#: ../metadata/mateconf.xml.in.h:1
+msgid "MateConf"
 msgstr "Gconf"
 
-#: ../metadata/gconf.xml.in.h:2
-msgid "GConf Control Backend"
+#: ../metadata/mateconf.xml.in.h:2
+msgid "MateConf Control Backend"
 msgstr "Gconf kontrollmotor"
 
 #: ../metadata/glib.xml.in.h:1
@@ -1731,56 +1731,56 @@ msgstr "Glib"
 msgid "GLib main loop support"
 msgstr "Glib støtte for hovedløkke"
 
-#: ../metadata/gnomecompat.xml.in.h:2
-msgid "Gnome Compatibility"
+#: ../metadata/matecompat.xml.in.h:2
+msgid "Mate Compatibility"
 msgstr ""
 
-#: ../metadata/gnomecompat.xml.in.h:3
+#: ../metadata/matecompat.xml.in.h:3
 msgid "Open a terminal"
 msgstr "Åpne en terminal"
 
-#: ../metadata/gnomecompat.xml.in.h:4
-msgid "Options that keep Compiz compatible to the Gnome desktop environment"
+#: ../metadata/matecompat.xml.in.h:4
+msgid "Options that keep Compiz compatible to the Mate desktop environment"
 msgstr ""
 
-#: ../metadata/gnomecompat.xml.in.h:5
+#: ../metadata/matecompat.xml.in.h:5
 msgid "Run Dialog"
 msgstr "Kjør-dialog"
 
-#: ../metadata/gnomecompat.xml.in.h:6
+#: ../metadata/matecompat.xml.in.h:6
 #, fuzzy
 msgid "Run terminal command"
 msgstr "Kommandolinje for terminal"
 
-#: ../metadata/gnomecompat.xml.in.h:7
+#: ../metadata/matecompat.xml.in.h:7
 msgid "Screenshot command line"
 msgstr "Kommandolinje for skjermbilde"
 
-#: ../metadata/gnomecompat.xml.in.h:8
+#: ../metadata/matecompat.xml.in.h:8
 msgid "Show Main Menu"
 msgstr "Vis hovedmeny"
 
-#: ../metadata/gnomecompat.xml.in.h:9
+#: ../metadata/matecompat.xml.in.h:9
 msgid "Show Run Application dialog"
 msgstr "Vis \"Kjør program\"-dialog"
 
-#: ../metadata/gnomecompat.xml.in.h:10
+#: ../metadata/matecompat.xml.in.h:10
 msgid "Show the main menu"
 msgstr "Vis hovedmenyen"
 
-#: ../metadata/gnomecompat.xml.in.h:11
+#: ../metadata/matecompat.xml.in.h:11
 msgid "Take a screenshot"
 msgstr "Ta et skjermbilde"
 
-#: ../metadata/gnomecompat.xml.in.h:12
+#: ../metadata/matecompat.xml.in.h:12
 msgid "Take a screenshot of a window"
 msgstr "Ta et skjermbilde av et vindu"
 
-#: ../metadata/gnomecompat.xml.in.h:13
+#: ../metadata/matecompat.xml.in.h:13
 msgid "Terminal command line"
 msgstr "Kommandolinje for terminal"
 
-#: ../metadata/gnomecompat.xml.in.h:14
+#: ../metadata/matecompat.xml.in.h:14
 msgid "Window screenshot command line"
 msgstr "Kommandolinje for skjermbilde av vindu"
 

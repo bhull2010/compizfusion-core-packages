@@ -29,13 +29,13 @@
   <xsl:param name="appName">/apps/compiz</xsl:param>
 
   <xsl:template  match="/compiz">
-    <gconfschemafile>
+    <mateconfschemafile>
       <schemalist>
         <xsl:for-each select="/compiz//option[not(@read_only='true') and not(@type='action')]">
           <xsl:call-template name="dumpOption"/>
         </xsl:for-each>
       </schemalist>
-    </gconfschemafile>
+    </mateconfschemafile>
   </xsl:template>
 
   <!-- generates the schema for an option -->
@@ -120,7 +120,7 @@
     </schema>
   </xsl:template>
 
-  <!-- converts a compiz type to a gconf type -->
+  <!-- converts a compiz type to a mateconf type -->
   <xsl:template name="printType">
     <xsl:param name="type">
       <xsl:value-of select="@type"/>

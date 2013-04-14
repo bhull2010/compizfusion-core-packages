@@ -37,7 +37,7 @@ typedef struct _GLibWatch {
     CompDisplay	      *display;
 } GLibWatch;
 
-typedef struct _GConfDisplay {
+typedef struct _MateConfDisplay {
     HandleEventProc   handleEvent;
     CompTimeoutHandle timeoutHandle;
     CompTimeoutHandle wakeupTimeoutHandle;
