@@ -4,7 +4,6 @@
 ### End of Debian-imported patches ###
 ### Patches imported from the ubuntu compiz packages ###
 029_default_options.patch
-037_fullscreen_stacking_fixes.patch
 049-damage-report-non-empty.patch
 050_stacking.patch
 ### End of ubuntu-imported patches ###
