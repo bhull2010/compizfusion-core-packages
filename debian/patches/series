@@ -4,7 +4,6 @@
 020_disable_gdk_gtk_disable_deprecated
 ### End of Debian-imported patches ###
 ### Patches imported from the ubuntu compiz packages ###
-016_call_glxwaitx_before_drawing.patch
 017_always_unredirect_screensaver_on_nvidia.patch
 029_default_options.patch
 037_fullscreen_stacking_fixes.patch
