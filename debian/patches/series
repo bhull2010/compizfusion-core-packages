@@ -6,7 +6,6 @@
 020_disable_gdk_gtk_disable_deprecated
 ### End of Debian-imported patches ###
 ### Patches imported from the ubuntu compiz packages ###
-013-add-cursor-theme-support.patch
 014-fix-gtk-window-decorator-no-argb-crash.patch
 015_draw_dock_shadows_on_desktop.patch
 016_call_glxwaitx_before_drawing.patch

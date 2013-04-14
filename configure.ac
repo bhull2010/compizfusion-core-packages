@@ -125,6 +125,7 @@ COMPIZ_REQUIRES="x11        \
 		 xdamage    \
 		 xrandr	    \
 		 xinerama   \
+		 xcursor    \
 		 ice	    \
 		 sm	    \
 		 libxml-2.0 \
@@ -301,6 +302,7 @@ AC_ARG_ENABLE(gnome-keybindings,
 if test "x$use_gtk" = "xyes"; then
   PKG_CHECK_MODULES(GTK_WINDOW_DECORATOR,
 		    xrender >= 0.8.4  \
+		    xcursor \
 		    gtk+-2.0 >= 2.8.0 \
 		    libwnck-1.0	      \
 		    pangocairo,
