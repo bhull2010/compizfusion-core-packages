@@ -4,7 +4,6 @@
 ### End of Debian-imported patches ###
 ### Patches imported from the ubuntu compiz packages ###
 029_default_options.patch
-049-damage-report-non-empty.patch
 050_stacking.patch
 ### End of ubuntu-imported patches ###
 ### http://forums.mate-desktop.org/viewtopic.php?f=8&t=818
