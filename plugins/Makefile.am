@@ -91,34 +91,6 @@ libannotate_la_SOURCES = annotate.c
 libannotate_module = libannotate.la
 endif
 
-if USE_GLIB
-libglib_la_LDFLAGS = -module -avoid-version -no-undefined
-libglib_la_LIBADD = @GLIB_LIBS@
-libglib_la_SOURCES = glib.c
-libglib_module = libglib.la
-endif
-
-if USE_MATECONF
-libmateconf_la_LDFLAGS = -module -avoid-version -no-undefined
-libmateconf_la_LIBADD = @MATECONF_LIBS@
-libmateconf_la_SOURCES = mateconf.c
-libmateconf_module = libmateconf.la
-endif
-
-if USE_KCONFIG
-libkconfig_la_LDFLAGS = -module -avoid-version -no-undefined
-libkconfig_la_LIBADD = @KCONFIG_LIBS@
-libkconfig_la_SOURCES = kconfig.cpp
-libkconfig_module = libkconfig.la
-endif
-
-if DBUS_PLUGIN
-libdbus_la_LDFLAGS = -module -avoid-version -no-undefined
-libdbus_la_LIBADD = @DBUS_LIBS@
-libdbus_la_SOURCES = dbus.c
-libdbus_module = libdbus.la
-endif
-
 if INOTIFY_PLUGIN
 libinotify_la_LDFLAGS = -module -avoid-version -no-undefined
 libinotify_la_SOURCES = inotify.c
@@ -137,10 +109,6 @@ INCLUDES =					\
 	@LIBPNG_CFLAGS@				\
 	@LIBRSVG_CFLAGS@			\
 	@ANNOTATE_CFLAGS@			\
-	@MATECONF_CFLAGS@				\
-	@KCONFIG_CFLAGS@			\
-	@DBUS_CFLAGS@				\
-	@GLIB_CFLAGS@				\
 	@FUSE_CFLAGS@				\
 	-DFUSE_USE_VERSION=26			\
 	-DALL_LINGUAS="\"@ALL_LINGUAS@\""	\
@@ -154,9 +122,6 @@ INCLUDES =					\
 moduledir = $(plugindir)
 
 module_LTLIBRARIES =		\
-	$(libglib_module)	\
-	$(libmateconf_module)	\
-	$(libkconfig_module)	\
 	libdecoration.la	\
 	libwobbly.la		\
 	libfade.la		\
@@ -168,7 +133,6 @@ module_LTLIBRARIES =		\
 	libmove.la		\
 	libresize.la		\
 	libplace.la             \
-	$(libdbus_module)	\
 	libswitcher.la		\
 	libwater.la		\
 	libscreenshot.la	\
