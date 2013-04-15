@@ -231,7 +231,7 @@ AC_ARG_ENABLE(marco,
   [use_marco=$enableval], [use_marco=yes])
 
 AC_ARG_ENABLE(mate,
-  [  --disable-mate         Disable mate settings module],
+  [  --disable-mate         Disable mate compatibility plugin],
   [use_mate=$enableval], [use_mate=yes])
 
 if test "x$use_gtk" = "xyes"; then
@@ -239,35 +239,14 @@ if test "x$use_gtk" = "xyes"; then
 		    xrender >= 0.8.4  \
 		    xcursor \
 		    gtk+-2.0 >= 2.8.0 \
-		    libwnck-1.0	      \
+		    libmatewnck	      \
 		    pangocairo,
 		    [use_gtk=yes], [use_gtk=no])
   if test "x$use_gtk" = "xyes"; then
-    save_CFLAGS="$CFLAGS"
-    save_LIBS="$LIBS"
-    CFLAGS="$CFLAGS $GTK_WINDOW_DECORATOR_CFLAGS"
-    LIBS="$LIBS $GTK_WINDOW_DECORATOR_LIBS"
-    AC_CHECK_FUNCS(wnck_window_has_name)
-    CFLAGS="$save_CFLAGS"
-    LIBS="$save_LIBS"
-
-    PKG_CHECK_EXISTS(libwnck-1.0 >= 2.18.1,
-		     [have_libwnck_2_18_1=yes], [have_libwnck_2_18_1=no])
-
-	PKG_CHECK_EXISTS(libwnck-1.0 >= 2.19.4,
-		     [have_libwnck_2_19_4=yes], [have_libwnck_2_19_4=no])
-
     if test "x$use_marco" = "xyes"; then
       PKG_CHECK_MODULES(MARCO, libmarco-private,
 			[use_marco=yes], [use_marco=no])
-      PKG_CHECK_EXISTS(libmarco-private >= 2.15.21,
-		       [have_marco_2_15_21=yes], [have_marco_2_15_21=no])
-      PKG_CHECK_EXISTS(libmarco-private >= 2.17.0,
-		       [have_marco_2_17_0=yes], [have_marco_2_17_0=no])
-      PKG_CHECK_EXISTS(libmarco-private >= 2.23.2,
-		       [have_marco_2_23_2=yes], [have_marco_2_23_2=no])
     fi
-
   else
     use_marco="no"
     use_mate="no"
@@ -280,31 +259,11 @@ fi
 AM_CONDITIONAL(USE_GTK, test "x$use_gtk" = "xyes")
 if test "$use_gtk" = yes; then
   AC_DEFINE(USE_GTK, 1, [Build gtk window decorator])
-  if test "$have_libwnck_2_18_1" = yes; then
-    AC_DEFINE(HAVE_LIBWNCK_2_18_1, 1,
-	      [Define to 1 if libwnck version >= 2_18_1])
-  fi
-  if test "$have_libwnck_2_19_4" = yes; then
-    AC_DEFINE(HAVE_LIBWNCK_2_19_4, 1,
-	      [Define to 1 if libwnck version >= 2_19_4])
-  fi
 fi
 
 AM_CONDITIONAL(USE_MARCO, test "x$use_marco" = "xyes")
 if test "$use_marco" = yes; then
   AC_DEFINE(USE_MARCO, 1, [Build marco theme support])
-  if test "$have_marco_2_15_21" = yes; then
-    AC_DEFINE(HAVE_MARCO_2_15_21, 1,
-	      [Define to 1 if marco version >= 2.15.21])
-  fi
-  if test "$have_marco_2_17_0" = yes; then
-    AC_DEFINE(HAVE_MARCO_2_17_0, 1,
-	      [Define to 1 if marco version >= 2.17.0])
-  fi
-  if test "$have_marco_2_23_2" = yes; then
-    AC_DEFINE(HAVE_MARCO_2_23_2, 1,
-	      [Define to 1 if marco version >= 2.23.2])
-  fi
 fi
 
 AM_CONDITIONAL(USE_MATE, test "x$use_mate" = "xyes")

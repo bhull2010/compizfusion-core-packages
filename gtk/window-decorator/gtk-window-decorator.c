@@ -35,23 +35,8 @@
 #include <gdk/gdkx.h>
 #include <glib/gi18n.h>
 
-#ifdef USE_MATECONF
-#include <mateconf/mateconf-client.h>
-#endif
-
-#ifdef USE_DBUS_GLIB
-#define DBUS_API_SUBJECT_TO_CHANGE
-#include <dbus/dbus.h>
-#include <dbus/dbus-glib-lowlevel.h>
-#endif
-
-#define WNCK_I_KNOW_THIS_IS_UNSTABLE
-#include <libwnck/libwnck.h>
-#include <libwnck/window-action-menu.h>
-
-#ifndef HAVE_LIBWNCK_2_19_4
-#define wnck_window_get_client_window_geometry wnck_window_get_geometry
-#endif
+#include <libmatewnck/libmatewnck.h>
+#include <libmatewnck/window-action-menu.h>
 
 #include <cairo.h>
 #include <cairo-xlib.h>
@@ -137,11 +122,6 @@
 
 #define WHEEL_ACTION_KEY   \
     MATECONF_DIR "/mouse_wheel_action"
-
-#define DBUS_DEST       "org.freedesktop.compiz"
-#define DBUS_PATH       "/org/freedesktop/compiz/decoration/allscreens"
-#define DBUS_INTERFACE  "org.freedesktop.compiz"
-#define DBUS_METHOD_GET "get"
 
 #define STROKE_ALPHA 0.6
 
@@ -389,8 +369,8 @@ typedef struct _decor {
     cairo_pattern_t   *icon;
     GdkPixmap	      *icon_pixmap;
     GdkPixbuf	      *icon_pixbuf;
-    WnckWindowState   state;
-    WnckWindowActions actions;
+    MatewnckWindowState   state;
+    MatewnckWindowActions actions;
     XID		      prop_xid;
     GtkWidget	      *force_quit_dialog;
     void	      (*draw) (struct _decor *d);
@@ -422,7 +402,7 @@ gboolean (*theme_get_button_position)       (decor_t *d,
 					     gint    *w,
 					     gint    *h);
 
-typedef void (*event_callback) (WnckWindow *win, XEvent *event);
+typedef void (*event_callback) (MatewnckWindow *win, XEvent *event);
 
 static char *program_name;
 
@@ -937,8 +917,8 @@ draw_window_decoration (decor_t *d)
 
     style = gtk_widget_get_style (style_window);
 
-    if (d->state & (WNCK_WINDOW_STATE_MAXIMIZED_HORIZONTALLY |
-		    WNCK_WINDOW_STATE_MAXIMIZED_VERTICALLY))
+    if (d->state & (MATEWNCK_WINDOW_STATE_MAXIMIZED_HORIZONTALLY |
+		    MATEWNCK_WINDOW_STATE_MAXIMIZED_VERTICALLY))
 	corners = 0;
 
     color.r = style->bg[GTK_STATE_NORMAL].red   / 65535.0;
@@ -1156,7 +1136,7 @@ draw_window_decoration (decor_t *d)
 
     button_x = d->width - d->context->right_space - 13;
 
-    if (d->actions & WNCK_WINDOW_ACTION_CLOSE)
+    if (d->actions & MATEWNCK_WINDOW_ACTION_CLOSE)
     {
 	button_state_offsets (button_x,
 			      y1 - 3.0 + titlebar_height / 2,
@@ -1182,7 +1162,7 @@ draw_window_decoration (decor_t *d)
 	}
     }
 
-    if (d->actions & WNCK_WINDOW_ACTION_MAXIMIZE)
+    if (d->actions & MATEWNCK_WINDOW_ACTION_MAXIMIZE)
     {
 	button_state_offsets (button_x,
 			      y1 - 3.0 + titlebar_height / 2,
@@ -1199,8 +1179,8 @@ draw_window_decoration (decor_t *d)
 					      STROKE_ALPHA);
 	    cairo_move_to (cr, x, y);
 
-	    if (d->state & (WNCK_WINDOW_STATE_MAXIMIZED_HORIZONTALLY |
-			    WNCK_WINDOW_STATE_MAXIMIZED_VERTICALLY))
+	    if (d->state & (MATEWNCK_WINDOW_STATE_MAXIMIZED_HORIZONTALLY |
+			    MATEWNCK_WINDOW_STATE_MAXIMIZED_VERTICALLY))
 		draw_unmax_button (d, cr, 4.0);
 	    else
 		draw_max_button (d, cr, 4.0);
@@ -1215,8 +1195,8 @@ draw_window_decoration (decor_t *d)
 					      alpha * 0.75);
 	    cairo_move_to (cr, x, y);
 
-	    if (d->state & (WNCK_WINDOW_STATE_MAXIMIZED_HORIZONTALLY |
-			    WNCK_WINDOW_STATE_MAXIMIZED_VERTICALLY))
+	    if (d->state & (MATEWNCK_WINDOW_STATE_MAXIMIZED_HORIZONTALLY |
+			    MATEWNCK_WINDOW_STATE_MAXIMIZED_VERTICALLY))
 		draw_unmax_button (d, cr, 4.0);
 	    else
 		draw_max_button (d, cr, 4.0);
@@ -1225,7 +1205,7 @@ draw_window_decoration (decor_t *d)
 	}
     }
 
-    if (d->actions & WNCK_WINDOW_ACTION_MINIMIZE)
+    if (d->actions & MATEWNCK_WINDOW_ACTION_MINIMIZE)
     {
 	button_state_offsets (button_x,
 			      y1 - 3.0 + titlebar_height / 2,
@@ -1396,19 +1376,10 @@ meta_get_corner_radius (const MetaFrameGeometry *fgeom,
 			int		        *bottom_left_radius,
 			int			*bottom_right_radius)
 {
-
-#ifdef HAVE_MARCO_2_17_0
     *top_left_radius     = fgeom->top_left_corner_rounded_radius;
     *top_right_radius    = fgeom->top_right_corner_rounded_radius;
     *bottom_left_radius  = fgeom->bottom_left_corner_rounded_radius;
     *bottom_right_radius = fgeom->bottom_right_corner_rounded_radius;
-#else
-    *top_left_radius     = fgeom->top_left_corner_rounded ? 5 : 0;
-    *top_right_radius    = fgeom->top_right_corner_rounded ? 5 : 0;
-    *bottom_left_radius  = fgeom->bottom_left_corner_rounded ? 5 : 0;
-    *bottom_right_radius = fgeom->bottom_right_corner_rounded ? 5 : 0;
-#endif
-
 }
 
 static int
@@ -1617,8 +1588,6 @@ meta_function_to_type (MetaButtonFunction function)
 	return META_BUTTON_TYPE_MAXIMIZE;
     case META_BUTTON_FUNCTION_CLOSE:
 	return META_BUTTON_TYPE_CLOSE;
-
-#ifdef HAVE_MARCO_2_17_0
     case META_BUTTON_FUNCTION_SHADE:
 	return META_BUTTON_TYPE_SHADE;
     case META_BUTTON_FUNCTION_ABOVE:
@@ -1631,7 +1600,6 @@ meta_function_to_type (MetaButtonFunction function)
 	return META_BUTTON_TYPE_UNABOVE;
     case META_BUTTON_FUNCTION_UNSTICK:
 	return META_BUTTON_TYPE_UNSTICK;
-#endif
 
     default:
 	break;
@@ -1675,8 +1643,6 @@ meta_button_state_for_button_type (decor_t	  *d,
 	return meta_button_state (d->button_states[BUTTON_MIN]);
     case META_BUTTON_TYPE_MENU:
 	return meta_button_state (d->button_states[BUTTON_MENU]);
-
-#ifdef HAVE_MARCO_2_17_0
     case META_BUTTON_TYPE_SHADE:
 	return meta_button_state (d->button_states[BUTTON_SHADE]);
     case META_BUTTON_TYPE_ABOVE:
@@ -1689,7 +1655,6 @@ meta_button_state_for_button_type (decor_t	  *d,
 	return meta_button_state (d->button_states[BUTTON_UNABOVE]);
     case META_BUTTON_TYPE_UNSTICK:
 	return meta_button_state (d->button_states[BUTTON_UNSTICK]);
-#endif
 
     default:
 	break;
@@ -1731,56 +1696,54 @@ meta_get_decoration_geometry (decor_t		*d,
 
     *flags = 0;
 
-    if (d->actions & WNCK_WINDOW_ACTION_CLOSE)
+    if (d->actions & MATEWNCK_WINDOW_ACTION_CLOSE)
 	*flags |= META_FRAME_ALLOWS_DELETE;
 
-    if (d->actions & WNCK_WINDOW_ACTION_MINIMIZE)
+    if (d->actions & MATEWNCK_WINDOW_ACTION_MINIMIZE)
 	*flags |= META_FRAME_ALLOWS_MINIMIZE;
 
-    if (d->actions & WNCK_WINDOW_ACTION_MAXIMIZE)
+    if (d->actions & MATEWNCK_WINDOW_ACTION_MAXIMIZE)
 	*flags |= META_FRAME_ALLOWS_MAXIMIZE;
 
     *flags |= META_FRAME_ALLOWS_MENU;
 
-    if (d->actions & WNCK_WINDOW_ACTION_RESIZE)
+    if (d->actions & MATEWNCK_WINDOW_ACTION_RESIZE)
     {
-	if (!(d->state & WNCK_WINDOW_STATE_MAXIMIZED_VERTICALLY))
+	if (!(d->state & MATEWNCK_WINDOW_STATE_MAXIMIZED_VERTICALLY))
 	    *flags |= META_FRAME_ALLOWS_VERTICAL_RESIZE;
-	if (!(d->state & WNCK_WINDOW_STATE_MAXIMIZED_HORIZONTALLY))
+	if (!(d->state & MATEWNCK_WINDOW_STATE_MAXIMIZED_HORIZONTALLY))
 	    *flags |= META_FRAME_ALLOWS_HORIZONTAL_RESIZE;
     }
 
-    if (d->actions & WNCK_WINDOW_ACTION_MOVE)
+    if (d->actions & MATEWNCK_WINDOW_ACTION_MOVE)
 	*flags |= META_FRAME_ALLOWS_MOVE;
 
-    if (d->actions & WNCK_WINDOW_ACTION_MAXIMIZE)
+    if (d->actions & MATEWNCK_WINDOW_ACTION_MAXIMIZE)
 	*flags |= META_FRAME_ALLOWS_MAXIMIZE;
 
-    if (d->actions & WNCK_WINDOW_ACTION_SHADE)
+    if (d->actions & MATEWNCK_WINDOW_ACTION_SHADE)
 	*flags |= META_FRAME_ALLOWS_SHADE;
 
     if (d->active)
 	*flags |= META_FRAME_HAS_FOCUS;
 
-#define META_MAXIMIZED (WNCK_WINDOW_STATE_MAXIMIZED_HORIZONTALLY | \
-			WNCK_WINDOW_STATE_MAXIMIZED_VERTICALLY)
+#define META_MAXIMIZED (MATEWNCK_WINDOW_STATE_MAXIMIZED_HORIZONTALLY | \
+			MATEWNCK_WINDOW_STATE_MAXIMIZED_VERTICALLY)
 
     if ((d->state & META_MAXIMIZED) == META_MAXIMIZED)
 	*flags |= META_FRAME_MAXIMIZED;
 
-    if (d->state & WNCK_WINDOW_STATE_STICKY)
+    if (d->state & MATEWNCK_WINDOW_STATE_STICKY)
 	*flags |= META_FRAME_STUCK;
 
-    if (d->state & WNCK_WINDOW_STATE_FULLSCREEN)
+    if (d->state & MATEWNCK_WINDOW_STATE_FULLSCREEN)
 	*flags |= META_FRAME_FULLSCREEN;
 
-    if (d->state & WNCK_WINDOW_STATE_SHADED)
+    if (d->state & MATEWNCK_WINDOW_STATE_SHADED)
 	*flags |= META_FRAME_SHADED;
 
-#ifdef HAVE_MARCO_2_17_0
-    if (d->state & WNCK_WINDOW_STATE_ABOVE)
+    if (d->state & MATEWNCK_WINDOW_STATE_ABOVE)
 	*flags |= META_FRAME_ABOVE;
-#endif
 
     meta_theme_get_frame_borders (theme,
 				  META_FRAME_TYPE_NORMAL,
@@ -1877,7 +1840,6 @@ meta_draw_window_decoration (decor_t *d)
     bg_color = style->bg[GTK_STATE_NORMAL];
     bg_alpha = 1.0;
 
-#ifdef HAVE_MARCO_2_17_0
     if (frame_style->window_background_color)
     {
 	meta_color_spec_render (frame_style->window_background_color,
@@ -1886,7 +1848,6 @@ meta_draw_window_decoration (decor_t *d)
 
 	bg_alpha = frame_style->window_background_alpha / 255.0;
     }
-#endif
 
     cairo_destroy (cr);
 
@@ -2711,7 +2672,7 @@ get_event_window_position (decor_t *d,
     *y = pos[i][j].y + pos[i][j].yh * height + pos[i][j].yth *
 	(titlebar_height - 17);
 
-    if ((d->state & WNCK_WINDOW_STATE_MAXIMIZED_HORIZONTALLY) &&
+    if ((d->state & MATEWNCK_WINDOW_STATE_MAXIMIZED_HORIZONTALLY) &&
 	(j == 0 || j == 2))
     {
 	*w = 0;
@@ -2721,7 +2682,7 @@ get_event_window_position (decor_t *d,
 	*w = pos[i][j].w + pos[i][j].ww * width;
     }
 
-    if ((d->state & WNCK_WINDOW_STATE_MAXIMIZED_VERTICALLY) &&
+    if ((d->state & MATEWNCK_WINDOW_STATE_MAXIMIZED_VERTICALLY) &&
 	(i == 0 || i == 2))
     {
 	*h = 0;
@@ -2913,12 +2874,7 @@ meta_get_button_position (decor_t *d,
     MetaFrameFlags    flags;
     MetaTheme	      *theme;
     GdkRectangle      clip;
-
-#ifdef HAVE_MARCO_2_15_21
     MetaButtonSpace   *space;
-#else
-    GdkRectangle      *space;
-#endif
 
     if (!d->context)
     {
@@ -2958,8 +2914,6 @@ meta_get_button_position (decor_t *d,
 
 	space = &fgeom.close_rect;
 	break;
-
-#if defined (HAVE_MARCO_2_17_0) && defined (HAVE_LIBWNCK_2_18_1)
     case BUTTON_SHADE:
 	if (!meta_button_present (&button_layout, META_BUTTON_FUNCTION_SHADE))
 	    return FALSE;
@@ -2996,13 +2950,10 @@ meta_get_button_position (decor_t *d,
 
 	space = &fgeom.unstick_rect;
 	break;
-#endif
-
     default:
 	return FALSE;
     }
 
-#ifdef HAVE_MARCO_2_15_21
     if (!space->clickable.width && !space->clickable.height)
 	return FALSE;
 
@@ -3010,15 +2961,6 @@ meta_get_button_position (decor_t *d,
     *y = space->clickable.y;
     *w = space->clickable.width;
     *h = space->clickable.height;
-#else
-    if (!space->width && !space->height)
-	return FALSE;
-
-    *x = space->x;
-    *y = space->y;
-    *w = space->width;
-    *h = space->height;
-#endif
 
     return TRUE;
 }
@@ -3026,7 +2968,7 @@ meta_get_button_position (decor_t *d,
 #endif
 
 static void
-update_event_windows (WnckWindow *win)
+update_event_windows (MatewnckWindow *win)
 {
     Display *xdisplay;
     decor_t *d = g_object_get_data (G_OBJECT (win), "decor");
@@ -3036,9 +2978,9 @@ update_event_windows (WnckWindow *win)
 
     xdisplay = GDK_DISPLAY_XDISPLAY (gdk_display_get_default ());
 
-    wnck_window_get_client_window_geometry (win, &x0, &y0, &width, &height);
+    matewnck_window_get_client_window_geometry (win, &x0, &y0, &width, &height);
 
-    if (d->state & WNCK_WINDOW_STATE_SHADED)
+    if (d->state & MATEWNCK_WINDOW_STATE_SHADED)
     {
 	height = 0;
 	k = l = 1;
@@ -3055,17 +2997,17 @@ update_event_windows (WnckWindow *win)
     {
 	static guint event_window_actions[3][3] = {
 	    {
-		WNCK_WINDOW_ACTION_RESIZE,
-		WNCK_WINDOW_ACTION_RESIZE,
-		WNCK_WINDOW_ACTION_RESIZE
+		MATEWNCK_WINDOW_ACTION_RESIZE,
+		MATEWNCK_WINDOW_ACTION_RESIZE,
+		MATEWNCK_WINDOW_ACTION_RESIZE
 	    }, {
-		WNCK_WINDOW_ACTION_RESIZE,
-		WNCK_WINDOW_ACTION_MOVE,
-		WNCK_WINDOW_ACTION_RESIZE
+		MATEWNCK_WINDOW_ACTION_RESIZE,
+		MATEWNCK_WINDOW_ACTION_MOVE,
+		MATEWNCK_WINDOW_ACTION_RESIZE
 	    }, {
-		WNCK_WINDOW_ACTION_RESIZE,
-		WNCK_WINDOW_ACTION_RESIZE,
-		WNCK_WINDOW_ACTION_RESIZE
+		MATEWNCK_WINDOW_ACTION_RESIZE,
+		MATEWNCK_WINDOW_ACTION_RESIZE,
+		MATEWNCK_WINDOW_ACTION_RESIZE
 	    }
 	};
 
@@ -3098,26 +3040,16 @@ update_event_windows (WnckWindow *win)
     for (i = 0; i < BUTTON_NUM; i++)
     {
 	static guint button_actions[BUTTON_NUM] = {
-	    WNCK_WINDOW_ACTION_CLOSE,
-	    WNCK_WINDOW_ACTION_MAXIMIZE,
-	    WNCK_WINDOW_ACTION_MINIMIZE,
+	    MATEWNCK_WINDOW_ACTION_CLOSE,
+	    MATEWNCK_WINDOW_ACTION_MAXIMIZE,
+	    MATEWNCK_WINDOW_ACTION_MINIMIZE,
 	    0,
-	    WNCK_WINDOW_ACTION_SHADE,
-
-#ifdef HAVE_LIBWNCK_2_18_1
-	    WNCK_WINDOW_ACTION_ABOVE,
-	    WNCK_WINDOW_ACTION_STICK,
-	    WNCK_WINDOW_ACTION_UNSHADE,
-	    WNCK_WINDOW_ACTION_ABOVE,
-	    WNCK_WINDOW_ACTION_UNSTICK
-#else
-	    0,
-	    0,
-	    0,
-	    0,
-	    0
-#endif
-
+	    MATEWNCK_WINDOW_ACTION_SHADE,
+	    MATEWNCK_WINDOW_ACTION_ABOVE,
+	    MATEWNCK_WINDOW_ACTION_STICK,
+	    MATEWNCK_WINDOW_ACTION_UNSHADE,
+	    MATEWNCK_WINDOW_ACTION_ABOVE,
+	    MATEWNCK_WINDOW_ACTION_UNSTICK
 	};
 
 	if (button_actions[i] && !(actions & button_actions[i]))
@@ -3141,17 +3073,14 @@ update_event_windows (WnckWindow *win)
     gdk_error_trap_pop ();
 }
 
-#ifdef HAVE_WNCK_WINDOW_HAS_NAME
 static const char *
-wnck_window_get_real_name (WnckWindow *win)
+wnck_window_get_real_name (MatewnckWindow *win)
 {
-    return wnck_window_has_name (win) ? wnck_window_get_name (win) : NULL;
+    return matewnck_window_has_name (win) ? matewnck_window_get_name (win) : NULL;
 }
-#define wnck_window_get_name wnck_window_get_real_name
-#endif
 
 static gint
-max_window_name_width (WnckWindow *win)
+max_window_name_width (MatewnckWindow *win)
 {
     decor_t     *d = g_object_get_data (G_OBJECT (win), "decor");
     const gchar *name;
@@ -3166,7 +3095,7 @@ max_window_name_width (WnckWindow *win)
 	pango_layout_set_wrap (d->layout, PANGO_WRAP_CHAR);
     }
 
-    name = wnck_window_get_name (win);
+    name = wnck_window_get_real_name (win);
     if (!name)
 	return 0;
 
@@ -3182,7 +3111,7 @@ max_window_name_width (WnckWindow *win)
 }
 
 static void
-update_window_decoration_name (WnckWindow *win)
+update_window_decoration_name (MatewnckWindow *win)
 {
     decor_t	    *d = g_object_get_data (G_OBJECT (win), "decor");
     const gchar	    *name;
@@ -3195,7 +3124,7 @@ update_window_decoration_name (WnckWindow *win)
 	d->name = NULL;
     }
 
-    name = wnck_window_get_name (win);
+    name = wnck_window_get_real_name (win);
     if (name && (name_length = strlen (name)))
     {
 	gint w;
@@ -3208,7 +3137,7 @@ update_window_decoration_name (WnckWindow *win)
 	{
 	    gint width;
 
-	    wnck_window_get_client_window_geometry (win, NULL, NULL, &width,
+	    matewnck_window_get_client_window_geometry (win, NULL, NULL, &width,
 						    NULL);
 
 	    w = width - ICON_SPACE - 2 - d->button_width;
@@ -3242,7 +3171,7 @@ update_window_decoration_name (WnckWindow *win)
 }
 
 static void
-update_window_decoration_icon (WnckWindow *win)
+update_window_decoration_icon (MatewnckWindow *win)
 {
     decor_t *d = g_object_get_data (G_OBJECT (win), "decor");
 
@@ -3261,7 +3190,7 @@ update_window_decoration_icon (WnckWindow *win)
     if (d->icon_pixbuf)
 	g_object_unref (G_OBJECT (d->icon_pixbuf));
 
-    d->icon_pixbuf = wnck_window_get_mini_icon (win);
+    d->icon_pixbuf = matewnck_window_get_mini_icon (win);
     if (d->icon_pixbuf)
     {
 	cairo_t	*cr;
@@ -3279,19 +3208,19 @@ update_window_decoration_icon (WnckWindow *win)
 }
 
 static void
-update_window_decoration_state (WnckWindow *win)
+update_window_decoration_state (MatewnckWindow *win)
 {
     decor_t *d = g_object_get_data (G_OBJECT (win), "decor");
 
-    d->state = wnck_window_get_state (win);
+    d->state = matewnck_window_get_state (win);
 }
 
 static void
-update_window_decoration_actions (WnckWindow *win)
+update_window_decoration_actions (MatewnckWindow *win)
 {
     decor_t *d = g_object_get_data (G_OBJECT (win), "decor");
 
-    d->actions = wnck_window_get_actions (win);
+    d->actions = matewnck_window_get_actions (win);
 }
 
 static void
@@ -3301,17 +3230,17 @@ calc_button_size (decor_t *d)
 
     button_width = 0;
 
-    if (d->actions & WNCK_WINDOW_ACTION_CLOSE)
+    if (d->actions & MATEWNCK_WINDOW_ACTION_CLOSE)
 	button_width += 17;
 
-    if (d->actions & (WNCK_WINDOW_ACTION_MAXIMIZE_HORIZONTALLY   |
-		      WNCK_WINDOW_ACTION_MAXIMIZE_VERTICALLY     |
-		      WNCK_WINDOW_ACTION_UNMAXIMIZE_HORIZONTALLY |
-		      WNCK_WINDOW_ACTION_UNMAXIMIZE_VERTICALLY))
+    if (d->actions & (MATEWNCK_WINDOW_ACTION_MAXIMIZE_HORIZONTALLY   |
+		      MATEWNCK_WINDOW_ACTION_MAXIMIZE_VERTICALLY     |
+		      MATEWNCK_WINDOW_ACTION_UNMAXIMIZE_HORIZONTALLY |
+		      MATEWNCK_WINDOW_ACTION_UNMAXIMIZE_VERTICALLY))
 	button_width += 17;
 
-    if (d->actions & (WNCK_WINDOW_ACTION_MINIMIZE |
-		      WNCK_WINDOW_ACTION_MINIMIZE))
+    if (d->actions & (MATEWNCK_WINDOW_ACTION_MINIMIZE |
+		      MATEWNCK_WINDOW_ACTION_MINIMIZE))
 	button_width += 17;
 
     if (button_width)
@@ -3371,9 +3300,9 @@ meta_calc_button_size (decor_t *d)
     for (i = 0; i < 3; i++)
     {
 	static guint button_actions[3] = {
-	    WNCK_WINDOW_ACTION_CLOSE,
-	    WNCK_WINDOW_ACTION_MAXIMIZE,
-	    WNCK_WINDOW_ACTION_MINIMIZE
+	    MATEWNCK_WINDOW_ACTION_CLOSE,
+	    MATEWNCK_WINDOW_ACTION_MAXIMIZE,
+	    MATEWNCK_WINDOW_ACTION_MINIMIZE
 	};
 
 	if (d->actions & button_actions[i])
@@ -3439,7 +3368,7 @@ meta_calc_decoration_size (decor_t *d,
 #endif
 
 static gboolean
-update_window_decoration_size (WnckWindow *win)
+update_window_decoration_size (MatewnckWindow *win)
 {
     decor_t   *d = g_object_get_data (G_OBJECT (win), "decor");
     GdkPixmap *pixmap, *buffer_pixmap = NULL;
@@ -3450,7 +3379,7 @@ update_window_decoration_size (WnckWindow *win)
 
     xdisplay = GDK_DISPLAY_XDISPLAY (gdk_display_get_default ());
 
-    wnck_window_get_client_window_geometry (win, NULL, NULL, &w, &h);
+    matewnck_window_get_client_window_geometry (win, NULL, NULL, &w, &h);
 
     name_width = max_window_name_width (win);
 
@@ -3495,7 +3424,7 @@ update_window_decoration_size (WnckWindow *win)
     d->width  = width;
     d->height = height;
 
-    d->prop_xid = wnck_window_get_xid (win);
+    d->prop_xid = matewnck_window_get_xid (win);
 
     update_window_decoration_name (win);
 
@@ -3505,18 +3434,18 @@ update_window_decoration_size (WnckWindow *win)
 }
 
 static void
-add_frame_window (WnckWindow *win,
+add_frame_window (MatewnckWindow *win,
 		  Window     frame)
 {
     Display		 *xdisplay;
     XSetWindowAttributes attr;
-    gulong		 xid = wnck_window_get_xid (win);
+    gulong		 xid = matewnck_window_get_xid (win);
     decor_t		 *d = g_object_get_data (G_OBJECT (win), "decor");
     gint		 i, j;
 
     xdisplay = GDK_DISPLAY_XDISPLAY (gdk_display_get_default ());
 
-    d->active = wnck_window_is_active (win);
+    d->active = matewnck_window_is_active (win);
 
     attr.event_mask = ButtonPressMask | EnterWindowMask | LeaveWindowMask;
     attr.override_redirect = TRUE;
@@ -3585,18 +3514,18 @@ add_frame_window (WnckWindow *win,
 }
 
 static gboolean
-update_switcher_window (WnckWindow *win,
+update_switcher_window (MatewnckWindow *win,
 			Window     selected)
 {
     decor_t    *d = g_object_get_data (G_OBJECT (win), "decor");
     GdkPixmap  *pixmap, *buffer_pixmap = NULL;
     gint       height, width = 0;
-    WnckWindow *selected_win;
+    MatewnckWindow *selected_win;
     Display    *xdisplay;
 
     xdisplay = GDK_DISPLAY_XDISPLAY (gdk_display_get_default ());
 
-    wnck_window_get_client_window_geometry (win, NULL, NULL, &width, NULL);
+    matewnck_window_get_client_window_geometry (win, NULL, NULL, &width, NULL);
 
     decor_get_default_layout (&switcher_context, width, 1, &d->border_layout);
 
@@ -3625,7 +3554,7 @@ update_switcher_window (WnckWindow *win,
     if (!d->height)
 	d->height = switcher_height;
 
-    selected_win = wnck_window_get (selected);
+    selected_win = matewnck_window_get (selected);
     if (selected_win)
     {
 	glong		name_length;
@@ -3638,7 +3567,7 @@ update_switcher_window (WnckWindow *win,
 	    d->name = NULL;
 	}
 
-	name = wnck_window_get_name (selected_win);
+	name = wnck_window_get_real_name (selected_win);
 	if (name && (name_length = strlen (name)))
 	{
 	    if (!d->layout)
@@ -3756,7 +3685,7 @@ update_switcher_window (WnckWindow *win,
     d->width  = width;
     d->height = height;
 
-    d->prop_xid = wnck_window_get_xid (win);
+    d->prop_xid = matewnck_window_get_xid (win);
 
     queue_decor_draw (d);
 
@@ -3764,7 +3693,7 @@ update_switcher_window (WnckWindow *win,
 }
 
 static void
-remove_frame_window (WnckWindow *win)
+remove_frame_window (MatewnckWindow *win)
 {
     decor_t *d = g_object_get_data (G_OBJECT (win), "decor");
     Display *xdisplay;
@@ -3848,7 +3777,7 @@ remove_frame_window (WnckWindow *win)
 }
 
 static void
-window_name_changed (WnckWindow *win)
+window_name_changed (MatewnckWindow *win)
 {
     decor_t *d = g_object_get_data (G_OBJECT (win), "decor");
 
@@ -3860,7 +3789,7 @@ window_name_changed (WnckWindow *win)
 }
 
 static void
-window_geometry_changed (WnckWindow *win)
+window_geometry_changed (MatewnckWindow *win)
 {
     decor_t *d = g_object_get_data (G_OBJECT (win), "decor");
 
@@ -3868,7 +3797,7 @@ window_geometry_changed (WnckWindow *win)
     {
 	int width, height;
 
-	wnck_window_get_client_window_geometry (win, NULL, NULL, &width,
+	matewnck_window_get_client_window_geometry (win, NULL, NULL, &width,
 						&height);
 
 	if (width != d->client_width || height != d->client_height)
@@ -3883,7 +3812,7 @@ window_geometry_changed (WnckWindow *win)
 }
 
 static void
-window_icon_changed (WnckWindow *win)
+window_icon_changed (MatewnckWindow *win)
 {
     decor_t *d = g_object_get_data (G_OBJECT (win), "decor");
 
@@ -3895,7 +3824,7 @@ window_icon_changed (WnckWindow *win)
 }
 
 static void
-window_state_changed (WnckWindow *win)
+window_state_changed (MatewnckWindow *win)
 {
     decor_t *d = g_object_get_data (G_OBJECT (win), "decor");
 
@@ -3910,7 +3839,7 @@ window_state_changed (WnckWindow *win)
 }
 
 static void
-window_actions_changed (WnckWindow *win)
+window_actions_changed (MatewnckWindow *win)
 {
     decor_t *d = g_object_get_data (G_OBJECT (win), "decor");
 
@@ -3925,7 +3854,7 @@ window_actions_changed (WnckWindow *win)
 }
 
 static void
-connect_window (WnckWindow *win)
+connect_window (MatewnckWindow *win)
 {
     g_signal_connect_object (win, "name_changed",
 			     G_CALLBACK (window_name_changed),
@@ -3945,37 +3874,37 @@ connect_window (WnckWindow *win)
 }
 
 static void
-active_window_changed (WnckScreen *screen)
+active_window_changed (MatewnckScreen *screen)
 {
-    WnckWindow *win;
+    MatewnckWindow *win;
     decor_t    *d;
 
-    win = wnck_screen_get_previously_active_window (screen);
+    win = matewnck_screen_get_previously_active_window (screen);
     if (win)
     {
 	d = g_object_get_data (G_OBJECT (win), "decor");
 	if (d && d->pixmap)
 	{
-	    d->active = wnck_window_is_active (win);
+	    d->active = matewnck_window_is_active (win);
 	    queue_decor_draw (d);
 	}
     }
 
-    win = wnck_screen_get_active_window (screen);
+    win = matewnck_screen_get_active_window (screen);
     if (win)
     {
 	d = g_object_get_data (G_OBJECT (win), "decor");
 	if (d && d->pixmap)
 	{
-	    d->active = wnck_window_is_active (win);
+	    d->active = matewnck_window_is_active (win);
 	    queue_decor_draw (d);
 	}
     }
 }
 
 static void
-window_opened (WnckScreen *screen,
-	       WnckWindow *win)
+window_opened (MatewnckScreen *screen,
+	       MatewnckWindow *win)
 {
     decor_t *d;
     Window  window;
@@ -3985,7 +3914,7 @@ window_opened (WnckScreen *screen,
     if (!d)
 	return;
 
-    wnck_window_get_client_window_geometry (win, NULL, NULL,
+    matewnck_window_get_client_window_geometry (win, NULL, NULL,
 					    &d->client_width,
 					    &d->client_height);
 
@@ -3995,11 +3924,11 @@ window_opened (WnckScreen *screen,
 
     connect_window (win);
 
-    xid = wnck_window_get_xid (win);
+    xid = matewnck_window_get_xid (win);
 
     if (get_window_prop (xid, select_window_atom, &window))
     {
-	d->prop_xid = wnck_window_get_xid (win);
+	d->prop_xid = matewnck_window_get_xid (win);
 	update_switcher_window (win, window);
     }
     else if (get_window_prop (xid, frame_window_atom, &window))
@@ -4009,8 +3938,8 @@ window_opened (WnckScreen *screen,
 }
 
 static void
-window_closed (WnckScreen *screen,
-	       WnckWindow *win)
+window_closed (MatewnckScreen *screen,
+	       MatewnckWindow *win)
 {
     Display *xdisplay = GDK_DISPLAY_XDISPLAY (gdk_display_get_default ());
     decor_t *d = g_object_get_data (G_OBJECT (win), "decor");
@@ -4020,7 +3949,7 @@ window_closed (WnckScreen *screen,
     g_object_set_data (G_OBJECT (win), "decor", NULL);
 
     gdk_error_trap_push ();
-    XDeleteProperty (xdisplay, wnck_window_get_xid (win), win_decor_atom);
+    XDeleteProperty (xdisplay, matewnck_window_get_xid (win), win_decor_atom);
     gdk_display_sync (gdk_display_get_default ());
     gdk_error_trap_pop ();
 
@@ -4028,7 +3957,7 @@ window_closed (WnckScreen *screen,
 }
 
 static void
-connect_screen (WnckScreen *screen)
+connect_screen (MatewnckScreen *screen)
 {
     GList *windows;
 
@@ -4042,7 +3971,7 @@ connect_screen (WnckScreen *screen)
 			     G_CALLBACK (window_closed),
 			     0, 0);
 
-    windows = wnck_screen_get_windows (screen);
+    windows = matewnck_screen_get_windows (screen);
     while (windows != NULL)
     {
 	window_opened (screen, windows->data);
@@ -4051,7 +3980,7 @@ connect_screen (WnckScreen *screen)
 }
 
 static void
-move_resize_window (WnckWindow *win,
+move_resize_window (MatewnckWindow *win,
 		    int	       direction,
 		    XEvent     *xevent)
 {
@@ -4080,7 +4009,7 @@ move_resize_window (WnckWindow *win,
     ev.xclient.serial	  = 0;
     ev.xclient.send_event = TRUE;
 
-    ev.xclient.window	    = wnck_window_get_xid (win);
+    ev.xclient.window	    = matewnck_window_get_xid (win);
     ev.xclient.message_type = wm_move_resize_atom;
     ev.xclient.format	    = 32;
 
@@ -4101,7 +4030,7 @@ move_resize_window (WnckWindow *win,
 }
 
 static void
-restack_window (WnckWindow *win,
+restack_window (MatewnckWindow *win,
 		int	   stack_mode)
 {
     Display    *xdisplay;
@@ -4129,7 +4058,7 @@ restack_window (WnckWindow *win,
     ev.xclient.serial	  = 0;
     ev.xclient.send_event = TRUE;
 
-    ev.xclient.window	    = wnck_window_get_xid (win);
+    ev.xclient.window	    = matewnck_window_get_xid (win);
     ev.xclient.message_type = restack_window_atom;
     ev.xclient.format	    = 32;
 
@@ -4302,7 +4231,7 @@ create_tooltip_window (void)
 }
 
 static void
-handle_tooltip_event (WnckWindow *win,
+handle_tooltip_event (MatewnckWindow *win,
 		      XEvent     *xevent,
 		      guint	 state,
 		      const char *tip)
@@ -4316,7 +4245,7 @@ handle_tooltip_event (WnckWindow *win,
     case EnterNotify:
 	if (!(state & PRESSED_EVENT_WINDOW))
 	{
-	    if (wnck_window_is_active (win))
+	    if (matewnck_window_is_active (win))
 		tooltip_start_delay (tip);
 	}
 	break;
@@ -4327,7 +4256,7 @@ handle_tooltip_event (WnckWindow *win,
 }
 
 static void
-common_button_event (WnckWindow *win,
+common_button_event (MatewnckWindow *win,
 		     XEvent     *xevent,
 		     int	button,
 		     int	max,
@@ -4362,7 +4291,7 @@ common_button_event (WnckWindow *win,
 #define BUTTON_EVENT_ACTION_STATE (PRESSED_EVENT_WINDOW | IN_EVENT_WINDOW)
 
 static void
-close_button_event (WnckWindow *win,
+close_button_event (MatewnckWindow *win,
 		    XEvent     *xevent)
 {
     decor_t *d = g_object_get_data (G_OBJECT (win), "decor");
@@ -4375,20 +4304,20 @@ close_button_event (WnckWindow *win,
 	if (xevent->xbutton.button == 1)
 	{
 	    if (state == BUTTON_EVENT_ACTION_STATE)
-		wnck_window_close (win, xevent->xbutton.time);
+		matewnck_window_close (win, xevent->xbutton.time);
 	}
 	break;
     }
 }
 
 static void
-max_button_event (WnckWindow *win,
+max_button_event (MatewnckWindow *win,
 		  XEvent     *xevent)
 {
     decor_t *d = g_object_get_data (G_OBJECT (win), "decor");
     guint   state = d->button_states[BUTTON_MAX];
 
-    if (wnck_window_is_maximized (win))
+    if (matewnck_window_is_maximized (win))
 	common_button_event (win, xevent, BUTTON_MAX,
 			     3, _("Unmaximize Window"));
     else
@@ -4403,24 +4332,24 @@ max_button_event (WnckWindow *win,
 	    {
 		if (xevent->xbutton.button == 2)
 		{
-		    if (wnck_window_is_maximized_vertically (win))
-			wnck_window_unmaximize_vertically (win);
+		    if (matewnck_window_is_maximized_vertically (win))
+			matewnck_window_unmaximize_vertically (win);
 		    else
-			wnck_window_maximize_vertically (win);
+			matewnck_window_maximize_vertically (win);
 		}
 		else if (xevent->xbutton.button == 3)
 		{
-		    if (wnck_window_is_maximized_horizontally (win))
-			wnck_window_unmaximize_horizontally (win);
+		    if (matewnck_window_is_maximized_horizontally (win))
+			matewnck_window_unmaximize_horizontally (win);
 		    else
-			wnck_window_maximize_horizontally (win);
+			matewnck_window_maximize_horizontally (win);
 		}
 		else
 		{
-		    if (wnck_window_is_maximized (win))
-			wnck_window_unmaximize (win);
+		    if (matewnck_window_is_maximized (win))
+			matewnck_window_unmaximize (win);
 		    else
-			wnck_window_maximize (win);
+			matewnck_window_maximize (win);
 		}
 	    }
 	}
@@ -4429,7 +4358,7 @@ max_button_event (WnckWindow *win,
 }
 
 static void
-min_button_event (WnckWindow *win,
+min_button_event (MatewnckWindow *win,
 		  XEvent     *xevent)
 {
     decor_t *d = g_object_get_data (G_OBJECT (win), "decor");
@@ -4442,7 +4371,7 @@ min_button_event (WnckWindow *win,
 	if (xevent->xbutton.button == 1)
 	{
 	    if (state == BUTTON_EVENT_ACTION_STATE)
-		wnck_window_minimize (win);
+		matewnck_window_minimize (win);
 	}
 	break;
     }
@@ -4461,11 +4390,11 @@ position_action_menu (GtkMenu  *menu,
 		      gboolean *push_in,
 		      gpointer user_data)
 {
-    WnckWindow *win = (WnckWindow *) user_data;
+    MatewnckWindow *win = (MatewnckWindow *) user_data;
     decor_t    *d = g_object_get_data (G_OBJECT (win), "decor");
     gint       bx, by, width, height;
 
-    wnck_window_get_client_window_geometry (win, x, y, &width, &height);
+    matewnck_window_get_client_window_geometry (win, x, y, &width, &height);
 
     if ((*theme_get_button_position) (d, BUTTON_MENU, width, height,
 				      &bx, &by, &width, &height))
@@ -4483,7 +4412,7 @@ position_action_menu (GtkMenu  *menu,
 }
 
 static void
-action_menu_map (WnckWindow *win,
+action_menu_map (MatewnckWindow *win,
 		 long	     button,
 		 Time	     time)
 {
@@ -4506,27 +4435,22 @@ action_menu_map (WnckWindow *win,
 	    gtk_widget_destroy (action_menu);
     }
 
-    switch (wnck_window_get_window_type (win)) {
-    case WNCK_WINDOW_DESKTOP:
-    case WNCK_WINDOW_DOCK:
+    switch (matewnck_window_get_window_type (win)) {
+    case MATEWNCK_WINDOW_DESKTOP:
+    case MATEWNCK_WINDOW_DOCK:
 	/* don't allow window action */
 	return;
-    case WNCK_WINDOW_NORMAL:
-    case WNCK_WINDOW_DIALOG:
-
-#ifndef HAVE_LIBWNCK_2_19_4
-    case WNCK_WINDOW_MODAL_DIALOG:
-#endif
-
-    case WNCK_WINDOW_TOOLBAR:
-    case WNCK_WINDOW_MENU:
-    case WNCK_WINDOW_UTILITY:
-    case WNCK_WINDOW_SPLASHSCREEN:
+    case MATEWNCK_WINDOW_NORMAL:
+    case MATEWNCK_WINDOW_DIALOG:
+    case MATEWNCK_WINDOW_TOOLBAR:
+    case MATEWNCK_WINDOW_MENU:
+    case MATEWNCK_WINDOW_UTILITY:
+    case MATEWNCK_WINDOW_SPLASHSCREEN:
 	/* allow window action menu */
 	break;
     }
 
-    action_menu = wnck_create_window_action_menu (win);
+    action_menu = matewnck_create_window_action_menu (win);
 
     gtk_menu_set_screen (GTK_MENU (action_menu), screen);
 
@@ -4557,7 +4481,7 @@ action_menu_map (WnckWindow *win,
 }
 
 static void
-menu_button_event (WnckWindow *win,
+menu_button_event (MatewnckWindow *win,
 		   XEvent     *xevent)
 {
     common_button_event (win, xevent, BUTTON_MENU, 1, _("Window Menu"));
@@ -4573,7 +4497,7 @@ menu_button_event (WnckWindow *win,
 }
 
 static void
-shade_button_event (WnckWindow *win,
+shade_button_event (MatewnckWindow *win,
 		    XEvent     *xevent)
 {
     decor_t *d = g_object_get_data (G_OBJECT (win), "decor");
@@ -4586,14 +4510,14 @@ shade_button_event (WnckWindow *win,
 	if (xevent->xbutton.button == 1)
 	{
 	    if (state == BUTTON_EVENT_ACTION_STATE)
-		wnck_window_shade (win);
+		matewnck_window_shade (win);
 	}
 	break;
     }
 }
 
 static void
-above_button_event (WnckWindow *win,
+above_button_event (MatewnckWindow *win,
 		    XEvent     *xevent)
 {
     decor_t *d = g_object_get_data (G_OBJECT (win), "decor");
@@ -4607,11 +4531,7 @@ above_button_event (WnckWindow *win,
 	{
 	    if (state == BUTTON_EVENT_ACTION_STATE)
 	    {
-
-#ifdef HAVE_LIBWNCK_2_18_1
-		wnck_window_make_above (win);
-#endif
-
+			matewnck_window_make_above (win);
 	    }
 	}
 	break;
@@ -4619,7 +4539,7 @@ above_button_event (WnckWindow *win,
 }
 
 static void
-stick_button_event (WnckWindow *win,
+stick_button_event (MatewnckWindow *win,
 		    XEvent     *xevent)
 {
     decor_t *d = g_object_get_data (G_OBJECT (win), "decor");
@@ -4632,14 +4552,14 @@ stick_button_event (WnckWindow *win,
 	if (xevent->xbutton.button == 1)
 	{
 	    if (state == BUTTON_EVENT_ACTION_STATE)
-		wnck_window_stick (win);
+		matewnck_window_stick (win);
 	}
 	break;
     }
 }
 
 static void
-unshade_button_event (WnckWindow *win,
+unshade_button_event (MatewnckWindow *win,
 		      XEvent     *xevent)
 {
     decor_t *d = g_object_get_data (G_OBJECT (win), "decor");
@@ -4652,14 +4572,14 @@ unshade_button_event (WnckWindow *win,
 	if (xevent->xbutton.button == 1)
 	{
 	    if (state == BUTTON_EVENT_ACTION_STATE)
-		wnck_window_unshade (win);
+		matewnck_window_unshade (win);
 	}
 	break;
     }
 }
 
 static void
-unabove_button_event (WnckWindow *win,
+unabove_button_event (MatewnckWindow *win,
 		      XEvent     *xevent)
 {
     decor_t *d = g_object_get_data (G_OBJECT (win), "decor");
@@ -4673,11 +4593,7 @@ unabove_button_event (WnckWindow *win,
 	{
 	    if (state == BUTTON_EVENT_ACTION_STATE)
 	    {
-
-#ifdef HAVE_LIBWNCK_2_18_1
-		wnck_window_unmake_above (win);
-#endif
-
+			matewnck_window_unmake_above (win);
 	    }
 	}
 	break;
@@ -4685,7 +4601,7 @@ unabove_button_event (WnckWindow *win,
 }
 
 static void
-unstick_button_event (WnckWindow *win,
+unstick_button_event (MatewnckWindow *win,
 		      XEvent     *xevent)
 {
     decor_t *d = g_object_get_data (G_OBJECT (win), "decor");
@@ -4698,45 +4614,45 @@ unstick_button_event (WnckWindow *win,
 	if (xevent->xbutton.button == 1)
 	{
 	    if (state == BUTTON_EVENT_ACTION_STATE)
-		wnck_window_unstick (win);
+		matewnck_window_unstick (win);
 	}
 	break;
     }
 }
 
 static void
-handle_title_button_event (WnckWindow   *win,
+handle_title_button_event (MatewnckWindow   *win,
 			   int          action,
 			   XButtonEvent *event)
 {
     switch (action) {
     case CLICK_ACTION_SHADE:
-	if (wnck_window_is_shaded (win))
-	    wnck_window_unshade (win);
+	if (matewnck_window_is_shaded (win))
+	    matewnck_window_unshade (win);
 	else
-	    wnck_window_shade (win);
+	    matewnck_window_shade (win);
 	break;
     case CLICK_ACTION_MAXIMIZE:
-	if (wnck_window_is_maximized (win))
-	    wnck_window_unmaximize (win);
+	if (matewnck_window_is_maximized (win))
+	    matewnck_window_unmaximize (win);
 	else
-	    wnck_window_maximize (win);
+	    matewnck_window_maximize (win);
 	break;
     case CLICK_ACTION_MAXIMIZE_HORZ:
-	if (wnck_window_is_maximized_horizontally (win))
-	    wnck_window_unmaximize_horizontally (win);
+	if (matewnck_window_is_maximized_horizontally (win))
+	    matewnck_window_unmaximize_horizontally (win);
 	else
-	    wnck_window_maximize_horizontally (win);
+	    matewnck_window_maximize_horizontally (win);
 	break;
     case CLICK_ACTION_MAXIMIZE_VERT:
-	if (wnck_window_is_maximized_vertically (win))
-	    wnck_window_unmaximize_vertically (win);
+	if (matewnck_window_is_maximized_vertically (win))
+	    matewnck_window_unmaximize_vertically (win);
 	else
-	    wnck_window_maximize_vertically (win);
+	    matewnck_window_maximize_vertically (win);
 	break;
     case CLICK_ACTION_MINIMIZE:
-	if (!wnck_window_is_minimized (win))
-	    wnck_window_minimize (win);
+	if (!matewnck_window_is_minimized (win))
+	    matewnck_window_minimize (win);
 	break;
     case CLICK_ACTION_RAISE:
 	restack_window (win, Above);
@@ -4751,20 +4667,20 @@ handle_title_button_event (WnckWindow   *win,
 }
 
 static void
-handle_mouse_wheel_title_event (WnckWindow   *win,
+handle_mouse_wheel_title_event (MatewnckWindow   *win,
 				unsigned int button)
 {
     switch (wheel_action) {
     case WHEEL_ACTION_SHADE:
 	if (button == 4)
 	{
-	    if (!wnck_window_is_shaded (win))
-		wnck_window_shade (win);
+	    if (!matewnck_window_is_shaded (win))
+		matewnck_window_shade (win);
 	}
 	else if (button == 5)
 	{
-	    if (wnck_window_is_shaded (win))
-		wnck_window_unshade (win);
+	    if (matewnck_window_is_shaded (win))
+		matewnck_window_unshade (win);
 	}
 	break;
     default:
@@ -4786,7 +4702,7 @@ dist (double x1, double y1,
 }
 
 static void
-title_event (WnckWindow *win,
+title_event (MatewnckWindow *win,
 	     XEvent     *xevent)
 {
     static int	  last_button_num = 0;
@@ -4846,7 +4762,7 @@ title_event (WnckWindow *win,
 }
 
 static void
-frame_common_event (WnckWindow *win,
+frame_common_event (MatewnckWindow *win,
 		    int        direction,
 		    XEvent     *xevent)
 {
@@ -4870,56 +4786,56 @@ frame_common_event (WnckWindow *win,
 }
 
 static void
-top_left_event (WnckWindow *win,
+top_left_event (MatewnckWindow *win,
 		XEvent     *xevent)
 {
     frame_common_event (win, WM_MOVERESIZE_SIZE_TOPLEFT, xevent);
 }
 
 static void
-top_event (WnckWindow *win,
+top_event (MatewnckWindow *win,
 	   XEvent     *xevent)
 {
     frame_common_event (win, WM_MOVERESIZE_SIZE_TOP, xevent);
 }
 
 static void
-top_right_event (WnckWindow *win,
+top_right_event (MatewnckWindow *win,
 		 XEvent     *xevent)
 {
     frame_common_event (win, WM_MOVERESIZE_SIZE_TOPRIGHT, xevent);
 }
 
 static void
-left_event (WnckWindow *win,
+left_event (MatewnckWindow *win,
 	    XEvent     *xevent)
 {
     frame_common_event (win, WM_MOVERESIZE_SIZE_LEFT, xevent);
 }
 
 static void
-right_event (WnckWindow *win,
+right_event (MatewnckWindow *win,
 	     XEvent     *xevent)
 {
     frame_common_event (win, WM_MOVERESIZE_SIZE_RIGHT, xevent);
 }
 
 static void
-bottom_left_event (WnckWindow *win,
+bottom_left_event (MatewnckWindow *win,
 		   XEvent     *xevent)
 {
     frame_common_event (win, WM_MOVERESIZE_SIZE_BOTTOMLEFT, xevent);
 }
 
 static void
-bottom_event (WnckWindow *win,
+bottom_event (MatewnckWindow *win,
 	      XEvent     *xevent)
 {
     frame_common_event (win, WM_MOVERESIZE_SIZE_BOTTOM, xevent);
 }
 
 static void
-bottom_right_event (WnckWindow *win,
+bottom_right_event (MatewnckWindow *win,
 		    XEvent     *xevent)
 {
     frame_common_event (win, WM_MOVERESIZE_SIZE_BOTTOMRIGHT, xevent);
@@ -4929,12 +4845,12 @@ static void
 force_quit_dialog_realize (GtkWidget *dialog,
 			   void      *data)
 {
-    WnckWindow *win = data;
+    MatewnckWindow *win = data;
 
     gdk_error_trap_push ();
     XSetTransientForHint (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()),
 			  GDK_WINDOW_XID (dialog->window),
-			  wnck_window_get_xid (win));
+			  matewnck_window_get_xid (win));
     gdk_display_sync (gdk_display_get_default ());
     gdk_error_trap_pop ();
 }
@@ -4978,20 +4894,20 @@ get_client_machine (Window xwindow)
 }
 
 static void
-kill_window (WnckWindow *win)
+kill_window (MatewnckWindow *win)
 {
     GdkDisplay      *gdk_display = gdk_display_get_default ();
     Display         *xdisplay    = GDK_DISPLAY_XDISPLAY (gdk_display);
-    WnckApplication *app;
+    MatewnckApplication *app;
 
-    app = wnck_window_get_application (win);
+    app = matewnck_window_get_application (win);
     if (app)
     {
 	gchar buf[257], *client_machine;
 	int   pid;
 
-	pid = wnck_application_get_pid (app);
-	client_machine = get_client_machine (wnck_application_get_xid (app));
+	pid = matewnck_application_get_pid (app);
+	client_machine = get_client_machine (matewnck_application_get_xid (app));
 
 	if (client_machine && pid > 0)
 	{
@@ -5007,7 +4923,7 @@ kill_window (WnckWindow *win)
     }
 
     gdk_error_trap_push ();
-    XKillClient (xdisplay, wnck_window_get_xid (win));
+    XKillClient (xdisplay, matewnck_window_get_xid (win));
     gdk_display_sync (gdk_display);
     gdk_error_trap_pop ();
 }
@@ -5017,7 +4933,7 @@ force_quit_dialog_response (GtkWidget *dialog,
 			    gint      response,
 			    void      *data)
 {
-    WnckWindow *win = data;
+    MatewnckWindow *win = data;
     decor_t    *d = g_object_get_data (G_OBJECT (win), "decor");
 
     if (response == GTK_RESPONSE_ACCEPT)
@@ -5031,7 +4947,7 @@ force_quit_dialog_response (GtkWidget *dialog,
 }
 
 static void
-show_force_quit_dialog (WnckWindow *win,
+show_force_quit_dialog (MatewnckWindow *win,
 			Time        timestamp)
 {
     decor_t   *d = g_object_get_data (G_OBJECT (win), "decor");
@@ -5041,7 +4957,7 @@ show_force_quit_dialog (WnckWindow *win,
     if (d->force_quit_dialog)
 	return;
 
-    tmp = g_markup_escape_text (wnck_window_get_name (win), -1);
+    tmp = g_markup_escape_text (wnck_window_get_real_name (win), -1);
     str = g_strdup_printf (_("The window \"%s\" is not responding."), tmp);
 
     g_free (tmp);
@@ -5092,7 +5008,7 @@ show_force_quit_dialog (WnckWindow *win,
 }
 
 static void
-hide_force_quit_dialog (WnckWindow *win)
+hide_force_quit_dialog (MatewnckWindow *win)
 {
     decor_t *d = g_object_get_data (G_OBJECT (win), "decor");
 
@@ -5137,11 +5053,11 @@ event_filter_func (GdkXEvent *gdkxevent,
     case PropertyNotify:
 	if (xevent->xproperty.atom == frame_window_atom)
 	{
-	    WnckWindow *win;
+	    MatewnckWindow *win;
 
 	    xid = xevent->xproperty.window;
 
-	    win = wnck_window_get (xid);
+	    win = matewnck_window_get (xid);
 	    if (win)
 	    {
 		Window frame, window;
@@ -5157,11 +5073,11 @@ event_filter_func (GdkXEvent *gdkxevent,
 	}
 	else if (xevent->xproperty.atom == mwm_hints_atom)
 	{
-	    WnckWindow *win;
+	    MatewnckWindow *win;
 
 	    xid = xevent->xproperty.window;
 
-	    win = wnck_window_get (xid);
+	    win = matewnck_window_get (xid);
 	    if (win)
 	    {
 		decor_t  *d = g_object_get_data (G_OBJECT (win), "decor");
@@ -5193,11 +5109,11 @@ event_filter_func (GdkXEvent *gdkxevent,
 	}
 	else if (xevent->xproperty.atom == select_window_atom)
 	{
-	    WnckWindow *win;
+	    MatewnckWindow *win;
 
 	    xid = xevent->xproperty.window;
 
-	    win = wnck_window_get (xid);
+	    win = matewnck_window_get (xid);
 	    if (win)
 	    {
 		Window select;
@@ -5219,9 +5135,9 @@ event_filter_func (GdkXEvent *gdkxevent,
 	    action = xevent->xclient.data.l[0];
 	    if (action == toolkit_action_window_menu_atom)
 	    {
-		WnckWindow *win;
+		MatewnckWindow *win;
 
-		win = wnck_window_get (xevent->xclient.window);
+		win = matewnck_window_get (xevent->xclient.window);
 		if (win)
 		{
 		    action_menu_map (win,
@@ -5231,9 +5147,9 @@ event_filter_func (GdkXEvent *gdkxevent,
 	    }
 	    else if (action == toolkit_action_force_quit_dialog_atom)
 	    {
-		WnckWindow *win;
+		MatewnckWindow *win;
 
-		win = wnck_window_get (xevent->xclient.window);
+		win = matewnck_window_get (xevent->xclient.window);
 		if (win)
 		{
 		    if (xevent->xclient.data.l[2])
@@ -5250,9 +5166,9 @@ event_filter_func (GdkXEvent *gdkxevent,
 
     if (xid)
     {
-	WnckWindow *win;
+	MatewnckWindow *win;
 
-	win = wnck_window_get (xid);
+	win = matewnck_window_get (xid);
 	if (win)
 	{
 	    static event_callback callback[3][3] = {
@@ -5561,8 +5477,8 @@ draw_border_shape (Display	   *xdisplay,
     /* we use closure argument if maximized */
     if (closure)
 	d.state |=
-	    WNCK_WINDOW_STATE_MAXIMIZED_HORIZONTALLY |
-	    WNCK_WINDOW_STATE_MAXIMIZED_VERTICALLY;
+	    MATEWNCK_WINDOW_STATE_MAXIMIZED_HORIZONTALLY |
+	    MATEWNCK_WINDOW_STATE_MAXIMIZED_VERTICALLY;
 
     decor_get_default_layout (c, 1, 1, &d.border_layout);
 
@@ -5703,7 +5619,7 @@ update_shadow (void)
 }
 
 static void
-update_window_decoration (WnckWindow *win)
+update_window_decoration (MatewnckWindow *win)
 {
     decor_t *d = g_object_get_data (G_OBJECT (win), "decor");
 
@@ -5718,7 +5634,7 @@ update_window_decoration (WnckWindow *win)
     }
     else
     {
-	Window xid = wnck_window_get_xid (win);
+	Window xid = matewnck_window_get_xid (win);
 	Window select;
 
 	if (get_window_prop (xid, select_window_atom, &select))
@@ -5832,8 +5748,6 @@ meta_button_function_from_string (const char *str)
 	return META_BUTTON_FUNCTION_MAXIMIZE;
     else if (strcmp (str, "close") == 0)
 	return META_BUTTON_FUNCTION_CLOSE;
-
-#ifdef HAVE_MARCO_2_17_0
     else if (strcmp (str, "shade") == 0)
 	return META_BUTTON_FUNCTION_SHADE;
     else if (strcmp (str, "above") == 0)
@@ -5846,8 +5760,6 @@ meta_button_function_from_string (const char *str)
 	return META_BUTTON_FUNCTION_UNABOVE;
     else if (strcmp (str, "unstick") == 0)
 	return META_BUTTON_FUNCTION_UNSTICK;
-#endif
-
     else
 	return META_BUTTON_FUNCTION_LAST;
 }
@@ -5857,7 +5769,6 @@ meta_button_opposite_function (MetaButtonFunction ofwhat)
 {
     switch (ofwhat)
     {
-#ifdef HAVE_MARCO_2_17_0
     case META_BUTTON_FUNCTION_SHADE:
 	return META_BUTTON_FUNCTION_UNSHADE;
     case META_BUTTON_FUNCTION_UNSHADE:
@@ -5872,7 +5783,6 @@ meta_button_opposite_function (MetaButtonFunction ofwhat)
 	return META_BUTTON_FUNCTION_UNSTICK;
     case META_BUTTON_FUNCTION_UNSTICK:
 	return META_BUTTON_FUNCTION_STICK;
-#endif
 
     default:
 	return META_BUTTON_FUNCTION_LAST;
@@ -5888,10 +5798,8 @@ meta_initialize_button_layout (MetaButtonLayout *layout)
     {
 	layout->left_buttons[i] = META_BUTTON_FUNCTION_LAST;
 	layout->right_buttons[i] = META_BUTTON_FUNCTION_LAST;
-#ifdef HAVE_MARCO_2_23_2
 	layout->left_buttons_has_spacer[i] = FALSE;
 	layout->right_buttons_has_spacer[i] = FALSE;
-#endif
     }
 }
 
@@ -5922,7 +5830,6 @@ meta_update_button_layout (const char *value)
 	while (buttons[b] != NULL)
 	{
 	    f = meta_button_function_from_string (buttons[b]);
-#ifdef HAVE_MARCO_2_23_2
 	    if (i > 0 && strcmp("spacer", buttons[b]) == 0)
             {
 	       new_layout.left_buttons_has_spacer[i - 1] = TRUE;
@@ -5932,7 +5839,6 @@ meta_update_button_layout (const char *value)
                   new_layout.left_buttons_has_spacer[i - 2] = TRUE;
             }
 	    else
-#endif
 	    {
 	       if (f != META_BUTTON_FUNCTION_LAST && !used[f])
 	       {
@@ -5969,7 +5875,6 @@ meta_update_button_layout (const char *value)
 	    while (buttons[b] != NULL)
 	    {
 	       f = meta_button_function_from_string (buttons[b]);
-#ifdef HAVE_MARCO_2_23_2
 	       if (i > 0 && strcmp("spacer", buttons[b]) == 0)
 	       {
 		  new_layout.right_buttons_has_spacer[i - 1] = TRUE;
@@ -5978,7 +5883,6 @@ meta_update_button_layout (const char *value)
 		     new_layout.right_buttons_has_spacer[i - 2] = TRUE;
 	       }
 	       else
-#endif
 	       {
 		   if (f != META_BUTTON_FUNCTION_LAST && !used[f])
 		   {
@@ -6022,14 +5926,12 @@ meta_update_button_layout (const char *value)
 	for (j = 0; j < i; j++)
 	{
 	    rtl_layout.right_buttons[j] = new_layout.left_buttons[i - j - 1];
-#ifdef HAVE_MARCO_2_23_2
 	    if (j == 0)
 		rtl_layout.right_buttons_has_spacer[i - 1] =
 		    new_layout.left_buttons_has_spacer[i - j - 1];
 	    else
 		rtl_layout.right_buttons_has_spacer[j - 1] =
 		    new_layout.left_buttons_has_spacer[i - j - 1];
-#endif
 	}
 
 	i = 0;
@@ -6039,14 +5941,12 @@ meta_update_button_layout (const char *value)
 	for (j = 0; j < i; j++)
 	{
 	    rtl_layout.left_buttons[j] = new_layout.right_buttons[i - j - 1];
-#ifdef HAVE_MARCO_2_23_2
 	    if (j == 0)
 		rtl_layout.left_buttons_has_spacer[i - 1] =
 		    new_layout.right_buttons_has_spacer[i - j - 1];
 	    else
 		rtl_layout.left_buttons_has_spacer[j - 1] =
 		    new_layout.right_buttons_has_spacer[i - j - 1];
-#endif
 	}
 
 	new_layout = rtl_layout;
@@ -6134,7 +6034,7 @@ update_titlebar_font (void)
 }
 
 static void
-decorations_changed (WnckScreen *screen)
+decorations_changed (MatewnckScreen *screen)
 {
     GdkDisplay *gdkdisplay;
     GdkScreen  *gdkscreen;
@@ -6152,7 +6052,7 @@ decorations_changed (WnckScreen *screen)
     if (minimal)
 	return;
 
-    windows = wnck_screen_get_windows (screen);
+    windows = matewnck_screen_get_windows (screen);
     while (windows != NULL)
     {
 	decor_t *d = g_object_get_data (G_OBJECT (windows->data), "decor");
@@ -6168,7 +6068,7 @@ decorations_changed (WnckScreen *screen)
 
 	}
 
-	update_window_decoration (WNCK_WINDOW (windows->data));
+	update_window_decoration (MATEWNCK_WINDOW (windows->data));
 	windows = windows->next;
     }
 }
@@ -6178,11 +6078,11 @@ style_changed (GtkWidget *widget)
 {
     GdkDisplay *gdkdisplay;
     GdkScreen  *gdkscreen;
-    WnckScreen *screen;
+    MatewnckScreen *screen;
 
     gdkdisplay = gdk_display_get_default ();
     gdkscreen  = gdk_display_get_default_screen (gdkdisplay);
-    screen     = wnck_screen_get_default ();
+    screen     = matewnck_screen_get_default ();
 
     update_style (widget);
 
@@ -6543,142 +6443,10 @@ value_changed (MateConfClient *client,
 	decorations_changed (data);
 }
 
-#elif USE_DBUS_GLIB
-
-static DBusHandlerResult
-dbus_handle_message (DBusConnection *connection,
-		     DBusMessage    *message,
-		     void           *user_data)
-{
-    WnckScreen	      *screen = user_data;
-    char	      **path;
-    const char        *interface, *member;
-    DBusHandlerResult result = DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-
-    interface = dbus_message_get_interface (message);
-    member    = dbus_message_get_member (message);
-
-    (void) connection;
-
-    if (!interface || !member)
-	return result;
-
-    if (!dbus_message_is_signal (message, interface, member))
-	return result;
-
-    if (strcmp (member, "changed"))
-	return result;
-
-    if (!dbus_message_get_path_decomposed (message, &path))
-	return result;
-
-    if (!path[0] || !path[1] || !path[2] || !path[3] || !path[4] || !path[5])
-    {
-	dbus_free_string_array (path);
-	return result;
-    }
-
-    if (!strcmp (path[0], "org")	 &&
-	!strcmp (path[1], "freedesktop") &&
-	!strcmp (path[2], "compiz")      &&
-	!strcmp (path[3], "decoration")  &&
-	!strcmp (path[4], "allscreens"))
-    {
-	result = DBUS_HANDLER_RESULT_HANDLED;
-
-	if (strcmp (path[5], "shadow_radius") == 0)
-	{
-	    dbus_message_get_args (message, NULL,
-				   DBUS_TYPE_DOUBLE, &shadow_radius,
-				   DBUS_TYPE_INVALID);
-	}
-	else if (strcmp (path[5], "shadow_opacity") == 0)
-	{
-	    dbus_message_get_args (message, NULL,
-				   DBUS_TYPE_DOUBLE, &shadow_opacity,
-				   DBUS_TYPE_INVALID);
-	}
-	else if (strcmp (path[5], "shadow_color") == 0)
-	{
-	    DBusError error;
-	    char      *str;
-
-	    dbus_error_init (&error);
-
-	    dbus_message_get_args (message, &error,
-				   DBUS_TYPE_STRING, &str,
-				   DBUS_TYPE_INVALID);
-
-	    if (!dbus_error_is_set (&error))
-	    {
-		int c[4];
-
-		if (sscanf (str, "#%2x%2x%2x%2x",
-			    &c[0], &c[1], &c[2], &c[3]) == 4)
-		{
-		    shadow_color[0] = c[0] << 8 | c[0];
-		    shadow_color[1] = c[1] << 8 | c[1];
-		    shadow_color[2] = c[2] << 8 | c[2];
-		}
-	    }
-
-	    dbus_error_free (&error);
-	}
-	else if (strcmp (path[5], "shadow_x_offset") == 0)
-	{
-	    dbus_message_get_args (message, NULL,
-				   DBUS_TYPE_INT32, &shadow_offset_x,
-				   DBUS_TYPE_INVALID);
-	}
-	else if (strcmp (path[5], "shadow_y_offset") == 0)
-	{
-	    dbus_message_get_args (message, NULL,
-				   DBUS_TYPE_INT32, &shadow_offset_y,
-				   DBUS_TYPE_INVALID);
-	}
-
-	decorations_changed (screen);
-    }
-
-    dbus_free_string_array (path);
-
-    return result;
-}
-
-static DBusMessage *
-send_and_block_for_shadow_option_reply (DBusConnection *connection,
-					char	       *path)
-{
-    DBusMessage *message;
-
-    message = dbus_message_new_method_call (NULL,
-					    path,
-					    DBUS_INTERFACE,
-					    DBUS_METHOD_GET);
-    if (message)
-    {
-	DBusMessage *reply;
-	DBusError   error;
-
-	dbus_message_set_destination (message, DBUS_DEST);
-
-	dbus_error_init (&error);
-	reply = dbus_connection_send_with_reply_and_block (connection,
-							   message, -1,
-							   &error);
-	dbus_message_unref (message);
-
-	if (!dbus_error_is_set (&error))
-	    return reply;
-    }
-
-    return NULL;
-}
-
 #endif
 
 static gboolean
-init_settings (WnckScreen *screen)
+init_settings (MatewnckScreen *screen)
 {
     GtkSettings	   *settings;
     GdkScreen	   *gdkscreen;
@@ -6709,95 +6477,6 @@ init_settings (WnckScreen *screen)
 		      "value_changed",
 		      G_CALLBACK (value_changed),
 		      screen);
-#elif USE_DBUS_GLIB
-    DBusConnection *connection;
-    DBusMessage	   *reply;
-    DBusError	   error;
-
-    dbus_error_init (&error);
-
-    connection = dbus_bus_get (DBUS_BUS_SESSION, &error);
-    if (!dbus_error_is_set (&error))
-    {
-	dbus_bus_add_match (connection, "type='signal'", &error);
-
-	dbus_connection_add_filter (connection,
-				    dbus_handle_message,
-				    screen, NULL);
-
-	dbus_connection_setup_with_g_main (connection, NULL);
-    }
-
-    reply = send_and_block_for_shadow_option_reply (connection, DBUS_PATH
-						    "/shadow_radius");
-    if (reply)
-    {
-	dbus_message_get_args (reply, NULL,
-			       DBUS_TYPE_DOUBLE, &shadow_radius,
-			       DBUS_TYPE_INVALID);
-
-	dbus_message_unref (reply);
-    }
-
-    reply = send_and_block_for_shadow_option_reply (connection, DBUS_PATH
-						    "/shadow_opacity");
-    if (reply)
-    {
-	dbus_message_get_args (reply, NULL,
-			       DBUS_TYPE_DOUBLE, &shadow_opacity,
-			       DBUS_TYPE_INVALID);
-	dbus_message_unref (reply);
-    }
-
-    reply = send_and_block_for_shadow_option_reply (connection, DBUS_PATH
-						    "/shadow_color");
-    if (reply)
-    {
-	DBusError error;
-	char      *str;
-
-	dbus_error_init (&error);
-
-	dbus_message_get_args (reply, &error,
-			       DBUS_TYPE_STRING, &str,
-			       DBUS_TYPE_INVALID);
-
-	if (!dbus_error_is_set (&error))
-	{
-	    int c[4];
-
-	    if (sscanf (str, "#%2x%2x%2x%2x", &c[0], &c[1], &c[2], &c[3]) == 4)
-	    {
-		shadow_color[0] = c[0] << 8 | c[0];
-		shadow_color[1] = c[1] << 8 | c[1];
-		shadow_color[2] = c[2] << 8 | c[2];
-	    }
-	}
-
-	dbus_error_free (&error);
-
-	dbus_message_unref (reply);
-    }
-
-    reply = send_and_block_for_shadow_option_reply (connection, DBUS_PATH
-						    "/shadow_x_offset");
-    if (reply)
-    {
-	dbus_message_get_args (reply, NULL,
-			       DBUS_TYPE_INT32, &shadow_offset_x,
-			       DBUS_TYPE_INVALID);
-	dbus_message_unref (reply);
-    }
-
-    reply = send_and_block_for_shadow_option_reply (connection, DBUS_PATH
-						    "/shadow_y_offset");
-    if (reply)
-    {
-	dbus_message_get_args (reply, NULL,
-			       DBUS_TYPE_INT32, &shadow_offset_y,
-			       DBUS_TYPE_INVALID);
-	dbus_message_unref (reply);
-    }
 #endif
 
     style_window = gtk_window_new (GTK_WINDOW_POPUP);
@@ -6877,7 +6556,7 @@ main (int argc, char *argv[])
     GdkDisplay *gdkdisplay;
     Display    *xdisplay;
     GdkScreen  *gdkscreen;
-    WnckScreen *screen;
+    MatewnckScreen *screen;
     gint       i, j, status;
     gboolean   replace = FALSE;
 
@@ -7060,8 +6739,8 @@ main (int argc, char *argv[])
 	return 1;
     }
 
-    screen = wnck_screen_get_default ();
-    wnck_set_client_type (WNCK_CLIENT_TYPE_PAGER);
+    screen = matewnck_screen_get_default ();
+    matewnck_set_client_type (MATEWNCK_CLIENT_TYPE_PAGER);
 
     gdk_window_add_filter (NULL,
 			   selection_event_filter_func,
