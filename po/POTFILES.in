@@ -1,9 +1,4 @@
-gtk/mate/50-compiz-desktop-key.xml.in
-gtk/mate/50-compiz-key.xml.in
 gtk/mate/compiz.desktop.in
-gtk/mate/compiz-window-manager.c
-gtk/mate/compiz-wm.desktop.in
-gtk/window-decorator/gwd.schemas.in
 gtk/window-decorator/gtk-window-decorator.c
 metadata/annotate.xml.in
 metadata/blur.xml.in
@@ -11,16 +6,12 @@ metadata/clone.xml.in
 metadata/commands.xml.in
 metadata/core.xml.in.in
 metadata/cube.xml.in
-metadata/dbus.xml.in
 metadata/decoration.xml.in
 metadata/fade.xml.in
 metadata/fs.xml.in
-metadata/mateconf.xml.in
-metadata/glib.xml.in
 metadata/matecompat.xml.in
 metadata/ini.xml.in
 metadata/inotify.xml.in
-metadata/kconfig.xml.in
 metadata/minimize.xml.in
 metadata/move.xml.in
 metadata/obs.xml.in

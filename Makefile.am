@@ -13,7 +13,6 @@ DISTCLEANFILES =	 \
 	po/stamp-it	 \
 	po/.intltool-merge-cache
 
-
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA =	\
 	compiz.pc	\
