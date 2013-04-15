@@ -6562,6 +6562,7 @@ main (int argc, char *argv[])
 
 #ifdef USE_MARCO
     char       *meta_theme = NULL;
+    char       *marco_button_layout = "menu:minimize,maximize,close";
 #endif
 
     program_name = argv[0];
@@ -6593,6 +6594,11 @@ main (int argc, char *argv[])
 	    }
 	    cmdline_options |= CMDLINE_BLUR;
 	}
+	else if (strcmp (argv[i], "--titlebar-font") == 0)
+	{
+	    if (argc > ++i)
+		titlebar_font = pango_font_description_from_string (argv[i]);
+	}
 
 #ifdef USE_MARCO
 	else if (strcmp (argv[i], "--opacity") == 0)
@@ -6623,6 +6629,11 @@ main (int argc, char *argv[])
 		meta_theme = argv[i];
 	    cmdline_options |= CMDLINE_THEME;
 	}
+	else if (strcmp (argv[i], "--button-layout") == 0)
+	{
+	    if (argc > ++i)
+		marco_button_layout = argv[i];
+	}
 #endif
 
 	else if (strcmp (argv[i], "--help") == 0)
@@ -6631,6 +6642,7 @@ main (int argc, char *argv[])
 		     "[--minimal] "
 		     "[--replace] "
 		     "[--blur none|titlebar|all] "
+		     "[--titlebar-font FONT] "
 
 #ifdef USE_MARCO
 		     "[--opacity OPACITY] "
@@ -6638,6 +6650,7 @@ main (int argc, char *argv[])
 		     "[--active-opacity OPACITY] "
 		     "[--no-active-opacity-shade] "
 		     "[--marco-theme THEME] "
+		     "[--button-layout LAYOUT] "
 #endif
 
 		     "[--help]"
@@ -6664,6 +6677,8 @@ main (int argc, char *argv[])
 	    theme_update_border_extents	    = meta_update_border_extents;
 	    theme_get_event_window_position = meta_get_event_window_position;
 	    theme_get_button_position	    = meta_get_button_position;
+	    meta_update_button_layout(marco_button_layout);
+	    meta_button_layout_set = TRUE;
 	}
     }
 #endif

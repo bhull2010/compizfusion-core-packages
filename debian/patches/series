@@ -4,7 +4,5 @@
 029_default_options.patch
 ### End of ubuntu-imported patches ###
 ### http://forums.mate-desktop.org/viewtopic.php?f=8&t=818
-101-mate-compiz_fix_gwd_window_buttons_placement.patch
 ### Patches imported from Wolfgang's forked redhat fc16 rpm package ###
-102-compiz_windows-decorator.patch
 #### End of Wolfgang/redhat-imported patches
