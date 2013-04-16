@@ -1,4 +1,4 @@
-libdecoration.so.0 libdecoration0 #MINVER#
+libdecoration.so.0 libdecorationfusion0 #MINVER#
  decor_acquire_dm_session@Base 0.8.8
  decor_apply_gravity@Base 0.8.8
  decor_blend_border_picture@Base 0.8.8

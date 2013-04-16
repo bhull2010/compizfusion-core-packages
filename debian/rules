@@ -6,123 +6,52 @@
 
 export DEB_BUILD_HARDENING=1
 
-export MATECONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1
-
 CORE_ABIVERSION := $(shell sed -rn 's/^\#define[[:space:]]+CORE_ABIVERSION[[:space:]]+//p' include/compiz-core.h )
 
 INSTALL = /usr/bin/install
 
 # generated via:
 #  python -c "import compizconfig; print ','.join(compizconfig.Context().Plugins['core'].Display['active_plugins'].Value)"
-PLUGINS1=core,ccp,dbus,glib,mateconf,matecompat,dbus,png,svg,video,screenshot
+PLUGINS1=core,ccp,matecompat,png,svg,video,screenshot
 PLUGINS2=decoration,clone,place,fade,minimize,move,resize,switcher,scale,wall,obs
 
 CONF_FLAGS =	--disable-static \
 				--disable-fuse \
-				--disable-kde \
-				--disable-kde4 \
-				--disable-kconfig \
-				--enable-dbus \
 				--enable-librsvg \
 				--enable-gtk \
-				--enable-mateconf \
 				--enable-marco \
 				--enable-mate \
-				--enable-mate-keybindings \
 				--with-default-plugins=$(PLUGINS1),$(PLUGINS2)
 
 DESTDIR := $(CURDIR)/debian/tmp
 BINSDIR := $(DESTDIR)/usr/bin
 MATEDIR := $(CURDIR)/debian/mate_files
-CCKBDIR := usr/share/mate-control-center/keybindings
 
 %:
 	dh $@ --with autoreconf
 
-post_patch:
-	###
-	### Renaming files - gnome->MATE
-	###
-	[ -d gtk/mate ] || mv gtk/gnome gtk/mate
-	[ -f metadata/mateconf.xml.in ] || mv metadata/gconf.xml.in metadata/mateconf.xml.in
-	[ -f metadata/matecompat.xml.in ] || mv metadata/gnomecompat.xml.in metadata/matecompat.xml.in
-	[ -f compiz-mateconf.pc.in ] || mv compiz-gconf.pc.in compiz-mateconf.pc.in
-	[ -f plugins/mateconf.c ] || mv plugins/gconf.c plugins/mateconf.c
-	[ -f plugins/matecompat.c ] ||  mv plugins/gnomecompat.c plugins/matecompat.c
-
-pre_unpatch:
-	###
-	### Reverting file renames - MATE->gnome
-	###
-	[ -d gtk/gnome ] || mv gtk/mate gtk/gnome
-	[ -f metadata/gconf.xml.in ] || mv metadata/mateconf.xml.in metadata/gconf.xml.in
-	[ -f metadata/gnomecompat.xml.in ] || mv metadata/matecompat.xml.in metadata/gnomecompat.xml.in
-	[ -f compiz-gconf.pc.in ] || mv compiz-mateconf.pc.in compiz-gconf.pc.in
-	[ -f plugins/gconf.c ] || mv plugins/mateconf.c plugins/gconf.c
-	[ -f plugins/gnomecompat.c ] ||  mv plugins/matecompat.c plugins/gnomecompat.c
-
-override_dh_autoreconf: post_patch
-	dh_autoreconf
-
-override_dh_auto_clean:
-	if [ -d gtk/gnome -a -d debian/tmp ]; then debian/rules post_patch; fi
-	dh_auto_clean
-
-override_dh_clean: pre_unpatch
-	dh_clean
 
 override_dh_auto_configure:
 	dh_auto_configure -- --prefix=/usr --sysconfdir=\$${prefix}/share $(CONF_FLAGS)
 
 override_dh_install:
-	### Adapted from Ubuntu
-	### launchpad.net/ubuntu/+archive/primary/+files/compiz_0.8.6-0ubuntu12.diff.gz
-	# create compiz keybindings file based on the marco ones.
-	mkdir -p $(DESTDIR)/$(CCKBDIR)
-	sed 's/wm_name=\"Marco\" package=\"marco\"/wm_name=\"Compiz\" package=\"compiz\"/' \
-		/$(CCKBDIR)/50-marco-desktop-key.xml > $(DESTDIR)/$(CCKBDIR)/50-compiz-desktop-key.xml
-	sed 's/wm_name=\"Marco\" package=\"marco\"/wm_name=\"Compiz\" package=\"compiz\"/' \
-		/$(CCKBDIR)/50-marco-key.xml > $(DESTDIR)/$(CCKBDIR)/50-compiz-key.xml
-	sed -i 's#key=\"/apps/marco/general/num_workspaces\" comparison=\"gt\"##g' \
-		$(DESTDIR)/$(CCKBDIR)/50-compiz-desktop-key.xml
-	sed -i 's#key=\"/apps/marco/general/num_workspaces\" comparison=\"gt\"##g' \
-		$(DESTDIR)/$(CCKBDIR)/50-compiz-key.xml
-	# add some selected keys
-	sed -i -f $(MATEDIR)/compiz-keybindings.sed $(DESTDIR)/$(CCKBDIR)/50-compiz-desktop-key.xml
-	# remove unsupported keys from compiz xml
-	for unsupported in switch_group switch_panels cycle_windows cycle_group cycle_panels; do \
-		sed -i "#marco/global_keybindings/$$unsupported#d" $(DESTDIR)/$(CCKBDIR)/50-compiz-key.xml; \
-	done;
-	### End Ubuntu adaptation
-
-	$(INSTALL) -m 0644 $(MATEDIR)/50-marco-navigation.xml $(DESTDIR)/$(CCKBDIR)/50-compiz-navigation.xml
-	$(INSTALL) -m 0644 $(MATEDIR)/50-marco-system.xml $(DESTDIR)/$(CCKBDIR)/50-compiz-system.xml
-	$(INSTALL) -m 0644 $(MATEDIR)/50-marco-windows.xml $(DESTDIR)/$(CCKBDIR)/50-compiz-windows.xml
 
 	# install compiz-mate-gtk
 	$(INSTALL) -m 0755 $(MATEDIR)/compiz-mate-gtk $(BINSDIR)
-
-	# kde disabled in this package, remove 'em
-	rm $(DESTDIR)/usr/share/compiz/kconfig.xml
-	rm $(DESTDIR)/usr/share/mateconf/schemas/compiz-kconfig.schemas
 
 	# remove unneeded .la files
 	find $(DESTDIR)/usr/lib -type f -name '*.la' -exec rm -f {} ';'
 
 	dh_install --fail-missing
 
-	# libmateconf & libmatecomapt are seperately installed in compiz-mate package
-	rm debian/compiz-plugins/usr/lib/compiz/libmate*.so
+	# libmatecompat is seperately installed in compizfusion-mate package
+	rm debian/compizfusion-plugins/usr/lib/compiz/libmatecompat.so
+	rm debian/compizfusion-plugins/usr/share/compiz/matecompat.xml
 	# core.xml excluded from plugins as it is in core
-	rm debian/compiz-plugins/usr/share/compiz/core.xml
+	rm debian/compizfusion-plugins/usr/share/compiz/core.xml
 
 override_dh_makeshlibs:
-	dh_makeshlibs -plibdecoration0 -V'libdecoration0 (>= 0.8.8)'
-
-# This forces the rename right before dpkg-source --after-build 
-#override_dh_builddeb: pre_unpatch
-override_dh_builddeb: pre_unpatch
-	dh_builddeb
+	dh_makeshlibs -plibdecorationfusion0 -V'libdecorationfusion0 (>= 0.8.8)'
 
 override_dh_gencontrol:
 	dh_gencontrol -- -Vcoreabiversion=$(CORE_ABIVERSION)

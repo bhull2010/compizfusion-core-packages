@@ -1,8 +1,0 @@
-usr/lib/compiz/libmate*.so
-usr/bin/gtk-window-decorator
-usr/bin/compiz-mate-gtk
-usr/share/applications/compiz.desktop
-usr/share/mate/wm-properties/compiz-wm.desktop
-usr/share/mateconf/schemas/gwd.schemas
-usr/share/mate-control-center/keybindings/50-compiz-*.xml
-usr/lib/window-manager-settings/libcompiz.so

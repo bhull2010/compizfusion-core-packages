@@ -1,7 +1,0 @@
-usr/bin/gtk-window-decorator usr/bin/compiz-decorator
-/usr/share/man/man1/gtk-window-decorator.1.gz /usr/share/man/man1/compiz-decorator.1.gz
-/usr/share/man/man1/gtk-window-decorator.1.gz /usr/share/man/man1/compiz-mate-gtk.1.gz
-/usr/share/doc/compiz-core/AUTHORS /usr/share/doc/compiz-mate/AUTHORS
-/usr/share/doc/compiz-core/NEWS.gz /usr/share/doc/compiz-mate/NEWS.gz
-/usr/share/doc/compiz-core/README /usr/share/doc/compiz-mate/README
-/usr/share/doc/compiz-core/TODO /usr/share/doc/compiz-mate/TODO

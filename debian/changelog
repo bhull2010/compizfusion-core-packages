@@ -1,3 +1,12 @@
+compizfusion (0.8.8-3) unstable; urgency=low
+
+  * Package rename to avoid update prompts for compiz 0.9
+  * Add breaks for compiz packages and libdecoration to avoid
+    file conflicts with compiz 0.9
+  * Now builds without mateconf dependencies
+
+ -- Local User <user@localhost>  Tue, 9 Apr 2013 12:36:00 +0000
+
 compiz (0.8.8-2) unstable; urgency=low
 
   * Don't remove compiz.desktop, and don't bundle compiz-mate-gtk.desktop

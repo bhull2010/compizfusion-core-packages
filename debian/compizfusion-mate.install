@@ -1,0 +1,5 @@
+usr/lib/compiz/libmate*.so
+usr/bin/gtk-window-decorator
+usr/bin/compiz-mate-gtk
+usr/share/applications/compiz.desktop
+usr/share/compiz/matecompat.xml

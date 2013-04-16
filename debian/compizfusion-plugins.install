@@ -1,3 +1,2 @@
-usr/share/mateconf/schemas/compiz-*.schemas
 usr/lib/compiz/lib*.so
 usr/share/compiz/*.xml
