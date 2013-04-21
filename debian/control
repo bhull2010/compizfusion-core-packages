@@ -24,8 +24,8 @@ Package: compizfusion
 Architecture: all
 Depends: ${misc:Depends},
  compizfusion-core (>= ${source:Version}), compizfusion-plugins (>= ${source:Version}),
- compizfusion-mate (>= ${source:Version}), libcompizfusionconfig-0
-Suggests: compizfusionconfig-settings-manager
+ compizfusion-mate (>= ${source:Version}), libcompizfusionconfig0
+Suggests: compizfusion-settings
 Conflicts: compiz
 Description: OpenGL window and compositing manager (metapackage)
  Compiz brings to life a variety of visual effects that make the Linux desktop

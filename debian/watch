@@ -1,2 +1,0 @@
-version=3
-http://releases.compiz.org/([\d\.]+)[02468]/ compiz-(\d.*)\.tar\.gz

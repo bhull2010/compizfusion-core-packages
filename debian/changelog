@@ -4,8 +4,9 @@ compizfusion (0.8.8-3) unstable; urgency=low
   * Add breaks for compiz packages and libdecoration to avoid
     file conflicts with compiz 0.9
   * Now builds without mateconf dependencies
+  * Package changed to 3.0 (native) format
 
- -- Local User <user@localhost>  Tue, 9 Apr 2013 12:36:00 +0000
+ -- Brent Hull <bhull2010@live.com>  Sun, 21 Apr 2013 16:09:14 -0400
 
 compiz (0.8.8-2) unstable; urgency=low
 
