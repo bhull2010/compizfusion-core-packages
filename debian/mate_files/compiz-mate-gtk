@@ -6,7 +6,7 @@ theme=`gsettings get org.mate.Marco.general theme | cut -d\' -f2`
 
 function runCompiz() {
 	gtk-window-decorator --replace --marco-theme "$theme" &
-	exec compiz --replace --sm-disable --ignore-desktop-hints ccp $@
+	exec compiz --replace ccp $@
 }
 
 ISSW=`glxinfo | grep "Software Rasterizer" -c`

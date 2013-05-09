@@ -1,3 +1,10 @@
+compizfusion (0.8.8-4) UNRELEASED; urgency=low
+
+  * Fix slow startup in MATE by reading DESKTOP_AUTOSTART_ID to get the
+    smclient id.
+
+ -- Brent Hull <bhull2010@live.com>  Thu, 09 May 2013 9:18:34 -0400
+
 compizfusion (0.8.8-3) unstable; urgency=low
 
   * Package rename to avoid update prompts for compiz 0.9
