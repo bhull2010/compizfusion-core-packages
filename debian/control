@@ -5,7 +5,7 @@ Maintainer: Local User <user@localhost>
 Uploaders: David Nusinow <dnusinow@debian.org>, Sean Finney <seanius@debian.org>, Cyril Brulebois <kibi@debian.org>
 Build-Depends: debhelper (>= 7.0.50~), dh-autoreconf,
  hardening-wrapper,
- intltool, libcairo2-dev,
+ intltool, libcairo2-dev, libdbus-glib-1-dev,
  libgl1-mesa-dev (>= 6.5.1) | libgl-dev, libglib2.0-dev,
  libgtk2.0-dev, libice-dev (>= 1:1.0.1), 
  libmarco-dev, libpango1.0-dev, libpng12-dev | libpng-dev, librsvg2-dev, 
