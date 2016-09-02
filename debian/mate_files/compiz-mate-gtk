@@ -1,11 +1,12 @@
 #!/bin/bash
 
 theme=`gsettings get org.mate.Marco.general theme | cut -d\' -f2`
+titlebar_font=`gsettings get org.mate.Marco.general titlebar-font | cut -d\' -f2`
 
 #echo "$theme"
 
 function runCompiz() {
-	gtk-window-decorator --replace --marco-theme "$theme" &
+	gtk-window-decorator --replace --marco-theme "$theme" --titlebar-font "$titlebar_font" --opacity 100 --active-opacity 100 --blur "none" &
 	exec compiz --replace ccp $@
 }
 

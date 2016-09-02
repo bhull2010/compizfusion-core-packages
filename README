@@ -1,3 +1,7 @@
 This is a test repository for debian/ubuntu packages of compiz-0.8.8 modified to work with the MATE desktop environment
 
 NOTE: This is not an official part of MATE.
+
+NOTE2: deprecated since Scott's compiz-reloaded:
+    http://blog.northfield.ws/compiz-maintenance/
+    https://github.com/compiz-reloaded
